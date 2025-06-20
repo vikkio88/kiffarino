@@ -10,7 +10,9 @@
   "scripts": {
     "dev": "bun --filter '*' dev",
     "check": "bun --filter '*' check",
-    "build": "rm -rf dist && bun --filter '*' build && mv be/dist dist/ && mv web/dist dist/public"
+    "clean": "rm -rf dist",
+    "build": "bun clean && bun --filter '*' build && mv be/dist dist/ && mv web/dist dist/public",
+    "start:server": "cd dist && node index.js"
   },
   "keywords": [],
   "author": "Vincenzo Ciaccio <vincenzo.ciaccio@gmail.com>",
