@@ -1,0 +1,14 @@
+{
+  "name": "@kiffarino/be",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --watch ./src/index.ts",
+    "build": "bun build ./src/index.ts --outdir ./dist/ --target node"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.4",
+    "hono": "^4.8.1",
+    "@kiffarino/shared": "workspace:*"
+  },
+  "module": "src/index.ts"
+}
