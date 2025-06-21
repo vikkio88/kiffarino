@@ -7,7 +7,7 @@
   );
 </script>
 
-<main>
+<main class="f1 ta-c">
   <h1>
     {SERVER_PORT}
   </h1>
