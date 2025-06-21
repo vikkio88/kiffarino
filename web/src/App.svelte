@@ -1,6 +1,6 @@
 <script lang="ts">
   import Counter from "./components/Counter.svelte";
-  import { SERVER_PORT } from "@kiffarino/shared";
+  import { SERVER_PORT } from "@kiffarino/shared/config";
 
   const promise = fetch(`http://localhost:${SERVER_PORT}/health`).then((r) =>
     r.json()
