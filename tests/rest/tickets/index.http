@@ -1,0 +1,6 @@
+post http://localhost:3003/api/tickets
+Content-Type: "application/json"
+
+{
+    "title": "yo"
+}

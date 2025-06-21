@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { NAME, SERVER_PORT } from "@kiffarino/shared/config";
 import staticHandler from "../static";
+import tickets from "./actions/tickets";
 
 const server = new Hono();
 
@@ -21,6 +22,11 @@ server.use(
 server.get("/health", (c) => {
   return c.json({ up: true });
 });
+
+const api = new Hono().basePath("/api");
+api.route("/", tickets);
+
+server.route("/", api);
 
 // SPA serving
 server.use("/*", staticHandler);

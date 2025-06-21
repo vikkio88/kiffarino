@@ -9,8 +9,9 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.14.4",
+    "@kiffarino/shared": "workspace:*",
     "hono": "^4.8.1",
-    "@kiffarino/shared": "workspace:*"
+    "zod": "^3.25.67"
   },
   "module": "src/index.ts"
 }
