@@ -2,9 +2,10 @@
   "name": "@kiffarino/be",
   "type": "module",
   "scripts": {
-    "dev": "bun run --watch ./src/index.ts",
+    "dev": "bun run --watch ./src/devServer.ts",
     "check": "bunx tsc --noEmit -p tsconfig.json",
-    "build": "bun build ./src/index.ts --outdir ./dist/ --target node"
+    "build": "bun build ./src/index.ts --outdir ./dist/ --target node",
+    "start": "cd dist/ && node index.js"
   },
   "dependencies": {
     "@hono/node-server": "^1.14.4",

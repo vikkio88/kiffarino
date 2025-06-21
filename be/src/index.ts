@@ -1,13 +1,10 @@
-import { serve } from "@hono/node-server";
-import { NAME, SERVER_PORT } from "@kiffarino/shared";
-import server from "./server";
+import { map, type MethodName } from "./cli/methods/map";
 
-serve(
-  {
-    fetch: server.fetch,
-    port: SERVER_PORT,
-  },
-  (info) => {
-    console.log(`${NAME} is running on http://localhost:${info.port}`);
-  }
-);
+function main(argv: string[]) {
+  const [method, ...args] = argv;
+  const func = map[method as MethodName] || map.help;
+
+  func(args);
+}
+
+main(process.argv.slice(2));

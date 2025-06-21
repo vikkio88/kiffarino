@@ -1,5 +1,7 @@
+import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { NAME, SERVER_PORT } from "@kiffarino/shared";
 import staticHandler from "./static";
 
 const server = new Hono();
@@ -23,4 +25,13 @@ server.get("/health", (c) => {
 // SPA serving
 server.use("/*", staticHandler);
 
-export default server;
+export const startServer = () =>
+  serve(
+    {
+      fetch: server.fetch,
+      port: SERVER_PORT,
+    },
+    (info) => {
+      console.log(`${NAME} is running on http://localhost:${info.port}`);
+    }
+  );
