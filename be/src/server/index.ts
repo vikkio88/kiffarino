@@ -2,7 +2,7 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { NAME, SERVER_PORT } from "@kiffarino/shared/config";
-import staticHandler from "./static";
+import staticHandler from "../static";
 
 const server = new Hono();
 
