@@ -78,7 +78,7 @@ export class Ticket {
     return lines.join("\n");
   }
 
-  static create(title: string): Ticket {
+  static create(title: string, body?: string): Ticket {
     const generatedId = id();
     const filename = `${toLowerCamelCase(title)}-${generatedId}.md`;
     const now = Date.now();
@@ -93,7 +93,7 @@ updatedAt: ${now}
 links: []
 -->
 
-Add description
+${body || "Add description"}
 `;
 
     return new Ticket(markdown, filename);
