@@ -1,17 +1,13 @@
 import { type ApiResult, Ticket } from "@kiffarino/shared";
 import type { Context } from "hono";
-import z from "zod";
 import { save } from "../../../db/tickets";
-
-const createTicketSchema = z.object({
-  title: z.string(),
-});
+import { createTicketSchema } from "./schemas";
 
 export async function create(c: Context) {
   const body = (await c.req.json()) as { title: string };
   const parsed = createTicketSchema.safeParse(body);
   if (!parsed.success) {
-    return c.json({ ...parsed.error.flatten() }, 422);
+    return c.json({ ...parsed.error.format() }, 422);
   }
 
   const ticket = Ticket.create(body.title);

@@ -1,3 +1,7 @@
+#
+get http://localhost:3003/api/tickets?status=backlog
+
+# Create
 post http://localhost:3003/api/tickets
 Content-Type: "application/json"
 
