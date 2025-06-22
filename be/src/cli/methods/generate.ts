@@ -7,6 +7,8 @@ import {
 } from "@kiffarino/shared/config";
 import { loadConfig, type ProjectConfig } from "../../libs/config";
 import { Ticket } from "@kiffarino/shared";
+import { migrate } from "../../db";
+import { save } from "../../db/tickets";
 
 export function generate(args: string[]) {
   const force = args.includes("-f") || args.includes("--force");
@@ -34,18 +36,18 @@ export function generate(args: string[]) {
   }
 
   fs.mkdirSync(projectRoot, { recursive: true });
-  const dbPath = path.join(projectRoot, "db.json");
-  fs.writeFileSync(dbPath, JSON.stringify([], null, 2));
+  // creating the db
+  migrate();
 
   const ticketsDir = path.join(projectRoot, TICKETS_SUBFOLDER);
   fs.mkdirSync(ticketsDir);
 
+  // adding a test ticket
   const testTicket = Ticket.create(
     "Test Ticket",
     `This is your first ticket inside ${config.baseFolder}/tickets.\n`
   );
-  const testTicketPath = path.join(ticketsDir, testTicket.filename);
-  fs.writeFileSync(testTicketPath, testTicket.toMarkdown());
+  save(testTicket);
 
   const docsDir = path.join(projectRoot, DOCS_SUBFOLDER);
   fs.mkdirSync(docsDir);
