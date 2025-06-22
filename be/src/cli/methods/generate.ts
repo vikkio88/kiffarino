@@ -1,51 +1,57 @@
-import { EXEC_NAME, PROJECT_CONFIG_FILENAME } from "@kiffarino/shared/config";
 import fs from "node:fs";
 import path from "node:path";
+import {
+  DOCS_SUBFOLDER,
+  PROJECT_CONFIG_FILENAME,
+  TICKETS_SUBFOLDER,
+} from "@kiffarino/shared/config";
+import { loadConfig, type ProjectConfig } from "../../libs/config";
+import { Ticket } from "@kiffarino/shared";
 
-export function generate() {
-  const configPath = path.resolve(".", PROJECT_CONFIG_FILENAME);
-
-  if (!fs.existsSync(configPath)) {
-    console.error(
-      `❌ No ${PROJECT_CONFIG_FILENAME} file found. Run \`${EXEC_NAME} init\` first.`
-    );
-    process.exit(1);
-  }
-
-  const raw = fs.readFileSync(configPath, "utf-8");
-  let config: { name: string; baseFolder: string };
-
+export function generate(args: string[]) {
+  const force = args.includes("-f") || args.includes("--force");
+  let config: ProjectConfig;
   try {
-    config = JSON.parse(raw);
+    config = loadConfig();
   } catch (err) {
-    console.error("❌ Failed to parse ${PROJECT_CONFIG_FILENAME} config file.");
+    console.error(`❌ Failed to parse ${PROJECT_CONFIG_FILENAME} config file.`);
     process.exit(1);
   }
 
   const projectRoot = path.resolve(".", config.baseFolder);
-  if (fs.existsSync(projectRoot)) {
-    console.error(`❌ Project folder '${config.baseFolder}' already exists.`);
+  if (fs.existsSync(projectRoot) && !force) {
+    console.error(
+      `❌ Project folder '${config.baseFolder}' already exists. Use --force to delete and restart.`
+    );
     process.exit(1);
+  }
+
+  if (fs.existsSync(projectRoot) && force) {
+    fs.rmSync(projectRoot, { recursive: true, force: true });
+    console.error(
+      `Project folder '${config.baseFolder}' already exists, but "-f" flag was passed, removing existing folder.`
+    );
   }
 
   fs.mkdirSync(projectRoot, { recursive: true });
   const dbPath = path.join(projectRoot, "db.json");
   fs.writeFileSync(dbPath, JSON.stringify([], null, 2));
 
-  const ticketsDir = path.join(projectRoot, "tickets");
+  const ticketsDir = path.join(projectRoot, TICKETS_SUBFOLDER);
   fs.mkdirSync(ticketsDir);
 
-  const testTicketPath = path.join(ticketsDir, "testTicket.md");
-  fs.writeFileSync(
-    testTicketPath,
+  const testTicket = Ticket.create(
+    "Test Ticket",
     `This is your first ticket inside ${config.baseFolder}/tickets.\n`
   );
+  const testTicketPath = path.join(ticketsDir, testTicket.filename);
+  fs.writeFileSync(testTicketPath, testTicket.toMarkdown());
 
-  const docsDir = path.join(projectRoot, "docs");
+  const docsDir = path.join(projectRoot, DOCS_SUBFOLDER);
   fs.mkdirSync(docsDir);
-  const testDocPath = path.join(ticketsDir, "firstDoc.md");
+  const testDocPath = path.join(docsDir, "firstDoc.md");
   fs.writeFileSync(
-    testTicketPath,
+    testDocPath,
     `This is your first document inside ${config.baseFolder}/docs.\n`
   );
 
