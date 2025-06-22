@@ -1,4 +1,7 @@
-import { PROJECT_CONFIG_FILENAME } from "@kiffarino/shared/config";
+import {
+  PROJECT_CONFIG_FILENAME,
+  TICKETS_SUBFOLDER,
+} from "@kiffarino/shared/config";
 import type { Ticket } from "@kiffarino/shared/models";
 
 import fs from "node:fs";
@@ -17,7 +20,7 @@ export function save(ticket: Ticket): boolean {
   const basePath = config.baseFolder;
   try {
     fs.writeFileSync(
-      path.join(".", basePath, "tickets", ticket.filename),
+      path.join(".", basePath, TICKETS_SUBFOLDER, ticket.filename),
       ticket.toMarkdown()
     );
     return true;
