@@ -1,11 +1,7 @@
 import { EXEC_NAME, PROJECT_CONFIG_FILENAME } from "@kiffarino/shared/config";
 import fs from "node:fs";
 import path from "node:path";
-
-type ProjectConfig = {
-  name: string;
-  baseFolder: string;
-};
+import type { ProjectConfig } from "../../libs/config";
 
 export function init(args: string[]) {
   const force = args.includes("-f") || args.includes("--force");
