@@ -1,6 +1,7 @@
-import { Ticket } from "@kiffarino/shared";
+import { type ApiResult, Ticket } from "@kiffarino/shared";
 import type { Context } from "hono";
 import z from "zod";
+import { save } from "../../../db/tickets";
 
 const createTicketSchema = z.object({
   title: z.string(),
@@ -14,7 +15,13 @@ export async function create(c: Context) {
   }
 
   const ticket = Ticket.create(body.title);
-  return c.json(
+
+  const result = save(ticket);
+  if (!result) {
+    return c.json({}, 410);
+  }
+  
+  return c.json<ApiResult<Ticket>>(
     {
       result: ticket,
     },
