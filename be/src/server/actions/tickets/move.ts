@@ -2,20 +2,20 @@ import type { Context } from "hono";
 import { Ticket, TICKETS_SUBFOLDER } from "@kiffarino/shared";
 import { loadTicketFromFile, save } from "../../../db/tickets";
 import { loadConfig } from "../../../libs/config";
-import { updateTicketSchema } from "./schemas";
+import { moveTicketSchema } from "./schemas";
 import { type ApiResult } from "@kiffarino/shared";
 import { read } from "../../../db";
 
-export async function update(c: Context) {
+export async function move(c: Context) {
   const id = c.req.param("id");
   const body = await c.req.json();
-  const parsed = updateTicketSchema.safeParse(body);
+  const parsed = moveTicketSchema.safeParse(body);
 
   if (!parsed.success) {
     return c.json({ ...parsed.error.format() }, 422);
   }
 
-  const updates = parsed.data;
+  const { status } = parsed.data;
   const db = await read();
   const ticketRecord = db.tickets.find((t) => t.id === id);
 
@@ -35,13 +35,9 @@ export async function update(c: Context) {
     return c.json({}, 404);
   }
 
-  if (updates.title) ticket.title = updates.title;
-  if (updates.body) ticket.body = updates.body;
-  if (updates.status) ticket.status = updates.status;
-  if (updates.priority !== undefined) ticket.priority = updates.priority;
+  ticket.status = status;
   ticket.updatedAt = Date.now();
 
   await save(ticket, true);
-
   return c.json<ApiResult<Ticket>>({ result: ticket }, 200);
 }

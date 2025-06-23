@@ -5,6 +5,16 @@ export const createTicketSchema = z.object({
   body: z.string().optional(),
 });
 
+export const moveTicketSchema = z.object({
+  status: z.union([
+    z.literal("idea"),
+    z.literal("backlog"),
+    z.literal("todo"),
+    z.literal("inProgress"),
+    z.literal("done"),
+  ]),
+});
+
 export const ticketFilterSchema = z.object({
   status: z
     .union([

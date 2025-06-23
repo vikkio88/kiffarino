@@ -3,13 +3,13 @@
 
 ## TODOs
 - [ ] Tickets
-    - [ ] Create
-    - [ ] Read
-    - [ ] Update
-    - [ ] Delete
+    - [x] Create
+    - [x] Read
+    - [x] Update
+    - [x] Delete
+    - [ ] Move
     - [ ] Archive
     - [ ] Link
-    - [ ] Move
 
 - [ ] Docs
     - [ ] Create

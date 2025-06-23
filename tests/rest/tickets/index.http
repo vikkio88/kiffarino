@@ -1,10 +1,11 @@
 ### Filter
-get http://localhost:3003/api/tickets
+get http://localhost:3003/api/tickets?status=todo
+
 ### getOne
 get http://localhost:3003/api/tickets/01JYF1PE3Y8NHDXVVG66V1T3PF
 
 ### udpate
-PUT  http://localhost:3003/api/tickets/01JYF1PE3Y8NHDXVVG66V1T3PF
+PUT  http://localhost:3003/api/tickets/01JYF1JZAJRPGXJPSEG34TAW7Z/move
 Content-Type: "application/json"
 
 {

@@ -4,7 +4,13 @@ import { TICKETS_URL } from "./conf";
 import { parse } from "../libs/resp";
 import { u } from "../libs/uri";
 
-type LocalTicket = { id: string; title: string; body: string };
+type LocalTicketStatus = "idea" | "backlog" | "todo" | "inProgress" | "done";
+type LocalTicket = {
+  id: string;
+  title: string;
+  body: string;
+  status: LocalTicketStatus;
+};
 
 describe("Tickets", () => {
   test("CRUD", async () => {
@@ -38,6 +44,35 @@ describe("Tickets", () => {
     expect(res.status).toBe(200);
 
     res = await get(u(TICKETS_URL, createdId));
+    expect(res.status).toBe(404);
+  });
+
+  test("Moving Ticket", async () => {
+    let res = await post(TICKETS_URL, { title: "ciao", body: "someBody" });
+    expect(res.status).toBe(201);
+    let result = await parse<{
+      result: LocalTicket;
+    }>(res);
+    const ticket = result!.result;
+    const id = ticket.id;
+
+    expect(ticket.status).toBe("todo");
+
+    res = await put<{ status: LocalTicketStatus }>(u(TICKETS_URL, id, "move"), {
+      status: "inProgress",
+    });
+    expect(res.status).toBe(200);
+
+    res = await get(u(TICKETS_URL, id));
+    result = await parse<{
+      result: LocalTicket;
+    }>(res);
+    expect(result?.result.status).toBe("inProgress");
+
+    res = await del(u(TICKETS_URL, id));
+    expect(res.status).toBe(200);
+
+    res = await get(u(TICKETS_URL, id));
     expect(res.status).toBe(404);
   });
 });
