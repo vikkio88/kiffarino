@@ -2,7 +2,7 @@ import {
   PROJECT_CONFIG_FILENAME,
   TICKETS_SUBFOLDER,
 } from "@kiffarino/shared/config";
-import type { Ticket } from "@kiffarino/shared/models";
+import { Ticket } from "@kiffarino/shared/models";
 
 import fs from "node:fs";
 import path from "node:path";
@@ -19,19 +19,48 @@ export type TicketRecord = {
   filename: string;
 };
 
+export function removeTicketFile(
+  baseFolder: string,
+  ticketsFolder: string,
+  filename: string
+): boolean {
+  const ticketPath = path.join(".", baseFolder, ticketsFolder, filename);
+  if (!fs.existsSync(ticketPath)) return true;
+  try {
+    fs.unlinkSync(ticketPath);
+    return true;
+  } catch (err) {
+    console.error(`Error whilst removing file "${ticketPath}"`);
+    return true;
+  }
+}
+export function loadTicketFromFile(
+  baseFolder: string,
+  ticketsFolder: string,
+  filename: string
+): Ticket | undefined {
+  const ticketPath = path.join(".", baseFolder, ticketsFolder, filename);
+  if (!fs.existsSync(ticketPath)) {
+    return undefined;
+  }
+
+  const md = fs.readFileSync(ticketPath).toString();
+  return new Ticket(md, filename);
+}
+
 export function toRecord(ticket: Ticket): TicketRecord {
   return {
     id: ticket.id,
     title: ticket.title,
-    status: ticket.meta.status,
-    priority: ticket.meta.priority,
+    status: ticket.status,
+    priority: ticket.priority,
     createdAt: ticket.createdAt || Date.now(),
     updatedAt: ticket.updatedAt || Date.now(),
     filename: ticket.filename,
   };
 }
 
-export async function save(ticket: Ticket) {
+export async function save(ticket: Ticket, isUpdate = false) {
   let config: ProjectConfig;
   try {
     config = loadConfig();
@@ -41,7 +70,14 @@ export async function save(ticket: Ticket) {
   }
 
   await db().read();
-  db().data!.tickets.push(toRecord(ticket));
+  if (!isUpdate) {
+    db().data!.tickets.push(toRecord(ticket));
+  } else {
+    db().data!.tickets = [
+      ...db().data!.tickets.filter((t) => t.id !== ticket.id),
+      toRecord(ticket),
+    ];
+  }
   await db().write();
 
   const basePath = config.baseFolder;

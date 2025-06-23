@@ -1,10 +1,25 @@
-#
-get http://localhost:3003/api/tickets?status=backlog
+### Filter
+get http://localhost:3003/api/tickets?status=inProgress
+### getOne
+get http://localhost:3003/api/tickets/01JYF1PE3Y8NHDXVVG66V1T3PF
 
-# Create
+### udpate
+PUT  http://localhost:3003/api/tickets/01JYF1PE3Y8NHDXVVG66V1T3PF
+Content-Type: "application/json"
+
+{
+    "status": "inProgress"
+}
+
+### delete
+DELETE http://localhost:3003/api/tickets/01JYF12RS4V9WDTB8AHQT8Y7ZF
+
+### Create
+
 post http://localhost:3003/api/tickets
 Content-Type: "application/json"
 
 {
-    "title": "yo"
+    "title": "Another Stuff",
+    "body": "Bloppo Blippo [cacca](pupu.com)"
 }

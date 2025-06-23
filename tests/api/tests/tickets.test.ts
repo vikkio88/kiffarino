@@ -1,15 +1,43 @@
 import { describe, test, expect } from "bun:test";
-import { post } from "../libs/http";
+import { del, get, post, put } from "../libs/http";
 import { TICKETS_URL } from "./conf";
 import { parse } from "../libs/resp";
+import { u } from "../libs/uri";
+
+type LocalTicket = { id: string; title: string; body: string };
 
 describe("Tickets", () => {
-  test("create", async () => {
-    const res = await post(TICKETS_URL, { title: "ciao" });
+  test("CRUD", async () => {
+    let res = await post(TICKETS_URL, { title: "ciao" });
     expect(res.status).toBe(201);
 
-    const ticket = await parse<{ result: { title: string } }>(res);
+    const ticket = await parse<{
+      result: LocalTicket;
+    }>(res);
 
+    expect(ticket?.result?.id).not.toBeUndefined();
     expect(ticket?.result?.title).toBe("ciao");
+    expect(ticket?.result?.body).toBe("Add description");
+    const createdId = ticket!.result!.id;
+
+    res = await get(u(TICKETS_URL, createdId));
+    expect(res.status).toBe(200);
+    const fetched = await parse<{ result: LocalTicket }>(res);
+    expect(fetched?.result.title).toBe("ciao");
+
+    res = await put<{ title: string }>(u(TICKETS_URL, createdId), {
+      title: "Not Ciao",
+    });
+    expect(res.status).toBe(200);
+
+    res = await get(u(TICKETS_URL, createdId));
+    const afterUpdatedfetched = await parse<{ result: LocalTicket }>(res);
+    expect(afterUpdatedfetched?.result.title).toBe("Not Ciao");
+
+    res = await del(u(TICKETS_URL, createdId));
+    expect(res.status).toBe(200);
+
+    res = await get(u(TICKETS_URL, createdId));
+    expect(res.status).toBe(404);
   });
 });

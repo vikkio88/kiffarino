@@ -28,4 +28,13 @@ export async function migrate() {
   await makeDb().write();
 }
 
+export async function read() {
+  await makeDb().read();
+  return makeDb().data!;
+}
+
+export async function write() {
+  await makeDb().write();
+}
+
 export default makeDb;

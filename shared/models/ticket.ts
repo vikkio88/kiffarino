@@ -1,6 +1,4 @@
-import { id } from "../libs/id";
 import { parseMd } from "../libs/parsers";
-import { toLowerCamelCase } from "../libs/text";
 
 export type LinkType = "blockedBy" | "blocks" | "linked";
 
@@ -13,7 +11,6 @@ export class Link {
     this.type = type;
   }
 }
-
 export type TicketStatus = "idea" | "backlog" | "todo" | "inProgress" | "done";
 
 export type Meta = {
@@ -26,7 +23,8 @@ export class Ticket {
   title: string;
   createdAt: number | undefined;
   updatedAt: number | undefined;
-  meta: Meta;
+  status: TicketStatus;
+  priority: number;
   links: Link[] = [];
   body: string;
   filename: string;
@@ -36,7 +34,8 @@ export class Ticket {
       id,
       title,
       body,
-      meta,
+      status,
+      priority,
       createdAt,
       updatedAt,
       links = [],
@@ -45,7 +44,8 @@ export class Ticket {
     this.id = id;
     this.title = title;
     this.body = body;
-    this.meta = meta;
+    this.status = status;
+    this.priority = priority;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.links = links;
@@ -59,9 +59,9 @@ export class Ticket {
 
     if (this.id) lines.push(`id: ${this.id}`);
     if (this.title) lines.push(`title: ${this.title}`);
-    if (this.meta?.status) lines.push(`status: ${this.meta.status}`);
-    if (typeof this.meta?.priority === "number")
-      lines.push(`priority: ${this.meta.priority}`);
+    if (this.status) lines.push(`status: ${this.status}`);
+    if (typeof this.priority === "number")
+      lines.push(`priority: ${this.priority}`);
     lines.push(`createdAt: ${this.createdAt ?? Date.now()}`);
     lines.push(`updatedAt: ${this.updatedAt ?? Date.now()}`);
     if (this.links.length > 0)
@@ -76,26 +76,5 @@ export class Ticket {
     lines.push(this.body);
 
     return lines.join("\n");
-  }
-
-  static create(title: string, body?: string): Ticket {
-    const generatedId = id();
-    const filename = `${toLowerCamelCase(title)}-${generatedId}.md`;
-    const now = Date.now();
-
-    const markdown = `<!--
-id: ${generatedId}
-title: ${title}
-status: todo
-priority: 0
-createdAt: ${now}
-updatedAt: ${now}
-links: []
--->
-
-${body || "Add description"}
-`;
-
-    return new Ticket(markdown, filename);
   }
 }

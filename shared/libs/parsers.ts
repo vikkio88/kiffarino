@@ -1,10 +1,11 @@
-import { Link, type Meta, type TicketStatus } from "../models/ticket";
+import { Link, type TicketStatus } from "../models/ticket";
 
 export function parseMd(markdown: string): {
   id: string;
   title: string;
   body: string;
-  meta: Meta;
+  status: TicketStatus,
+  priority: number,
   createdAt: number | undefined;
   updatedAt: number | undefined;
   links: Link[];
@@ -56,7 +57,8 @@ export function parseMd(markdown: string): {
     id,
     title,
     body,
-    meta: { status, priority },
+    status,
+    priority,
     createdAt,
     updatedAt,
     links,

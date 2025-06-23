@@ -9,6 +9,7 @@ import { loadConfig, type ProjectConfig } from "../../libs/config";
 import { Ticket } from "@kiffarino/shared";
 import { migrate } from "../../db";
 import { save } from "../../db/tickets";
+import { createTicket } from "../../libs/factories";
 
 export function generate(args: string[]) {
   const force = args.includes("-f") || args.includes("--force");
@@ -43,7 +44,7 @@ export function generate(args: string[]) {
   fs.mkdirSync(ticketsDir);
 
   // adding a test ticket
-  const testTicket = Ticket.create(
+  const testTicket = createTicket(
     "Test Ticket",
     `This is your first ticket inside ${config.baseFolder}/tickets.\n`
   );

@@ -14,7 +14,7 @@ export function get(api: string, headers = {}) {
   });
 }
 
-export function put(api: string, body = {}, headers = {}) {
+export function put<T>(api: string, body?: T, headers = {}) {
   return fetch(`${API_URL}/${api}`, {
     method: "PUT",
     headers: { ...basicHeaders(), ...headers },
@@ -29,7 +29,7 @@ export function del(api: string, headers = {}) {
   });
 }
 
-export function post(api: string, body = {}, headers = {}) {
+export function post<T>(api: string, body?: T, headers = {}) {
   return fetch(`${API_URL}/${api}`, {
     method: "POST",
     headers: { ...basicHeaders(), ...headers },
