@@ -1,5 +1,5 @@
 ### Filter
-get http://localhost:3003/api/tickets?status=inProgress
+get http://localhost:3003/api/tickets
 ### getOne
 get http://localhost:3003/api/tickets/01JYF1PE3Y8NHDXVVG66V1T3PF
 

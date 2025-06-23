@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "bun run --watch ./src/devServer.ts",
     "check": "bunx tsc --noEmit -p tsconfig.json",
-    "build": "bun build ./src/index.ts --outdir ./dist/ --target node",
+    "build": "bun run bun.build.ts",
     "start:bin": "cd dist/ && node index.js",
     "start": "bun run ./src/index.ts"
   },
