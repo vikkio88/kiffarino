@@ -1,14 +1,6 @@
 {
   "name": "web",
-  "private": true,
   "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "bunx --bun vite",
-    "build": "bunx --bun vite build",
-    "preview": "bunx --bun vite preview",
-    "check": "bunx --bun svelte-check --tsconfig ./tsconfig.app.json && bunx --bun tsc -p tsconfig.node.json"
-  },
   "devDependencies": {
     "@kiffarino/shared": "workspace:*",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
@@ -17,5 +9,16 @@
     "svelte-check": "^4.1.6",
     "typescript": "~5.8.3",
     "vite": "^6.3.5"
+  },
+  "private": true,
+  "scripts": {
+    "dev": "bunx --bun vite",
+    "build": "bunx --bun vite build",
+    "preview": "bunx --bun vite preview",
+    "check": "bunx --bun svelte-check --tsconfig ./tsconfig.app.json && bunx --bun tsc -p tsconfig.node.json"
+  },
+  "type": "module",
+  "dependencies": {
+    "@mateothegreat/svelte5-router": "^2.15.3"
   }
 }

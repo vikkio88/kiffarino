@@ -1,12 +1,16 @@
 {
   "name": "@kiffarino/root",
   "version": "0.0.1",
+  "author": "Vincenzo Ciaccio <vincenzo.ciaccio@gmail.com>",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
   "description": "A lightweight project management tool via cli",
-  "workspaces": [
-    "be",
-    "web",
-    "shared"
-  ],
+  "keywords": [],
+  "license": "ISC",
   "scripts": {
     "dev": "bun --filter '*' dev",
     "check": "bun --filter '*' check",
@@ -14,14 +18,10 @@
     "build": "bun clean && bun --filter '*' build && mv be/dist dist/ && mv web/dist dist/public",
     "start:server": "cd dist && node index.js"
   },
-  "keywords": [],
-  "author": "Vincenzo Ciaccio <vincenzo.ciaccio@gmail.com>",
-  "license": "ISC",
   "type": "module",
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+  "workspaces": [
+    "be",
+    "web",
+    "shared"
+  ]
 }
