@@ -11,7 +11,11 @@ export async function create(c: Context) {
     return c.json({ ...parsed.error.format() }, 422);
   }
 
-  const ticket = createTicket(parsed.data.title, parsed.data.body);
+  const { title, ...rest } = parsed.data;
+
+  const ticket = createTicket(parsed.data.title, {
+    ...rest,
+  });
 
   const result = await save(ticket);
   if (!result) {

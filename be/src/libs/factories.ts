@@ -1,8 +1,11 @@
-import { Ticket } from "@kiffarino/shared";
+import { Ticket, type TicketStatus } from "@kiffarino/shared";
 import { generatedId } from "./id";
 import { toLowerCamelCase } from "./text";
 
-export function createTicket(title: string, body?: string): Ticket {
+export function createTicket(
+  title: string,
+  { status = "todo", body }: { body?: string; status?: TicketStatus } = {}
+): Ticket {
   const id = generatedId();
   const filename = `${toLowerCamelCase(title)}-${id}.md`;
   const now = Date.now();
@@ -10,7 +13,7 @@ export function createTicket(title: string, body?: string): Ticket {
   const markdown = `<!--
 id: ${id}
 title: ${title}
-status: todo
+status: ${status}
 priority: 0
 createdAt: ${now}
 updatedAt: ${now}

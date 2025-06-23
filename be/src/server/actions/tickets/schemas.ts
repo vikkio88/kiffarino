@@ -1,30 +1,25 @@
 import z from "zod";
 
+const status = z.union([
+  z.literal("idea"),
+  z.literal("backlog"),
+  z.literal("todo"),
+  z.literal("inProgress"),
+  z.literal("done"),
+]);
+
 export const createTicketSchema = z.object({
   title: z.string(),
   body: z.string().optional(),
+  status: status.optional(),
 });
 
 export const moveTicketSchema = z.object({
-  status: z.union([
-    z.literal("idea"),
-    z.literal("backlog"),
-    z.literal("todo"),
-    z.literal("inProgress"),
-    z.literal("done"),
-  ]),
+  status,
 });
 
 export const ticketFilterSchema = z.object({
-  status: z
-    .union([
-      z.literal("idea"),
-      z.literal("backlog"),
-      z.literal("todo"),
-      z.literal("inProgress"),
-      z.literal("done"),
-    ])
-    .optional(),
+  status: status.optional(),
   priority: z.coerce.number().optional(),
   title: z.coerce.string().optional(),
 });

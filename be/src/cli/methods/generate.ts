@@ -44,10 +44,9 @@ export function generate(args: string[]) {
   fs.mkdirSync(ticketsDir);
 
   // adding a test ticket
-  const testTicket = createTicket(
-    "Test Ticket",
-    `This is your first ticket inside ${config.baseFolder}/tickets.\n`
-  );
+  const testTicket = createTicket("Test Ticket", {
+    body: `This is your first ticket inside ${config.baseFolder}/tickets.\n`,
+  });
   save(testTicket);
 
   const docsDir = path.join(projectRoot, DOCS_SUBFOLDER);
