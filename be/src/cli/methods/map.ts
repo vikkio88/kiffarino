@@ -11,9 +11,8 @@ export const map: Record<MethodName, (args: string[]) => void> = {
   init,
   generate,
 
-  start: () => {
-    //TODO: maybe check if port is passed and use that instead of default
-    // check if folder and rc file are there
-    startServer();
+  start: (args: string[]) => {
+    const forcedPort = args[0] ? parseInt(args[0]) : undefined;
+    startServer(forcedPort);
   },
 };

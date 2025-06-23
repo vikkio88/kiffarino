@@ -31,13 +31,32 @@ server.route("/", api);
 // SPA serving
 server.use("/*", staticHandler);
 
-export const startServer = () =>
+export const startServer = (forcedPort?: number) => {
+  if (forcedPort) {
+    console.log(
+      `⚠️ forced port specified, trying running on port ${forcedPort}.`
+    );
+  }
+
   serve(
     {
       fetch: server.fetch,
-      port: SERVER_PORT,
+      port: forcedPort || SERVER_PORT,
     },
     (info) => {
       console.log(`${NAME} is running on http://localhost:${info.port}`);
     }
   );
+
+
+   // Graceful shutdown on Ctrl+C
+    process.on("SIGINT", () => {
+      console.log("\n🛑 Received SIGINT. Shutting down...");
+      process.exit(0);
+    });
+
+    process.on("SIGTERM", () => {
+      console.log("\n🛑 Received SIGTERM. Shutting down...");
+      process.exit(0);
+    });
+};
