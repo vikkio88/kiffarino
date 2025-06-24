@@ -1,0 +1,87 @@
+<script lang="ts">
+  import { ticketStatuses, type TicketStatus } from "@kiffarino/shared";
+  import { filter } from "../api/tickets";
+  import FPC from "../components/layout/FullPageCentre.svelte";
+  import Spinner from "../components/shared/Spinner.svelte";
+  import { tick } from "svelte";
+  let statuses: TicketStatus[] | undefined = $state(["backlog"]);
+  const boardPromise = $derived(filter({ statuses }));
+
+  const isActive = (statuses: TicketStatus[], status: TicketStatus) =>
+    statuses.includes(status);
+
+  const toggleStatus = async (status: TicketStatus) => {
+    if (!statuses) {
+      statuses = [status];
+      return;
+    }
+
+    if (statuses?.includes(status)) {
+      statuses = statuses.filter((s) => s != status);
+      return;
+    }
+
+    statuses.push(status);
+    if (statuses.length === ticketStatuses.length) {
+      statuses = undefined;
+    }
+  };
+</script>
+
+<div class="f1 f c w100">
+  <h1 class="ta-c">Backlog</h1>
+  <div class="statusFilter f rc g w100">
+    <button
+      class:active={!statuses || statuses?.length === 0}
+      onclick={() => (statuses = undefined)}>All</button
+    >
+    <button
+      class:active={isActive(statuses || [], "idea")}
+      onclick={() => toggleStatus("idea")}>Idea</button
+    >
+    <button
+      class:active={isActive(statuses || [], "backlog")}
+      onclick={() => toggleStatus("backlog")}>Backlog</button
+    >
+    <button
+      class:active={isActive(statuses || [], "todo")}
+      onclick={() => toggleStatus("todo")}>Todo</button
+    >
+    <button
+      class:active={isActive(statuses || [], "inProgress")}
+      onclick={() => toggleStatus("inProgress")}>In Progress</button
+    >
+    <button
+      class:active={isActive(statuses || [], "done")}
+      onclick={() => toggleStatus("done")}>Done</button
+    >
+  </div>
+  {#await boardPromise}
+    <FPC>
+      <Spinner />
+    </FPC>
+  {:then resp}
+    <pre>
+{JSON.stringify(resp, null, 2)}
+  </pre>
+  {/await}
+</div>
+
+<style>
+  .statusFilter {
+    overflow: auto;
+  }
+  .statusFilter > button {
+    flex: 1;
+    font-size: 0.8rem;
+  }
+  .active {
+    background-color: var(--secondary-color);
+    color: var(--main-bg-color);
+  }
+
+  .active:hover {
+    background-color: var(--danger-color);
+    color: var(--main-font-color);
+  }
+</style>
