@@ -19,6 +19,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@mateothegreat/svelte5-router": "^2.15.3"
+    "@mateothegreat/svelte5-router": "^2.15.3",
+    "marked": "^15.0.12"
   }
 }
