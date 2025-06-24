@@ -5,8 +5,10 @@ import { getOne } from "./getOne";
 import { del } from "./del";
 import { update } from "./update";
 import { move } from "./move";
+import { board } from "./board";
 
 const tickets = new Hono().basePath("/tickets");
+tickets.get("/board", board);
 tickets.get("/", filter);
 tickets.get("/:id", getOne);
 tickets.put("/:id", update);

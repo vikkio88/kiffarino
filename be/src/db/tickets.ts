@@ -2,22 +2,12 @@ import {
   PROJECT_CONFIG_FILENAME,
   TICKETS_SUBFOLDER,
 } from "@kiffarino/shared/config";
-import { Ticket } from "@kiffarino/shared/models";
+import { Ticket, type TicketRecord } from "@kiffarino/shared/models";
 
 import fs from "node:fs";
 import path from "node:path";
 import { loadConfig, type ProjectConfig } from "../libs/config";
 import db from ".";
-
-export type TicketRecord = {
-  id: string;
-  title: string;
-  status: string;
-  priority: number;
-  createdAt: number | null;
-  updatedAt: number | null;
-  filename: string;
-};
 
 export function removeTicketFile(
   baseFolder: string,

@@ -1,9 +1,8 @@
 import path from "node:path";
 import { Low } from "lowdb";
 import { JSONFile } from "lowdb/node";
-import { DB_FILENAME } from "@kiffarino/shared";
+import { DB_FILENAME, type TicketRecord } from "@kiffarino/shared";
 import { loadConfig } from "../libs/config";
-import type { TicketRecord } from "./tickets";
 
 type DBSchema = {
   tickets: TicketRecord[];

@@ -85,3 +85,13 @@ export class Ticket {
     return lines.join("\n");
   }
 }
+
+export type TicketRecord = {
+  id: string;
+  title: string;
+  status: TicketStatus;
+  priority: number;
+  createdAt: number | null;
+  updatedAt: number | null;
+  filename: string;
+};

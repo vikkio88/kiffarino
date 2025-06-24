@@ -1,7 +1,6 @@
-import { type ApiResult, type TicketStatus } from "@kiffarino/shared";
+import { type ApiResult, type TicketRecord, type TicketStatus } from "@kiffarino/shared";
 import type { Context } from "hono";
 import { ticketFilterSchema } from "./schemas";
-import { type TicketRecord } from "../../../db/tickets";
 import { read } from "../../../db";
 
 export async function filter(c: Context) {
