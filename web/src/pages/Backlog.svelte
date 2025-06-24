@@ -3,9 +3,8 @@
   import { filter } from "../api/tickets";
   import FPC from "../components/layout/FullPageCentre.svelte";
   import Spinner from "../components/shared/Spinner.svelte";
-  import { tick } from "svelte";
   let statuses: TicketStatus[] | undefined = $state(["backlog"]);
-  const boardPromise = $derived(filter({ statuses }));
+  const backLogPromise = $derived(filter({ statuses }));
 
   const isActive = (statuses: TicketStatus[], status: TicketStatus) =>
     statuses.includes(status);
@@ -56,20 +55,31 @@
       onclick={() => toggleStatus("done")}>Done</button
     >
   </div>
-  {#await boardPromise}
+  {#await backLogPromise}
     <FPC>
       <Spinner />
     </FPC>
   {:then resp}
-    <pre>
-{JSON.stringify(resp, null, 2)}
-  </pre>
+    <ul class="f1 f c">
+      {#each resp?.result ?? [] as ticket}
+        <li>
+          {ticket.title}
+          <a href={`/tickets/${ticket.id}`}>Details</a>
+        </li>
+      {:else}
+        <FPC>
+          <h1>🤷</h1>
+          <h2>No tickets</h2>
+        </FPC>
+      {/each}
+    </ul>
   {/await}
 </div>
 
 <style>
   .statusFilter {
     overflow: auto;
+    padding: 0 2rem;
   }
   .statusFilter > button {
     flex: 1;
@@ -83,5 +93,13 @@
   .active:hover {
     background-color: var(--danger-color);
     color: var(--main-font-color);
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  h2 {
+    color: var(--gray-color);
   }
 </style>
