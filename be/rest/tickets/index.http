@@ -1,15 +1,15 @@
 ### Filter
-get http://localhost:3003/api/tickets?status=todo
+get http://localhost:3003/api/tickets?statuses=todo,inProgress
 
 ### getOne
 get http://localhost:3003/api/tickets/01JYF1PE3Y8NHDXVVG66V1T3PF
 
 ### udpate
-PUT  http://localhost:3003/api/tickets/01JYF1JZAJRPGXJPSEG34TAW7Z/move
+PUT  http://localhost:3003/api/tickets/01JYF5F18Z9CYGKG7B080JK95Y/move
 Content-Type: "application/json"
 
 {
-    "status": "inProgress"
+    "status": "todo"
 }
 
 ### delete
