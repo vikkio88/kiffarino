@@ -11,7 +11,14 @@ export class Link {
     this.type = type;
   }
 }
-export type TicketStatus = "idea" | "backlog" | "todo" | "inProgress" | "done";
+export const ticketStatuses = [
+  "idea",
+  "backlog",
+  "todo",
+  "inProgress",
+  "done",
+] as const;
+export type TicketStatus = (typeof ticketStatuses)[number];
 
 export type Meta = {
   status: TicketStatus;

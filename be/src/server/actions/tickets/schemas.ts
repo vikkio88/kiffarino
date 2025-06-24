@@ -1,12 +1,7 @@
+import { ticketStatuses, type TicketStatus } from "@kiffarino/shared";
 import z from "zod";
 
-const status = z.union([
-  z.literal("idea"),
-  z.literal("backlog"),
-  z.literal("todo"),
-  z.literal("inProgress"),
-  z.literal("done"),
-]);
+const status = z.enum(ticketStatuses);
 
 export const createTicketSchema = z.object({
   title: z.string(),
@@ -19,7 +14,15 @@ export const moveTicketSchema = z.object({
 });
 
 export const ticketFilterSchema = z.object({
-  status: status.optional(),
+  statuses: z
+    .string()
+    .optional()
+    .transform((val) => val?.split(","))
+    .refine(
+      (arr): arr is TicketStatus[] | undefined =>
+        !arr || arr.every((s) => ticketStatuses.includes(s as TicketStatus)),
+      { message: "Invalid status value(s)" }
+    ),
   priority: z.coerce.number().optional(),
   title: z.coerce.string().optional(),
 });
@@ -27,14 +30,6 @@ export const ticketFilterSchema = z.object({
 export const updateTicketSchema = z.object({
   title: z.string().optional(),
   body: z.string().optional(),
-  status: z
-    .union([
-      z.literal("idea"),
-      z.literal("backlog"),
-      z.literal("todo"),
-      z.literal("inProgress"),
-      z.literal("done"),
-    ])
-    .optional(),
+  status: status.optional(),
   priority: z.coerce.number().optional(),
 });
