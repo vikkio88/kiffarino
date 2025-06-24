@@ -1,31 +1,27 @@
 <script lang="ts">
   import Home from "./pages/Home.svelte";
-  import About from "./pages/About.svelte";
+  import BackLog from "./pages/Backlog.svelte";
   import { Router, type RouteConfig } from "@mateothegreat/svelte5-router";
   import Tickets from "./pages/Tickets.svelte";
+  import Nav from "./components/layout/Nav.svelte";
   const routes: RouteConfig[] = [
     {
       path: "/",
       component: Home,
     },
     {
-      path: "/about",
-      component: About,
+      path: "/backlog",
+      component: BackLog,
     },
     {
       path: "/tickets/(?<id>.*)",
       component: Tickets,
     },
+    
   ];
 </script>
 
-<header>
-  <nav>
-    <a href="/">Home</a>
-    <a href="/about">about</a>
-    <a href="/tickets/123aaa">tickets</a>
-  </nav>
-</header>
-<main class="f1">
+<Nav />
+<main class="f1 f">
   <Router {routes} />
 </main>
