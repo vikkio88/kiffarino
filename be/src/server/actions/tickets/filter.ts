@@ -1,4 +1,4 @@
-import { type ApiResult } from "@kiffarino/shared";
+import { type ApiResult, type TicketStatus } from "@kiffarino/shared";
 import type { Context } from "hono";
 import { ticketFilterSchema } from "./schemas";
 import { type TicketRecord } from "../../../db/tickets";
@@ -21,15 +21,18 @@ export async function filter(c: Context) {
 
   const db = await read();
   const result = db.tickets.filter((t) => {
-    return (
-      (filters.status ? t.status === filters.status : true) &&
-      (filters.priority !== undefined
-        ? t.priority === filters.priority
-        : true) &&
-      (filters.title
-        ? t.title.toLowerCase().includes(filters.title.toLowerCase())
-        : true)
-    );
+    const statusMatch = filters.statuses
+      ? filters.statuses.includes(t.status as TicketStatus)
+      : true;
+
+    const priorityMatch =
+      filters.priority !== undefined ? t.priority === filters.priority : true;
+
+    const titleMatch = filters.title
+      ? t.title.toLowerCase().includes(filters.title.toLowerCase())
+      : true;
+
+    return statusMatch && priorityMatch && titleMatch;
   });
 
   return c.json<ApiResult<TicketRecord[]>>({ result }, 200);
