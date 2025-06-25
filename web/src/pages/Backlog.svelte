@@ -4,6 +4,7 @@
   import FPC from "../components/layout/FullPageCentre.svelte";
   import Spinner from "../components/shared/Spinner.svelte";
   import ListItem from "../components/tickets/ListItem.svelte";
+  import { emojiMap, statusLabelMap } from "../components/tickets/status";
   let statuses: TicketStatus[] | undefined = $state(["backlog"]);
   const backLogPromise = $derived(filter({ statuses }));
 
@@ -35,26 +36,14 @@
       class:active={!statuses || statuses?.length === 0}
       onclick={() => (statuses = undefined)}>All</button
     >
-    <button
-      class:active={isActive(statuses || [], "idea")}
-      onclick={() => toggleStatus("idea")}>Idea</button
-    >
-    <button
-      class:active={isActive(statuses || [], "backlog")}
-      onclick={() => toggleStatus("backlog")}>Backlog</button
-    >
-    <button
-      class:active={isActive(statuses || [], "todo")}
-      onclick={() => toggleStatus("todo")}>Todo</button
-    >
-    <button
-      class:active={isActive(statuses || [], "inProgress")}
-      onclick={() => toggleStatus("inProgress")}>In Progress</button
-    >
-    <button
-      class:active={isActive(statuses || [], "done")}
-      onclick={() => toggleStatus("done")}>Done</button
-    >
+    {#each ticketStatuses as status}
+      <button
+        class:active={isActive(statuses || [], status)}
+        onclick={() => toggleStatus(status)}
+      >
+        {`${emojiMap[status]} ${statusLabelMap[status]}`}
+      </button>
+    {/each}
   </div>
   {#await backLogPromise}
     <FPC>
@@ -63,7 +52,7 @@
   {:then resp}
     <ul class="f1 f c">
       {#each resp?.result ?? [] as ticket}
-        <ListItem {ticket} showStatus />
+        <ListItem {ticket} showStatus showMoveActions />
       {:else}
         <FPC>
           <h1>🤷</h1>
@@ -89,8 +78,7 @@
   }
 
   .active:hover {
-    background-color: var(--danger-color);
-    color: var(--main-font-color);
+    background-color: var(--secondary-v1-color);
   }
 
   ul {
