@@ -11,9 +11,19 @@
     inProgress: "💻",
     done: "✅",
   };
+
+  export const statusLabelMap: Record<TicketStatus, string> = {
+    idea: "Idea",
+    backlog: "Backlog",
+    todo: "To Do",
+    inProgress: "In Progress",
+    done: "Done",
+  };
 </script>
 
-<span data-tooltip={status}>{emojiMap[status] ?? "❓"}</span>
+<span data-tooltip={statusLabelMap[status]} data-tooltip-position="left">
+  {emojiMap[status] ?? "❓"}
+</span>
 
 <style>
   span {

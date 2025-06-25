@@ -9,6 +9,26 @@ import path from "node:path";
 import { loadConfig, type ProjectConfig } from "../libs/config";
 import db from ".";
 
+export const sort = {
+  byUpdatedASC: (a: TicketRecord, b: TicketRecord) =>
+    (a.updatedAt || 0) - (b.updatedAt || 0),
+
+  byUpdatedDESC: (a: TicketRecord, b: TicketRecord) =>
+    (b.updatedAt || 0) - (a.updatedAt || 0),
+
+  byCreatedASC: (a: TicketRecord, b: TicketRecord) =>
+    (a.createdAt || 0) - (b.createdAt || 0),
+
+  byCreatedDESC: (a: TicketRecord, b: TicketRecord) =>
+    (b.createdAt || 0) - (a.createdAt || 0),
+
+  byPriorityASC: (a: TicketRecord, b: TicketRecord) =>
+    (a.priority ?? 99) - (b.priority ?? 99),
+
+  byPriorityDESC: (a: TicketRecord, b: TicketRecord) =>
+    (b.priority ?? 0) - (a.priority ?? 0),
+};
+
 export function removeTicketFile(
   baseFolder: string,
   ticketsFolder: string,

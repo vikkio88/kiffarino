@@ -8,10 +8,10 @@
 </script>
 
 <li>
+  <a href={`/tickets/${ticket.id}`}>{ticket.title}</a>
   {#if showStatus}
     <Status status={ticket.status} />
   {/if}
-  <a href={`/tickets/${ticket.id}`}>{ticket.title}</a>
 </li>
 
 <style>

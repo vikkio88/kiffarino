@@ -21,6 +21,7 @@ post http://localhost:3003/api/tickets
 Content-Type: "application/json"
 
 {
-    "title": "Another Stuff",
-    "body": "Bloppo Blippo [cacca](pupu.com)"
+    "title": "Thingy3",
+    "body": "Bloppo Blippo",
+    "status": "inProgress"
 }
