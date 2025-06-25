@@ -4,7 +4,11 @@ import { toLowerCamelCase } from "./text";
 
 export function createTicket(
   title: string,
-  { status = "todo", body }: { body?: string; status?: TicketStatus } = {}
+  {
+    status = "backlog",
+    body,
+    tagsString = "",
+  }: { body?: string; status?: TicketStatus; tagsString?: string } = {}
 ): Ticket {
   const id = generatedId();
   const filename = `${toLowerCamelCase(title)}-${id}.md`;
@@ -13,6 +17,7 @@ export function createTicket(
   const markdown = `<!--
 id: ${id}
 title: ${title}
+tags: ${tagsString}
 status: ${status}
 priority: 0
 createdAt: ${now}

@@ -3,6 +3,7 @@
   import { filter } from "../api/tickets";
   import FPC from "../components/layout/FullPageCentre.svelte";
   import Spinner from "../components/shared/Spinner.svelte";
+  import ListItem from "../components/tickets/ListItem.svelte";
   let statuses: TicketStatus[] | undefined = $state(["backlog"]);
   const backLogPromise = $derived(filter({ statuses }));
 
@@ -62,10 +63,7 @@
   {:then resp}
     <ul class="f1 f c">
       {#each resp?.result ?? [] as ticket}
-        <li>
-          {ticket.title}
-          <a href={`/tickets/${ticket.id}`}>Details</a>
-        </li>
+        <ListItem {ticket} showStatus />
       {:else}
         <FPC>
           <h1>🤷</h1>
@@ -96,7 +94,7 @@
   }
 
   ul {
-    list-style: none;
+    padding: 1rem 2rem;
   }
 
   h2 {

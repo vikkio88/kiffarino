@@ -1,5 +1,4 @@
 import { EXEC_NAME, PROJECT_CONFIG_FILENAME } from "@kiffarino/shared/config";
-import type { Ticket } from "@kiffarino/shared/models";
 
 import fs from "node:fs";
 import path from "node:path";

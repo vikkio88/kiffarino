@@ -55,7 +55,7 @@ describe("Tickets", () => {
     const ticket = result!.result;
     const id = ticket.id;
 
-    expect(ticket.status).toBe("todo");
+    expect(ticket.status).toBe("backlog");
 
     res = await put<{ status: LocalTicketStatus }>(u(TICKETS_API, id, "move"), {
       status: "inProgress",
@@ -74,4 +74,7 @@ describe("Tickets", () => {
     res = await get(u(TICKETS_API, id));
     expect(res.status).toBe(404);
   });
+
+  test("filters", async () => {});
+  test("board loading", async () => {});
 });

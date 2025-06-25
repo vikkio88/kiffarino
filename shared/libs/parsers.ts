@@ -3,6 +3,7 @@ import { Link, type TicketStatus } from "../models/ticket";
 export function parseMd(markdown: string): {
   id: string;
   title: string;
+  tags: string | null;
   body: string;
   status: TicketStatus,
   priority: number,
@@ -32,6 +33,7 @@ export function parseMd(markdown: string): {
 
   const id = metaMap["id"] ?? crypto.randomUUID();
   const title = metaMap["title"] ?? "Untitled";
+  const tags = metaMap["tags"] ?? null;
   const status = (metaMap["status"] as TicketStatus) ?? "todo";
   const priority = parseInt(metaMap["priority"] ?? "3", 10);
   const createdAt = parseJsTimestamp(metaMap["createdAt"]);
@@ -56,6 +58,7 @@ export function parseMd(markdown: string): {
   return {
     id,
     title,
+    tags,
     body,
     status,
     priority,

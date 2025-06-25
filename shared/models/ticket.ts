@@ -25,9 +25,12 @@ export type Meta = {
   priority: number;
 };
 
+const TAG_SEPARATOR = ",";
+
 export class Ticket {
   id: string;
   title: string;
+  tags: string[];
   createdAt: number | undefined;
   updatedAt: number | undefined;
   status: TicketStatus;
@@ -40,6 +43,7 @@ export class Ticket {
     const {
       id,
       title,
+      tags,
       body,
       status,
       priority,
@@ -50,6 +54,7 @@ export class Ticket {
 
     this.id = id;
     this.title = title;
+    this.tags = tags ? tags.split(TAG_SEPARATOR).map((t) => t.trim()).filter(Boolean) : [];
     this.body = body;
     this.status = status;
     this.priority = priority;
@@ -66,6 +71,7 @@ export class Ticket {
 
     if (this.id) lines.push(`id: ${this.id}`);
     if (this.title) lines.push(`title: ${this.title}`);
+    if (this.tags) lines.push(`tags: ${this.tags.join(TAG_SEPARATOR)}`);
     if (this.status) lines.push(`status: ${this.status}`);
     if (typeof this.priority === "number")
       lines.push(`priority: ${this.priority}`);
@@ -89,6 +95,7 @@ export class Ticket {
 export type TicketRecord = {
   id: string;
   title: string;
+  tags: string[];
   status: TicketStatus;
   priority: number;
   createdAt: number | null;

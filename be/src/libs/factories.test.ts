@@ -12,7 +12,7 @@ describe("Create a Ticket", () => {
     expect(ticket.title).toBe(title);
     expect(ticket.body).toBe("Add description");
     expect(ticket.priority).toBe(0);
-    expect(ticket.status).toBe("todo");
+    expect(ticket.status).toBe("backlog");
     expect(ticket.links).toHaveLength(0);
 
     expect(ticket.createdAt).toBeGreaterThanOrEqual(before);
@@ -27,5 +27,13 @@ describe("Create a Ticket", () => {
     const title = " Fix!! Login --- Issue 42 ";
     const ticket = createTicket(title);
     expect(ticket.filename).toContain("fixLoginIssue42");
+  });
+
+  test("tags", () => {
+    const ticket = createTicket("Stuff", { status: "backlog" });
+    expect(ticket.tags).toEqual([]);
+
+    const tagged = createTicket("tagged", { tagsString: "ciao,come,stai" });
+    expect(tagged.tags).toEqual(["ciao", "come", "stai"]);
   });
 });

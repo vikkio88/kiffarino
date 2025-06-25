@@ -42,6 +42,7 @@ export function toRecord(ticket: Ticket): TicketRecord {
   return {
     id: ticket.id,
     title: ticket.title,
+    tags: ticket.tags,
     status: ticket.status,
     priority: ticket.priority,
     createdAt: ticket.createdAt || Date.now(),

@@ -6,7 +6,6 @@ import {
   TICKETS_SUBFOLDER,
 } from "@kiffarino/shared/config";
 import { loadConfig, type ProjectConfig } from "../../libs/config";
-import { Ticket } from "@kiffarino/shared";
 import { migrate } from "../../db";
 import { save } from "../../db/tickets";
 import { createTicket } from "../../libs/factories";
@@ -46,6 +45,7 @@ export function generate(args: string[]) {
   // adding a test ticket
   const testTicket = createTicket("Test Ticket", {
     body: `This is your first ticket inside ${config.baseFolder}/tickets.\n`,
+    tagsString: "example,"
   });
   save(testTicket);
 

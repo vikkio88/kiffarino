@@ -6,6 +6,7 @@ describe("Loading Ticket from Markdown", () => {
     const markdown = `<!--
 id: abc-123
 title: Fix layout bug
+tags: one,two,three
 status: inProgress
 priority: 1
 createdAt: 1718880000000
@@ -20,6 +21,7 @@ It describes what needs to be fixed.`;
 
     expect(ticket.id).toBe("abc-123");
     expect(ticket.title).toBe("Fix layout bug");
+    expect(ticket.tags).toEqual(["one", "two", "three"]);
     expect(ticket.status).toBe("inProgress");
     expect(ticket.priority).toBe(1);
     expect(ticket.createdAt).toBe(1718880000000);
@@ -128,4 +130,108 @@ No title here.`;
     const ticket = new Ticket(markdown, "no-title.md");
     expect(ticket.title).toBe("Untitled");
   });
+
+  test("parses tags", () => {
+    const markdown = `<!--
+    id: just-an-id
+    title: tagged
+    tags: ciao,tag,one
+    -->
+    No title here.`;
+    const ticket = new Ticket(markdown, "file.md");
+
+    expect(ticket.tags).toEqual(["ciao", "tag", "one"]);
+  });
+
+  test("retains filename on construction", () => {
+    const markdown = `<!--
+id: abc
+title: Filename test
+status: todo
+priority: 1
+-->
+File test.`;
+
+    const ticket = new Ticket(markdown, "my-file.md");
+    expect(ticket.filename).toBe("my-file.md");
+  });
+
+  test("handles empty tags gracefully", () => {
+    const markdown = `<!--
+id: tag-test
+title: Empty tags
+tags:
+status: todo
+priority: 2
+-->
+Body here.`;
+
+    const ticket = new Ticket(markdown, "empty-tags.md");
+    expect(ticket.tags).toEqual([]);
+  });
+
+  test("trims and filters tags with empty segments", () => {
+    const markdown = `<!--
+id: tag-test
+title: Filter empty tags
+tags: one, , two,   , ,three,
+status: todo
+priority: 1
+-->
+Tags with extra commas and spaces.`;
+
+    const ticket = new Ticket(markdown, "weird-tags.md");
+    expect(ticket.tags).toEqual(["one", "two", "three"]);
+  });
+
+  test("toMarkdown fills in missing dates with current timestamps", () => {
+    const markdown = `<!--
+id: time-test
+title: Test current timestamp
+status: todo
+priority: 1
+-->
+Check timestamps.`;
+
+    const ticket = new Ticket(markdown, "time.md");
+    const before = Date.now();
+    const result = ticket.toMarkdown();
+    const after = Date.now();
+
+    const createdAtMatch = result.match(/createdAt: (\d+)/);
+    const updatedAtMatch = result.match(/updatedAt: (\d+)/);
+    const createdAt = Number(createdAtMatch?.[1]);
+    const updatedAt = Number(updatedAtMatch?.[1]);
+
+    expect(createdAt).toBeGreaterThanOrEqual(before);
+    expect(createdAt).toBeLessThanOrEqual(after);
+    expect(updatedAt).toBeGreaterThanOrEqual(before);
+    expect(updatedAt).toBeLessThanOrEqual(after);
+  });
+});
+
+
+test("roundtrip works after modifying fields", () => {
+  const markdown = `<!--
+id: abc-123
+title: Original
+tags: one,two
+status: backlog
+priority: 1
+-->
+Original body.`;
+
+  const ticket = new Ticket(markdown, "mutate.md");
+  ticket.title = "Updated title";
+  ticket.status = "done";
+  ticket.priority = 0;
+  ticket.tags.push("three");
+  ticket.body = "New content.";
+  const out = ticket.toMarkdown();
+
+  expect(out).toContain("title: Updated title");
+  expect(out).toContain("status: done");
+  expect(out).toContain("priority: 0");
+  expect(out).toContain("tags: one,two,three");
+  expect(out).toContain("New content.");
 });
