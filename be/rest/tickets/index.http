@@ -5,7 +5,7 @@ get http://localhost:3003/api/tickets?statuses=todo,inProgress
 get http://localhost:3003/api/tickets/01JYF1PE3Y8NHDXVVG66V1T3PF
 
 ### udpate
-PUT  http://localhost:3003/api/tickets/01JYF5F18Z9CYGKG7B080JK95Y/move
+PUT  http://localhost:3003/api/tickets/01JYKHGQA3NBMNAT5YS4K0YWER/move
 Content-Type: "application/json"
 
 {
