@@ -2,6 +2,7 @@ import { type ApiResult, type TicketRecord, type TicketStatus } from "@kiffarino
 import type { Context } from "hono";
 import { ticketFilterSchema } from "./schemas";
 import { read } from "../../../db";
+import { sort } from "../../../db/tickets";
 
 export async function filter(c: Context) {
   const query = Object.fromEntries(new URLSearchParams(c.req.query()));
@@ -34,5 +35,5 @@ export async function filter(c: Context) {
     return statusMatch && priorityMatch && titleMatch;
   });
 
-  return c.json<ApiResult<TicketRecord[]>>({ result }, 200);
+  return c.json<ApiResult<TicketRecord[]>>({ result: result.toSorted(sort.byUpdatedDESC) }, 200);
 }
