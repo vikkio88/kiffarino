@@ -23,8 +23,8 @@ export async function board(c: Context) {
   return c.json<ApiResult<Board>>(
     {
       result: {
-        todo: todo.toSorted(sort.byUpdatedDESC),
-        inProgress: inProgress.toSorted(sort.byUpdatedDESC),
+        todo: todo.toSorted(sort.byCreatedASC),
+        inProgress: inProgress.toSorted(sort.byCreatedASC),
         done: done.toSorted(sort.byUpdatedDESC),
       },
     },
