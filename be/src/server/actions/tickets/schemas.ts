@@ -7,6 +7,7 @@ export const createTicketSchema = z.object({
   title: z.string(),
   body: z.string().optional(),
   status: status.optional(),
+  tags: z.array(z.string().min(2)).optional(),
 });
 
 export const moveTicketSchema = z.object({
@@ -32,4 +33,5 @@ export const updateTicketSchema = z.object({
   body: z.string().optional(),
   status: status.optional(),
   priority: z.coerce.number().optional(),
+  tags: z.union([z.tuple([]), z.array(z.string().min(2))]).optional(),
 });

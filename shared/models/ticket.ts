@@ -20,6 +20,15 @@ export const ticketStatuses = [
 ] as const;
 export type TicketStatus = (typeof ticketStatuses)[number];
 
+export function calculateStatus(
+  current: TicketStatus,
+  direction: -1 | 1
+): TicketStatus {
+  const index = ticketStatuses.findIndex((s) => s === current);
+  const nextIndex = index + direction;
+  return ticketStatuses[nextIndex] ?? current;
+}
+
 export type Meta = {
   status: TicketStatus;
   priority: number;
@@ -54,7 +63,12 @@ export class Ticket {
 
     this.id = id;
     this.title = title;
-    this.tags = tags ? tags.split(TAG_SEPARATOR).map((t) => t.trim()).filter(Boolean) : [];
+    this.tags = tags
+      ? tags
+          .split(TAG_SEPARATOR)
+          .map((t) => t.trim())
+          .filter(Boolean)
+      : [];
     this.body = body;
     this.status = status;
     this.priority = priority;

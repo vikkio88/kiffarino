@@ -1,5 +1,5 @@
 import { describe, test, expect } from "bun:test";
-import { Ticket } from "./ticket";
+import { calculateStatus, Ticket, type TicketStatus } from "./ticket";
 
 describe("Loading Ticket from Markdown", () => {
   test("parses metadata and body correctly, then returns it as its previous state", () => {
@@ -210,7 +210,6 @@ Check timestamps.`;
   });
 });
 
-
 test("roundtrip works after modifying fields", () => {
   const markdown = `<!--
 id: abc-123
@@ -234,4 +233,50 @@ Original body.`;
   expect(out).toContain("priority: 0");
   expect(out).toContain("tags: one,two,three");
   expect(out).toContain("New content.");
+});
+
+describe("calculateStatus", () => {
+  test("returns same status if at the start and moving backward", () => {
+    const result = calculateStatus("idea", -1);
+    expect(result).toBe("idea");
+  });
+
+  test("returns same status if at the end and moving forward", () => {
+    const result = calculateStatus("done", 1);
+    expect(result).toBe("done");
+  });
+
+  test("moves forward to the next status", () => {
+    const result = calculateStatus("todo", 1);
+    expect(result).toBe("inProgress");
+  });
+
+  test("moves backward to the previous status", () => {
+    const result = calculateStatus("inProgress", -1);
+    expect(result).toBe("todo");
+  });
+
+  test("moves to done, then all the way back to idea", () => {
+    let status: TicketStatus = "todo";
+    status = calculateStatus(status, 1);
+    expect(status).toBe("inProgress");
+
+    status = calculateStatus(status, 1);
+    expect(status).toBe("done");
+
+    status = calculateStatus(status, -1);
+    expect(status).toBe("inProgress");
+
+    status = calculateStatus(status, -1);
+    expect(status).toBe("todo");
+
+    status = calculateStatus(status, -1);
+    expect(status).toBe("backlog");
+
+    status = calculateStatus(status, -1);
+    expect(status).toBe("idea");
+
+    status = calculateStatus(status, -1);
+    expect(status).toBe("idea");
+  });
 });

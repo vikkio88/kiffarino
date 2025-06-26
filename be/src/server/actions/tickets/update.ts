@@ -12,7 +12,8 @@ export async function update(c: Context) {
   const parsed = updateTicketSchema.safeParse(body);
 
   if (!parsed.success) {
-    return c.json({ ...parsed.error.format() }, 422);
+    console.error(parsed.error);
+    return c.json({ ...parsed.error.errors }, 422);
   }
 
   const updates = parsed.data;
@@ -37,6 +38,7 @@ export async function update(c: Context) {
 
   if (updates.title) ticket.title = updates.title;
   if (updates.body) ticket.body = updates.body;
+  if (updates.tags) ticket.tags = updates.tags;
   if (updates.status) ticket.status = updates.status;
   if (updates.priority !== undefined) ticket.priority = updates.priority;
   ticket.updatedAt = Date.now();

@@ -11,8 +11,8 @@ const tickets = new Hono().basePath("/tickets");
 tickets.get("/board", board);
 tickets.get("/", filter);
 tickets.get("/:id", getOne);
-tickets.put("/:id", update);
 tickets.put("/:id/move", move);
+tickets.put("/:id", update);
 
 //TODO: Implement
 tickets.put("/:id/link", getOne);

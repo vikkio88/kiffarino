@@ -7,8 +7,14 @@ export function createTicket(
   {
     status = "backlog",
     body,
+    tags = [],
     tagsString = "",
-  }: { body?: string; status?: TicketStatus; tagsString?: string } = {}
+  }: {
+    body?: string;
+    status?: TicketStatus;
+    tags?: string[];
+    tagsString?: string;
+  } = {}
 ): Ticket {
   const id = generatedId();
   const filename = `${toLowerCamelCase(title)}-${id}.md`;
@@ -17,7 +23,7 @@ export function createTicket(
   const markdown = `<!--
 id: ${id}
 title: ${title}
-tags: ${tagsString}
+tags: ${tags && tags.length > 0 ? tags.join(",") : tagsString}
 status: ${status}
 priority: 0
 createdAt: ${now}

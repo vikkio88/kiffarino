@@ -36,4 +36,9 @@ describe("Create a Ticket", () => {
     const tagged = createTicket("tagged", { tagsString: "ciao,come,stai" });
     expect(tagged.tags).toEqual(["ciao", "come", "stai"]);
   });
+  test("tags non string", () => {
+    const tagged = createTicket("tagged", { tags: ["ciao", "come", "stai"] });
+    expect(tagged.tags).toEqual(["ciao", "come", "stai"]);
+    expect(tagged.toMarkdown()).toInclude("ciao,come,stai");
+  });
 });
