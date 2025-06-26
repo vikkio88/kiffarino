@@ -1,4 +1,8 @@
 ul {
-    all: unset;
-    list-style: none;
+  all: unset;
+  list-style: none;
+}
+
+button.n-btn:hover {
+  opacity: 0.8;
 }

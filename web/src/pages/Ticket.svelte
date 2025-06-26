@@ -97,8 +97,4 @@
     align-items: center;
     justify-content: space-between;
   }
-
-  button:hover {
-    opacity: 0.9;
-  }
 </style>
