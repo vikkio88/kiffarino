@@ -1,26 +1,32 @@
 {
   "output": "public/style.css",
   "vars": {
-    "DARK": "#000003",
-    "LIGHT": "#fbfcfe",
-    "DARK_FAINT": "#2e2e2e",
-    "LIGHT_FAINT": "#e8e9eb",
-    "PRIMARY": "#94FDF8",
-    "PRIMARY_1": "#73C2BE",
-    "SECONDARY": "#D0F88B",
-    "SECONDARY_1": "#B5F44A",
-    "ACCENT": "#583F78",
-    "ACCENT_1": "#312343",
-    "ACCENT_FAINT": "#b0b4ff",
-    "DANGER": "#db3a34",
-    "DANGER_1": "#a12b28",
-    "DANGER_FAINT": "#f4a3a0",
-    "WARNING": "#ed9b40",
-    "WARNING_1": "#b37932",
-    "WARNING_FAINT": "#f4cf9a",
-    "SUCCESS": "#3bceac",
-    "SUCCESS_1": "#2b997e",
-    "SUCCESS_FAINT": "#a3e3d4"
+    "DARK": "#1b1309",
+    "LIGHT": "#fffdf9",
+    "DARK_FAINT": "#3b2a1a",
+    "LIGHT_FAINT": "#f3ece3",
+
+    "PRIMARY": "#FF934F",
+    "PRIMARY_1": "#E6762C",
+
+    "SECONDARY": "#FFD166",
+    "SECONDARY_1": "#E6B043",
+
+    "ACCENT": "#6A4E35",
+    "ACCENT_1": "#4B3523",
+    "ACCENT_FAINT": "#D8C3B3",
+
+    "DANGER": "#D84727",
+    "DANGER_1": "#A3341D",
+    "DANGER_FAINT": "#F2A497",
+
+    "WARNING": "#FFB627",
+    "WARNING_1": "#D9981E",
+    "WARNING_FAINT": "#FFE3AC",
+
+    "SUCCESS": "#90C97E",
+    "SUCCESS_1": "#639D57",
+    "SUCCESS_FAINT": "#CFEAC2"
   },
   "config": {
     "animations": true,
