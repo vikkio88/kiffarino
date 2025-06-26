@@ -5,7 +5,15 @@ get http://localhost:3003/api/tickets?statuses=todo,inProgress
 get http://localhost:3003/api/tickets/01JYF1PE3Y8NHDXVVG66V1T3PF
 
 ### udpate
-PUT  http://localhost:3003/api/tickets/01JYKHGQA3NBMNAT5YS4K0YWER/move
+PUT  http://localhost:3003/api/tickets/01JYNWZTG6BP12JHWS0E4GV4PZ
+Content-Type: "application/json"
+
+{
+    "tags": ["mario"]
+}
+
+### move
+PUT  http://localhost:3003/api/tickets/01JYNWZTG6BP12JHWS0E4GV4PZ/move
 Content-Type: "application/json"
 
 {
@@ -21,7 +29,8 @@ post http://localhost:3003/api/tickets
 Content-Type: "application/json"
 
 {
-    "title": "Thingy3",
+    "title": "Thingy333",
     "body": "Bloppo Blippo",
-    "status": "inProgress"
+    "status": "inProgress",
+    "tags":["mario", "cacca"]
 }
