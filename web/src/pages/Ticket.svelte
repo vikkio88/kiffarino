@@ -1,9 +1,11 @@
 <script lang="ts">
-  import { one } from "../api/tickets";
+  import type { TicketStatus } from "@kiffarino/shared";
+  import { move, one } from "../api/tickets";
   import FCP from "../components/layout/FullPageCentre.svelte";
   import Renderer from "../components/md/Renderer.svelte";
   import Spinner from "../components/shared/Spinner.svelte";
   import Status from "../components/tickets/Status.svelte";
+  import StatusSelector from "../components/tickets/StatusSelector.svelte";
   import { cd } from "../libs/dates";
 
   type Props = {
@@ -19,10 +21,28 @@
   };
 
   const { route }: Props = $props();
-  const id = route.result.path.params.id;
+  let id = route.result.path.params.id;
 
-  const getOnePromise = one(id);
+  let getOnePromise = $state(one(id));
   let isEditable = $state(false);
+
+  let updatedStatus: TicketStatus | undefined = undefined;
+  const onStatusChange = (status: TicketStatus) => {
+    updatedStatus = status;
+  };
+
+  const saveInfo = async () => {
+    if (!updatedStatus) {
+      isEditable = false;
+      return;
+    }
+
+    const result = await move(id, updatedStatus);
+    if (result) {
+      getOnePromise = one(id);
+    }
+    isEditable = false;
+  };
 </script>
 
 {#await getOnePromise}
@@ -34,10 +54,15 @@
     <div class="f1 pd">
       <div class="head">
         {#if isEditable}
-          <span>Edit</span>
+          <StatusSelector
+            status={resp.result.status}
+            onChange={onStatusChange}
+          />
           <div class="f r g">
-            <button class="n-btn">💾</button>
-            <button class="n-btn" onclick={() => (isEditable = false)}>❌</button>
+            <button class="n-btn" onclick={saveInfo}>💾</button>
+            <button class="n-btn" onclick={() => (isEditable = false)}>
+              ❌
+            </button>
           </div>
         {:else}
           <Status status={resp.result.status} extended />
