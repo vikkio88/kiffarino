@@ -5,7 +5,7 @@ import {
   type TicketRecord,
   type TicketStatus,
 } from "@kiffarino/shared";
-import { get } from "./http";
+import { get, put } from "./http";
 import { p, parse, u } from "./libs";
 import { TICKETS_API } from "./shared";
 
@@ -44,4 +44,9 @@ export async function board(): Promise<ApiResult<Board> | null> {
   }
 
   return parse<ApiResult<Board>>(resp);
+}
+
+export async function move(id: string, status: TicketStatus): Promise<boolean> {
+  const resp = await put(u(TICKETS_API, id, "move"), { status });
+  return resp.status === 200;
 }

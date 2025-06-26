@@ -8,6 +8,7 @@ type LocalTicket = {
   id: string;
   title: string;
   body: string;
+  tags: string[];
   status: LocalTicketStatus;
 };
 
@@ -38,6 +39,39 @@ describe("Tickets", () => {
     res = await get(u(TICKETS_API, createdId));
     const afterUpdatedfetched = await parse<{ result: LocalTicket }>(res);
     expect(afterUpdatedfetched?.result.title).toBe("Not Ciao");
+
+    res = await del(u(TICKETS_API, createdId));
+    expect(res.status).toBe(200);
+
+    res = await get(u(TICKETS_API, createdId));
+    expect(res.status).toBe(404);
+  });
+
+  test("crud with tags", async () => {
+    let res = await post(TICKETS_API, { title: "ciao", tags: ["ciaotag"] });
+    expect(res.status).toBe(201);
+
+    const ticket = await parse<{
+      result: LocalTicket;
+    }>(res);
+
+    expect(ticket?.result?.id).not.toBeUndefined();
+    expect(ticket?.result?.tags).toEqual(["ciaotag"]);
+    const createdId = ticket!.result!.id;
+
+    res = await get(u(TICKETS_API, createdId));
+    expect(res.status).toBe(200);
+    const fetched = await parse<{ result: LocalTicket }>(res);
+    expect(fetched?.result?.tags).toEqual(["ciaotag"]);
+
+    res = await put<{ tags: string[] }>(u(TICKETS_API, createdId), {
+      tags: [],
+    });
+    expect(res.status).toBe(200);
+
+    res = await get(u(TICKETS_API, createdId));
+    const afterUpdatedfetched = await parse<{ result: LocalTicket }>(res);
+    expect(afterUpdatedfetched?.result?.tags).toEqual([]);
 
     res = await del(u(TICKETS_API, createdId));
     expect(res.status).toBe(200);

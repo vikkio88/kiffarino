@@ -38,10 +38,12 @@
     >
     {#each ticketStatuses as status}
       <button
+        class="f rc g"
         class:active={isActive(statuses || [], status)}
         onclick={() => toggleStatus(status)}
       >
-        {`${emojiMap[status]} ${statusLabelMap[status]}`}
+        <input type="checkbox" checked={isActive(statuses || [], status)} />
+        {`${statusLabelMap[status]} ${emojiMap[status]}`}
       </button>
     {/each}
   </div>
@@ -52,7 +54,7 @@
   {:then resp}
     <ul class="f1 f c">
       {#each resp?.result ?? [] as ticket}
-        <ListItem {ticket} showStatus showMoveActions />
+        <ListItem {ticket} showStatus />
       {:else}
         <FPC>
           <h1>🤷</h1>
@@ -73,12 +75,12 @@
     font-size: 0.8rem;
   }
   .active {
-    background-color: var(--secondary-color);
+    background-color: var(--accent-faint-color);
     color: var(--main-bg-color);
   }
 
   .active:hover {
-    background-color: var(--secondary-v1-color);
+    color: var(--main-font-color);
   }
 
   ul {

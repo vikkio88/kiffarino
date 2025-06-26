@@ -1,20 +1,24 @@
 <script lang="ts">
-  import type { TicketRecord } from "@kiffarino/shared";
+  import {
+    calculateStatus,
+    type TicketRecord,
+    type TicketStatus,
+  } from "@kiffarino/shared";
   import Status from "./Status.svelte";
 
   type Props = {
     ticket: TicketRecord;
     showStatus?: boolean;
     showMoveActions?: boolean;
-    onMove?: (ticket: TicketRecord, direction: "up" | "down") => void;
+    onMove?: (ticket: TicketRecord, status: TicketStatus) => void;
   };
 
   const {
     ticket,
     showStatus = false,
     showMoveActions = false,
-    onMove = (t: TicketRecord, direction: "up" | "down") =>
-      console.log({ t, direction }),
+    onMove = (t: TicketRecord, status: TicketStatus) =>
+      console.log({ t, status }),
   }: Props = $props();
 </script>
 
@@ -28,14 +32,14 @@
       <button
         disabled={ticket.status === "idea"}
         class="small n-btn"
-        onclick={() => onMove(ticket, "up")}
+        onclick={() => onMove(ticket, calculateStatus(ticket.status, -1))}
       >
         ⬆️
       </button>
       <button
         disabled={ticket.status === "done"}
         class="small n-btn"
-        onclick={() => onMove(ticket, "down")}
+        onclick={() => onMove(ticket, calculateStatus(ticket.status, 1))}
       >
         ⬇️
       </button>

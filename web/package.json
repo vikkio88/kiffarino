@@ -20,6 +20,7 @@
   "type": "module",
   "dependencies": {
     "@mateothegreat/svelte5-router": "^2.15.3",
+    "date-fns": "^4.1.0",
     "marked": "^15.0.12"
   }
 }
