@@ -28,7 +28,8 @@
   let id = route.result.path.params.id;
 
   let getOnePromise = $state(one(id));
-  let isEditable = $state(false);
+  let isEditingInfo = $state(false);
+  let isEditingBody = $state(false);
 
   let updatedStatus: TicketStatus | undefined = undefined;
   let updatedType: TicketType | undefined = undefined;
@@ -41,7 +42,7 @@
 
   const saveInfo = async () => {
     if (!updatedStatus && !updatedType) {
-      isEditable = false;
+      isEditingInfo = false;
       return;
     }
 
@@ -52,7 +53,7 @@
     if (result) {
       getOnePromise = one(id);
     }
-    isEditable = false;
+    isEditingInfo = false;
   };
 
   const onDelete = async () => {
@@ -71,7 +72,7 @@
   {#if resp?.result}
     <div class="f1 pd">
       <div class="head">
-        {#if isEditable}
+        {#if isEditingInfo}
           <StatusSelector
             status={resp.result.status}
             onChange={onStatusChange}
@@ -79,22 +80,30 @@
           <TypeSelector type={resp.result.type} onChange={onTypeChange} />
           <div class="f r g">
             <button class="n-btn" onclick={saveInfo}>💾</button>
-            <button class="n-btn" onclick={() => (isEditable = false)}>
+            <button class="n-btn" onclick={() => (isEditingInfo = false)}>
               ❌
             </button>
           </div>
         {:else}
           <Status status={resp.result.status} extended />
           <Type type={resp.result.type} extended />
-          <button class="n-btn" onclick={() => (isEditable = true)}>
+          <button class="n-btn" onclick={() => (isEditingInfo = true)}>
             ⚙️
           </button>
         {/if}
       </div>
-      <h1 class="ta-c">{resp.result.title}</h1>
 
+      {#if isEditingBody}
+        <input value={resp.result.title} />
+      {:else}
+        <h1 class="ta-c">{resp.result.title}</h1>
+      {/if}
       <div class="body pd">
-        <Renderer text={resp.result.body} />
+        {#if isEditingBody}
+          <textarea cols="50">{resp.result.body}</textarea>
+        {:else}
+          <Renderer text={resp.result.body} />
+        {/if}
       </div>
     </div>
     <div class="bottom">
@@ -109,10 +118,22 @@
 
       <!-- <div>Links/Tags</div> -->
 
-      <div class="f rc g_5">
-        <ConfirmBtn onConfirm={onDelete}>🗑️</ConfirmBtn>
-        <ConfirmBtn onConfirm={() => console.log("archive")}>🗄️</ConfirmBtn>
-        <button class="n-btn">📝</button>
+      <div class="edit f rc g">
+        {#if isEditingBody}
+          <button class="n-btn" onclick={() => (isEditingBody = false)}>
+            💾
+          </button>
+          <button class="n-btn" onclick={() => (isEditingBody = false)}>
+            ❌
+          </button>
+        {:else}
+          <ConfirmBtn onConfirm={onDelete}>🗑️</ConfirmBtn>
+          <!-- TODO: Implement Delete -->
+          <!-- <ConfirmBtn onConfirm={() => console.log("archive")}>🗄️</ConfirmBtn> -->
+          <button class="n-btn" onclick={() => (isEditingBody = true)}>
+            📝
+          </button>
+        {/if}
       </div>
     </div>
   {:else}
@@ -125,10 +146,38 @@
 <style>
   .body {
     font-size: 1.2rem;
-    min-height: 80%;
+    height: 70%;
     overflow: auto;
   }
 
+  input {
+    margin-top: 1rem;
+    padding: .5rem;
+    font-family: inherit;
+    font-size: inherit;
+    background-color: var(--black-2-color);
+    color: var(--main-font-color);
+    border: none;
+    font-size: 2.5rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  textarea {
+    width: 100%;
+    height: 90%;
+    resize: none;
+    border: none;
+    padding: 1rem;
+    font-family: inherit;
+    font-size: inherit;
+    background-color: var(--black-2-color);
+    color: var(--main-font-color);
+  }
+
+  .edit {
+    font-size: 1.5rem;
+  }
   .bottom {
     position: absolute;
     display: flex;
