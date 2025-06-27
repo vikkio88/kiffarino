@@ -5,6 +5,7 @@
     type TicketStatus,
   } from "@kiffarino/shared";
   import Status from "./Status.svelte";
+  import Type from "./Type.svelte";
 
   type Props = {
     ticket: TicketRecord;
@@ -23,6 +24,7 @@
 </script>
 
 <li>
+  <Type type={ticket.type} />
   {#if showStatus}
     <Status status={ticket.status} />
   {/if}
@@ -50,6 +52,7 @@
 <style>
   li {
     padding: 1rem;
+    gap: 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
