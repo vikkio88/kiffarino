@@ -1,12 +1,13 @@
-import { Link, type TicketStatus } from "../models/ticket";
+import { Link, type TicketStatus, type TicketType } from "../models/ticket";
 
 export function parseMd(markdown: string): {
   id: string;
   title: string;
   tags: string | null;
   body: string;
-  status: TicketStatus,
-  priority: number,
+  type: TicketType;
+  status: TicketStatus;
+  priority: number;
   createdAt: number | undefined;
   updatedAt: number | undefined;
   links: Link[];
@@ -35,6 +36,7 @@ export function parseMd(markdown: string): {
   const title = metaMap["title"] ?? "Untitled";
   const tags = metaMap["tags"] ?? null;
   const status = (metaMap["status"] as TicketStatus) ?? "todo";
+  const type = (metaMap["type"] as TicketType) ?? "task";
   const priority = parseInt(metaMap["priority"] ?? "3", 10);
   const createdAt = parseJsTimestamp(metaMap["createdAt"]);
   const updatedAt = parseJsTimestamp(metaMap["updatedAt"]);
@@ -60,6 +62,7 @@ export function parseMd(markdown: string): {
     title,
     tags,
     body,
+    type,
     status,
     priority,
     createdAt,
