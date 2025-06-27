@@ -100,7 +100,7 @@
       {/if}
       <div class="body pd">
         {#if isEditingBody}
-          <textarea cols="50">{resp.result.body}</textarea>
+          <textarea>{resp.result.body}</textarea>
         {:else}
           <Renderer text={resp.result.body} />
         {/if}
@@ -118,7 +118,7 @@
 
       <!-- <div>Links/Tags</div> -->
 
-      <div class="edit f rc g">
+      <div class="edit f rc g" class:bg={isEditingBody}>
         {#if isEditingBody}
           <button class="n-btn" onclick={() => (isEditingBody = false)}>
             💾
@@ -152,7 +152,7 @@
 
   input {
     margin-top: 1rem;
-    padding: .5rem;
+    padding: 0.5rem;
     font-family: inherit;
     font-size: inherit;
     background-color: var(--black-2-color);
@@ -177,6 +177,12 @@
 
   .edit {
     font-size: 1.5rem;
+  }
+
+  .bg {
+    background-color: var(--gray-1-color);
+    padding: 0.1rem 0.5rem;
+    border-radius: var(--border-radius);
   }
   .bottom {
     position: absolute;
