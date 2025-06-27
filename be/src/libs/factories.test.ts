@@ -12,6 +12,7 @@ describe("Create a Ticket", () => {
     expect(ticket.title).toBe(title);
     expect(ticket.body).toBe("Add description");
     expect(ticket.priority).toBe(0);
+    expect(ticket.type).toBe("task");
     expect(ticket.status).toBe("backlog");
     expect(ticket.links).toHaveLength(0);
 
@@ -40,5 +41,11 @@ describe("Create a Ticket", () => {
     const tagged = createTicket("tagged", { tags: ["ciao", "come", "stai"] });
     expect(tagged.tags).toEqual(["ciao", "come", "stai"]);
     expect(tagged.toMarkdown()).toInclude("ciao,come,stai");
+  });
+  
+  test("type", () => {
+    const typed = createTicket("typed", { type:  "bug" });
+    expect(typed.type).toEqual("bug");
+    expect(typed.toMarkdown()).toInclude("bug");
   });
 });

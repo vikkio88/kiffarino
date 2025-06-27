@@ -1,4 +1,4 @@
-import { Ticket, type TicketStatus } from "@kiffarino/shared";
+import { Ticket, type TicketStatus, type TicketType } from "@kiffarino/shared";
 import { generatedId } from "./id";
 import { toLowerCamelCase } from "./text";
 
@@ -9,8 +9,10 @@ export function createTicket(
     body,
     tags = [],
     tagsString = "",
+    type = "task",
   }: {
     body?: string;
+    type?: TicketType;
     status?: TicketStatus;
     tags?: string[];
     tagsString?: string;
@@ -24,6 +26,7 @@ export function createTicket(
 id: ${id}
 title: ${title}
 tags: ${tags && tags.length > 0 ? tags.join(",") : tagsString}
+type: ${type}
 status: ${status}
 priority: 0
 createdAt: ${now}
