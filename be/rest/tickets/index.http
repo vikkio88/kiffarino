@@ -1,15 +1,16 @@
 ### Filter
-get http://localhost:3003/api/tickets?statuses=todo,inProgress
+get http://localhost:3003/api/tickets?statuses=todo,inProgress,backlog
 
 ### getOne
 get http://localhost:3003/api/tickets/01JYF1PE3Y8NHDXVVG66V1T3PF
 
 ### udpate
-PUT  http://localhost:3003/api/tickets/01JYNWZTG6BP12JHWS0E4GV4PZ
+PUT  http://localhost:3003/api/tickets/01JYRK01WZ69BYMSTDHMM5QR80
 Content-Type: "application/json"
 
 {
-    "tags": ["mario"]
+    "type": "bug",
+    "status": "inProgress"
 }
 
 ### move
