@@ -58,19 +58,6 @@ export function loadTicketFromFile(
   return new Ticket(md, filename);
 }
 
-export function toRecord(ticket: Ticket): TicketRecord {
-  return {
-    id: ticket.id,
-    title: ticket.title,
-    tags: ticket.tags,
-    status: ticket.status,
-    priority: ticket.priority,
-    createdAt: ticket.createdAt || Date.now(),
-    updatedAt: ticket.updatedAt || Date.now(),
-    filename: ticket.filename,
-  };
-}
-
 export async function save(ticket: Ticket, isUpdate = false) {
   let config: ProjectConfig;
   try {
@@ -82,11 +69,11 @@ export async function save(ticket: Ticket, isUpdate = false) {
 
   await db().read();
   if (!isUpdate) {
-    db().data!.tickets.push(toRecord(ticket));
+    db().data!.tickets.push(ticket.toRecord());
   } else {
     db().data!.tickets = [
       ...db().data!.tickets.filter((t) => t.id !== ticket.id),
-      toRecord(ticket),
+      ticket.toRecord(),
     ];
   }
   await db().write();
