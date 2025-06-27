@@ -2,7 +2,6 @@
   import {
     calculateStatus,
     type TicketStatus,
-    ticketStatuses,
   } from "@kiffarino/shared";
   import { emojiMap, statusLabelMap } from "./status";
 
