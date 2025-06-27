@@ -2,9 +2,10 @@
   import FPC from "../layout/FullPageCentre.svelte";
   import ListItem from "../tickets/ListItem.svelte";
   import { emojiMap } from "../tickets/status";
-  import { board, move } from "../../api/tickets";
+  import { board, create, move } from "../../api/tickets";
   import Spinner from "../shared/Spinner.svelte";
-  import type { Board, TicketRecord, TicketStatus } from "@kiffarino/shared";
+  import type { TicketRecord, TicketStatus } from "@kiffarino/shared";
+  import ExpandInput from "../shared/ExpandInput.svelte";
 
   let boardPromise = $derived(board());
 
@@ -14,6 +15,23 @@
     boardPromise = board();
   };
 </script>
+
+{#snippet fabAdd(status: TicketStatus)}
+  <div class="fab">
+    <ExpandInput
+      onSend={async (title: string) => {
+        const result = await create({ title, status });
+        if (result) {
+          boardPromise = board();
+        }
+
+        //TODO: handle error
+      }}
+    >
+      ➕
+    </ExpandInput>
+  </div>
+{/snippet}
 
 {#await boardPromise}
   <FPC>
@@ -31,6 +49,7 @@
             <h4>No tickets here 🤷</h4>
           {/each}
         </ul>
+        {@render fabAdd("todo")}
       </article>
 
       <article>
@@ -42,6 +61,7 @@
             <h4>No tickets here 🤷</h4>
           {/each}
         </ul>
+        {@render fabAdd("inProgress")}
       </article>
 
       <article>
@@ -53,6 +73,7 @@
             <h4>No tickets here 🤷</h4>
           {/each}
         </ul>
+        {@render fabAdd("done")}
       </article>
     </div>
   {:else}
