@@ -7,6 +7,7 @@ describe("Loading Ticket from Markdown", () => {
 id: abc-123
 title: Fix layout bug
 tags: one,two,three
+type: task
 status: inProgress
 priority: 1
 createdAt: 1718880000000
@@ -22,6 +23,7 @@ It describes what needs to be fixed.`;
     expect(ticket.id).toBe("abc-123");
     expect(ticket.title).toBe("Fix layout bug");
     expect(ticket.tags).toEqual(["one", "two", "three"]);
+    expect(ticket.type).toBe("task");
     expect(ticket.status).toBe("inProgress");
     expect(ticket.priority).toBe(1);
     expect(ticket.createdAt).toBe(1718880000000);
@@ -42,6 +44,7 @@ describe("Ticket edge cases", () => {
     const markdown = `<!--
 id: test-id
 title: Ticket with no timestamps
+type: task
 status: todo
 priority: 2
 -->
@@ -176,6 +179,7 @@ id: tag-test
 title: Filter empty tags
 tags: one, , two,   , ,three,
 status: todo
+type: task
 priority: 1
 -->
 Tags with extra commas and spaces.`;
@@ -189,6 +193,7 @@ Tags with extra commas and spaces.`;
 id: time-test
 title: Test current timestamp
 status: todo
+type: task
 priority: 1
 -->
 Check timestamps.`;
@@ -215,6 +220,7 @@ test("roundtrip works after modifying fields", () => {
 id: abc-123
 title: Original
 tags: one,two
+type: task
 status: backlog
 priority: 1
 -->
@@ -278,5 +284,42 @@ describe("calculateStatus", () => {
 
     status = calculateStatus(status, -1);
     expect(status).toBe("idea");
+  });
+});
+
+describe("Loading Ticket from Markdown then returning record", () => {
+  test("parses metadata and body correctly, then returns it as its previous state", () => {
+    const markdown = `<!--
+id: abc-123
+title: Fix layout bug
+tags: one,two,three
+type: task
+status: inProgress
+priority: 1
+createdAt: 1718880000000
+updatedAt: 1718880030000
+links: [{"type":"blocks","linkedId":"def-456"}]
+-->
+
+This is the body of the ticket.
+It describes what needs to be fixed.`;
+
+    const ticket = new Ticket(markdown, "testTicket.md");
+    const record = ticket.toRecord();
+
+    expect("body" in record).toBeFalse();
+    // TODO: add this when you link
+    expect("links" in record).toBeFalse();
+    expect(record).toEqual({
+      id: "abc-123",
+      title: "Fix layout bug",
+      tags: ["one", "two", "three"],
+      type: "task",
+      status: "inProgress",
+      priority: 1,
+      createdAt: 1718880000000,
+      updatedAt: 1718880030000,
+      filename: "testTicket.md",
+    });
   });
 });
