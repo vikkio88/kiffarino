@@ -5,7 +5,7 @@ import {
   type TicketRecord,
   type TicketStatus,
 } from "@kiffarino/shared";
-import { get, put } from "./http";
+import { get, put, del } from "./http";
 import { p, parse, u } from "./libs";
 import { TICKETS_API } from "./shared";
 
@@ -48,5 +48,19 @@ export async function board(): Promise<ApiResult<Board> | null> {
 
 export async function move(id: string, status: TicketStatus): Promise<boolean> {
   const resp = await put(u(TICKETS_API, id, "move"), { status });
+  return resp.status === 200;
+}
+
+export async function update(
+  id: string,
+  updates: Partial<TicketRecord>
+): Promise<boolean> {
+  const resp = await put(u(TICKETS_API, id), { ...updates });
+  return resp.status === 200;
+}
+
+export async function deleteTicket(id: string): Promise<boolean> {
+  console.log(u(TICKETS_API, id));
+  const resp = await del(u(TICKETS_API, id));
   return resp.status === 200;
 }
