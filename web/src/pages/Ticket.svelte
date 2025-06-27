@@ -1,12 +1,16 @@
 <script lang="ts">
-  import type { TicketStatus } from "@kiffarino/shared";
-  import { move, one } from "../api/tickets";
+  import type { TicketStatus, TicketType } from "@kiffarino/shared";
+  import { one, update, deleteTicket } from "../api/tickets";
   import FCP from "../components/layout/FullPageCentre.svelte";
   import Renderer from "../components/md/Renderer.svelte";
   import Spinner from "../components/shared/Spinner.svelte";
   import Status from "../components/tickets/Status.svelte";
   import StatusSelector from "../components/tickets/StatusSelector.svelte";
-  import { cd } from "../libs/dates";
+  import { ago, cd } from "../libs/dates";
+  import Type from "../components/tickets/Type.svelte";
+  import TypeSelector from "../components/tickets/TypeSelector.svelte";
+  import ConfirmBtn from "../components/shared/ConfirmBtn.svelte";
+  import { goto } from "@mateothegreat/svelte5-router";
 
   type Props = {
     route: {
@@ -27,21 +31,35 @@
   let isEditable = $state(false);
 
   let updatedStatus: TicketStatus | undefined = undefined;
+  let updatedType: TicketType | undefined = undefined;
   const onStatusChange = (status: TicketStatus) => {
     updatedStatus = status;
   };
+  const onTypeChange = (type: TicketType) => {
+    updatedType = type;
+  };
 
   const saveInfo = async () => {
-    if (!updatedStatus) {
+    if (!updatedStatus && !updatedType) {
       isEditable = false;
       return;
     }
 
-    const result = await move(id, updatedStatus);
+    const result = await update(id, {
+      status: updatedStatus,
+      type: updatedType,
+    });
     if (result) {
       getOnePromise = one(id);
     }
     isEditable = false;
+  };
+
+  const onDelete = async () => {
+    const result = await deleteTicket(id);
+    if (result) {
+      goto("/");
+    }
   };
 </script>
 
@@ -58,6 +76,7 @@
             status={resp.result.status}
             onChange={onStatusChange}
           />
+          <TypeSelector type={resp.result.type} onChange={onTypeChange} />
           <div class="f r g">
             <button class="n-btn" onclick={saveInfo}>💾</button>
             <button class="n-btn" onclick={() => (isEditable = false)}>
@@ -66,6 +85,7 @@
           </div>
         {:else}
           <Status status={resp.result.status} extended />
+          <Type type={resp.result.type} extended />
           <button class="n-btn" onclick={() => (isEditable = true)}>
             ⚙️
           </button>
@@ -78,16 +98,22 @@
       </div>
     </div>
     <div class="bottom">
-      <div class="f c g_5">
-        <span>
-          Created: {cd(resp.result.createdAt)}
+      <div class="f c">
+        <span data-tooltip={cd(resp.result.createdAt)}>
+          🆕 {ago(resp.result.createdAt)}
         </span>
-        <span>Updated: {cd(resp.result.updatedAt)} </span>
+        <span data-tooltip={cd(resp.result.updatedAt)}>
+          ✏️ {ago(resp.result.updatedAt)}
+        </span>
       </div>
 
-      <div>Links/Tags</div>
+      <!-- <div>Links/Tags</div> -->
 
-      <div class="f cc">Edit Delete</div>
+      <div class="f rc g_5">
+        <ConfirmBtn onConfirm={onDelete}>🗑️</ConfirmBtn>
+        <ConfirmBtn onConfirm={() => console.log("archive")}>🗄️</ConfirmBtn>
+        <button class="n-btn">📝</button>
+      </div>
     </div>
   {:else}
     <FCP>
