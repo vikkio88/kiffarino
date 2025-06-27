@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 
 const SIMPLE_DATE_FORMAT = "dd/MM/yyyy";
 const COMPLETE_DATE_FORMAT = "dd/MM/yyyy H:mm";
@@ -30,4 +30,15 @@ export function sd(date: Date | number | string | null | undefined): string {
 export function cd(date: Date | number | string | null | undefined): string {
   const formattedDate = d(date);
   return formattedDate ? format(formattedDate, COMPLETE_DATE_FORMAT) : "";
+}
+
+/**
+ * Time ago format (e.g., "2 days ago")
+ */
+export function ago(
+  date: Date | number | string | null | undefined,
+  suffix = true
+): string {
+  const parsed = d(date);
+  return parsed ? formatDistanceToNow(parsed, { addSuffix: suffix }) : "";
 }
