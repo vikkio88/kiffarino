@@ -39,6 +39,14 @@ export type Meta = {
 
 const TAG_SEPARATOR = ",";
 
+export type CreateTicketParams = {
+  body?: string;
+  type?: TicketType;
+  status?: TicketStatus;
+  tags?: string[];
+  tagsString?: string;
+};
+
 export class Ticket {
   id: string;
   title: string;
@@ -82,6 +90,37 @@ export class Ticket {
     this.updatedAt = updatedAt;
     this.links = links;
     this.filename = filename;
+  }
+
+  static make(
+    id: string,
+    title: string,
+    {
+      status = "backlog",
+      body,
+      tags = [],
+      tagsString = "",
+      type = "task",
+    }: CreateTicketParams = {}
+  ): Ticket {
+    const filename = `${id}.md`;
+    const now = Date.now();
+    const markdown = `<!--
+id: ${id}
+title: ${title}
+tags: ${tags && tags.length > 0 ? tags.join(",") : tagsString}
+type: ${type}
+status: ${status}
+priority: 0
+createdAt: ${now}
+updatedAt: ${now}
+links: []
+-->
+
+${body || "Add description"}
+`;
+
+    return new Ticket(markdown, filename);
   }
 
   toMarkdown(): string {
