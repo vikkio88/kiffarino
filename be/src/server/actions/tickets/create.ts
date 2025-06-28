@@ -8,7 +8,7 @@ export async function create(c: Context) {
   const body = await c.req.json();
   const parsed = createTicketSchema.safeParse(body);
   if (!parsed.success) {
-    return c.json({ ...parsed.error.format() }, 422);
+    return c.json({ ...parsed.error.issues }, 422);
   }
 
   const { title, ...rest } = parsed.data;

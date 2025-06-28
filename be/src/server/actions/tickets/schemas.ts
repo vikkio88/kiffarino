@@ -3,7 +3,7 @@ import {
   ticketTypes,
   type TicketStatus,
 } from "@kiffarino/shared";
-import z from "zod";
+import z from "zod/v4";
 
 const status = z.enum(ticketStatuses);
 const type = z.enum(ticketTypes);

@@ -11,7 +11,7 @@ export async function filter(c: Context) {
   if (!parsed.success) {
     return c.json(
       {
-        ...parsed.error.flatten(),
+        ...parsed.error.issues,
       },
       400
     );

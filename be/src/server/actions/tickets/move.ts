@@ -12,7 +12,7 @@ export async function move(c: Context) {
   const parsed = moveTicketSchema.safeParse(body);
 
   if (!parsed.success) {
-    return c.json({ ...parsed.error.format() }, 422);
+    return c.json({ ...parsed.error.issues }, 422);
   }
 
   const { status } = parsed.data;

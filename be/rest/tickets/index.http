@@ -14,11 +14,11 @@ Content-Type: "application/json"
 }
 
 ### move
-PUT  http://localhost:3003/api/tickets/01JYNWZTG6BP12JHWS0E4GV4PZ/move
+PUT  http://localhost:3003/api/tickets/01JYTHB24E0H7D29THF7ZX6NFY/move
 Content-Type: "application/json"
 
 {
-    "status": "todo"
+    "status": "flappo"
 }
 
 ### delete

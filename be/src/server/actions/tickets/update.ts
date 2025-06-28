@@ -13,7 +13,7 @@ export async function update(c: Context) {
 
   if (!parsed.success) {
     console.error(parsed.error);
-    return c.json({ ...parsed.error.errors }, 422);
+    return c.json({ ...parsed.error.issues }, 422);
   }
 
   const updates = parsed.data;
