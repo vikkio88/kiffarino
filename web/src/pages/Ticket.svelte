@@ -7,21 +7,13 @@
   import ConfirmBtn from "../components/shared/ConfirmBtn.svelte";
   import { goto } from "@mateothegreat/svelte5-router";
   import Info from "../components/tickets/Info.svelte";
+  import { getParam, type RouteParams } from "../libs/routing";
 
   type Props = {
-    route: {
-      result: {
-        path: {
-          params: {
-            id: string;
-          };
-        };
-      };
-    };
+    route: RouteParams<{ id: string }>;
   };
-
   const { route }: Props = $props();
-  let id = route.result.path.params.id;
+  let id = getParam(route, "id")!;
 
   let getOnePromise = $state(one(id));
   let isEditingBody = $state(false);
