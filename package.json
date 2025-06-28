@@ -12,6 +12,7 @@
   "keywords": [],
   "license": "ISC",
   "scripts": {
+    "dev:be": "bun --filter '@kiffarino/be' dev",
     "dev": "bun --filter '*' dev",
     "check": "bun --filter '*' check",
     "clean": "rm -rf dist",
