@@ -1,16 +1,12 @@
 <script lang="ts">
-  import type { TicketStatus, TicketType } from "@kiffarino/shared";
-  import { one, update, deleteTicket } from "../api/tickets";
+  import { one, deleteTicket } from "../api/tickets";
   import FCP from "../components/layout/FullPageCentre.svelte";
   import Renderer from "../components/md/Renderer.svelte";
   import Spinner from "../components/shared/Spinner.svelte";
-  import Status from "../components/tickets/Status.svelte";
-  import StatusSelector from "../components/tickets/StatusSelector.svelte";
   import { ago, cd } from "../libs/dates";
-  import Type from "../components/tickets/Type.svelte";
-  import TypeSelector from "../components/tickets/TypeSelector.svelte";
   import ConfirmBtn from "../components/shared/ConfirmBtn.svelte";
   import { goto } from "@mateothegreat/svelte5-router";
+  import Info from "../components/tickets/Info.svelte";
 
   type Props = {
     route: {
@@ -28,33 +24,7 @@
   let id = route.result.path.params.id;
 
   let getOnePromise = $state(one(id));
-  let isEditingInfo = $state(false);
   let isEditingBody = $state(false);
-
-  let updatedStatus: TicketStatus | undefined = undefined;
-  let updatedType: TicketType | undefined = undefined;
-  const onStatusChange = (status: TicketStatus) => {
-    updatedStatus = status;
-  };
-  const onTypeChange = (type: TicketType) => {
-    updatedType = type;
-  };
-
-  const saveInfo = async () => {
-    if (!updatedStatus && !updatedType) {
-      isEditingInfo = false;
-      return;
-    }
-
-    const result = await update(id, {
-      status: updatedStatus,
-      type: updatedType,
-    });
-    if (result) {
-      getOnePromise = one(id);
-    }
-    isEditingInfo = false;
-  };
 
   const onDelete = async () => {
     const result = await deleteTicket(id);
@@ -72,27 +42,15 @@
   {#if resp?.result}
     <div class="f1 pd">
       <div class="head">
-        {#if isEditingInfo}
-          <StatusSelector
-            status={resp.result.status}
-            onChange={onStatusChange}
-          />
-          <TypeSelector type={resp.result.type} onChange={onTypeChange} />
-          <div class="f r g">
-            <button class="n-btn" onclick={saveInfo}>💾</button>
-            <button class="n-btn" onclick={() => (isEditingInfo = false)}>
-              ❌
-            </button>
-          </div>
-        {:else}
-          <Status status={resp.result.status} extended />
-          <Type type={resp.result.type} extended />
-          <button class="n-btn" onclick={() => (isEditingInfo = true)}>
-            ⚙️
-          </button>
-        {/if}
+        <Info
+          id={resp.result.id}
+          status={resp.result.status}
+          type={resp.result.type}
+          onSuccess={() => {
+            getOnePromise = one(id);
+          }}
+        />
       </div>
-
       {#if isEditingBody}
         <input value={resp.result.title} />
       {:else}
