@@ -1,9 +1,15 @@
-const build = await Bun.build({
+const result = await Bun.build({
   entrypoints: ["./src/index.ts"],
   outdir: "./dist",
   target: "node",
 });
 
-if (!build.success) throw new AggregateError(build.logs);
+if (!result.success) {
+  console.error("❌ Build failed for @kiffarino/be:");
+  for (const log of result.logs) {
+    console.error(log.message);
+  }
+  throw new AggregateError(result.logs, "Build failed.");
+}
 
-console.log("Built correctly.");
+console.log("✅ @kiffarino/be build done.");
