@@ -19,7 +19,7 @@ export function createTicket(
   } = {}
 ): Ticket {
   const id = generatedId();
-  const filename = `${toLowerCamelCase(title)}-${id}.md`;
+  const filename = `${id}.md`;
   const now = Date.now();
 
   const markdown = `<!--

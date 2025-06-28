@@ -21,13 +21,13 @@ describe("Create a Ticket", () => {
     expect(ticket.updatedAt).toBeGreaterThanOrEqual(before);
     expect(ticket.updatedAt).toBeLessThanOrEqual(after);
 
-    expect(ticket.filename).toContain("fixLoginIssue");
+    expect(ticket.filename).toContain(ticket.id);
   });
 
   test("filename removes special characters and handles multiple spaces", () => {
     const title = " Fix!! Login --- Issue 42 ";
     const ticket = createTicket(title);
-    expect(ticket.filename).toContain("fixLoginIssue42");
+    expect(ticket.filename).toContain(ticket.id);
   });
 
   test("tags", () => {
