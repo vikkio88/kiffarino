@@ -108,7 +108,7 @@ export class Ticket {
     const markdown = `<!--
 id: ${id}
 title: ${title}
-tags: ${tags && tags.length > 0 ? tags.join(",") : tagsString}
+tags: ${tags && tags.length > 0 ? tags.join(TAG_SEPARATOR) : tagsString}
 type: ${type}
 status: ${status}
 priority: 0
