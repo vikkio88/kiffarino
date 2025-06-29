@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { one, deleteTicket } from "../api/tickets";
+  import { one, deleteTicket, update } from "../api/tickets";
   import FCP from "../components/layout/FullPageCentre.svelte";
   import Renderer from "../components/md/Renderer.svelte";
   import Spinner from "../components/shared/Spinner.svelte";
@@ -8,6 +8,7 @@
   import { goto } from "@mateothegreat/svelte5-router";
   import Info from "../components/tickets/Info.svelte";
   import { getParam, type RouteParams } from "../libs/routing";
+  import Edit, { type BodyUpdates } from "../components/tickets/Edit.svelte";
 
   type Props = {
     route: RouteParams<{ id: string }>;
@@ -18,11 +19,34 @@
   let getOnePromise = $state(one(id));
   let isEditingBody = $state(false);
 
+  const onUpdate = async () => {
+    const res = await update(id, { ...updateBody });
+    isEditingBody = false;
+    if (res) {
+      refresh();
+      return;
+    }
+    //TODO: handle error
+  };
+
   const onDelete = async () => {
     const result = await deleteTicket(id);
     if (result) {
       goto("/");
     }
+  };
+
+  let updateBody = $state<BodyUpdates>({});
+
+  const onTicketUpdate = (updates: BodyUpdates) => {
+    updateBody = {
+      ...updateBody,
+      ...updates,
+    };
+  };
+
+  const refresh = () => {
+    getOnePromise = one(id);
   };
 </script>
 
@@ -38,23 +62,17 @@
           id={resp.result.id}
           status={resp.result.status}
           type={resp.result.type}
-          onSuccess={() => {
-            getOnePromise = one(id);
-          }}
+          onSuccess={refresh}
         />
       </div>
       {#if isEditingBody}
-        <input value={resp.result.title} />
+        <Edit ticket={resp.result} onChange={onTicketUpdate} />
       {:else}
         <h1 class="ta-c">{resp.result.title}</h1>
-      {/if}
-      <div class="body pd">
-        {#if isEditingBody}
-          <textarea>{resp.result.body}</textarea>
-        {:else}
+        <div class="body pd">
           <Renderer text={resp.result.body} />
-        {/if}
-      </div>
+        </div>
+      {/if}
     </div>
     <div class="bottom">
       <div class="f c">
@@ -70,9 +88,7 @@
 
       <div class="edit f rc g" class:bg={isEditingBody}>
         {#if isEditingBody}
-          <button class="n-btn" onclick={() => (isEditingBody = false)}>
-            💾
-          </button>
+          <button class="n-btn" onclick={onUpdate}> 💾 </button>
           <button class="n-btn" onclick={() => (isEditingBody = false)}>
             ❌
           </button>
@@ -98,31 +114,6 @@
     font-size: 1.2rem;
     height: 70%;
     overflow: auto;
-  }
-
-  input {
-    margin-top: 1rem;
-    padding: 0.5rem;
-    font-family: inherit;
-    font-size: inherit;
-    background-color: var(--black-2-color);
-    color: var(--main-font-color);
-    border: none;
-    font-size: 2.5rem;
-    text-align: center;
-    width: 100%;
-  }
-
-  textarea {
-    width: 100%;
-    height: 90%;
-    resize: none;
-    border: none;
-    padding: 1rem;
-    font-family: inherit;
-    font-size: inherit;
-    background-color: var(--black-2-color);
-    color: var(--main-font-color);
   }
 
   .edit {
