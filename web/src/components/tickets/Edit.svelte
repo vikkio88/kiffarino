@@ -1,22 +1,20 @@
 <script lang="ts">
-  import type { Ticket } from "@kiffarino/shared";
-
-  export type BodyUpdates = { title?: string; body?: string };
+  export type BodyFields = { title?: string; body?: string };
 
   type Props = {
-    ticket: Ticket;
-    onChange: (props: BodyUpdates) => void;
+    fields: BodyFields;
+    onChange: (props: BodyFields) => void;
   };
 
-  const { ticket, onChange }: Props = $props();
-  let title = $state<string>(ticket.title);
-  let body = $state<string>(ticket.body);
+  const { fields: ticket, onChange }: Props = $props();
+  let title = $state<string>(ticket.title || "");
+  let body = $state<string>(ticket.body || "");
 </script>
 
-<input onchange={() => onChange({ title })} bind:value={title} />
+<input onchange={() => onChange({ title })} bind:value={title} placeholder="Ticket Title..." />
 
 <div class="body pd">
-  <textarea onchange={() => onChange({ body })} bind:value={body}></textarea>
+  <textarea onchange={() => onChange({ body })} bind:value={body} placeholder="Add a description..."></textarea>
 </div>
 
 <style>

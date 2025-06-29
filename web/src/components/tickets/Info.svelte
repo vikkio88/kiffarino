@@ -6,28 +6,42 @@
   import StatusSelector from "./StatusSelector.svelte";
   import TypeSelector from "./TypeSelector.svelte";
 
-  type Props = {
-    id: string;
-    status: TicketStatus;
-    type: TicketType;
-    onSuccess: () => void;
+  export type TicketInfo = {
+    status?: TicketStatus;
+    type?: TicketType;
   };
 
-  const { id, status, type, onSuccess }: Props = $props();
+  type Props = {
+    id?: string;
+    status: TicketStatus;
+    type: TicketType;
+    onSuccess?: () => void;
+    onChange?: (info: TicketInfo) => void;
+  };
 
-  let isEditing = $state(false);
+  const { id, status, type, onSuccess, onChange }: Props = $props();
+
+  let isEditing = $state(id === undefined);
   let updatedStatus: TicketStatus | undefined = undefined;
   let updatedType: TicketType | undefined = undefined;
   const onStatusChange = (status: TicketStatus) => {
     updatedStatus = status;
+    onChange?.({ status });
   };
   const onTypeChange = (type: TicketType) => {
     updatedType = type;
+    onChange?.({ type });
   };
 
   const saveInfo = async () => {
     if (!updatedStatus && !updatedType) {
       isEditing = false;
+      return;
+    }
+
+    // This means is updating
+    if (!id || !onSuccess) {
+      console.error("Trying to Update but no id nor onSuccess specified");
       return;
     }
 
@@ -39,16 +53,20 @@
       onSuccess();
     }
     isEditing = false;
+    return;
   };
 </script>
 
 {#if isEditing}
   <StatusSelector {status} onChange={onStatusChange} />
   <TypeSelector {type} onChange={onTypeChange} />
-  <div class="f r g">
-    <button class="n-btn" onclick={saveInfo}>💾</button>
-    <button class="n-btn" onclick={() => (isEditing = false)}> ❌ </button>
-  </div>
+
+  {#if id}
+    <div class="f r g">
+      <button class="n-btn" onclick={saveInfo}>💾</button>
+      <button class="n-btn" onclick={() => (isEditing = false)}> ❌ </button>
+    </div>
+  {/if}
 {:else}
   <Status {status} extended />
   <Type {type} extended />

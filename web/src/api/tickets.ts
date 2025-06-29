@@ -68,3 +68,14 @@ export async function create(ticket: Partial<Ticket>): Promise<boolean> {
   const resp = await post(TICKETS_API, ticket);
   return resp.status === 201;
 }
+
+export async function createWithRespBody(
+  ticket: Partial<Ticket>
+): Promise<ApiResult<TicketRecord> | null> {
+  const resp = await post(TICKETS_API, ticket);
+  if (resp.status !== 201) {
+    return null;
+  }
+
+  return parse<ApiResult<TicketRecord>>(resp);
+}

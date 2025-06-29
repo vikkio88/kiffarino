@@ -8,7 +8,7 @@
   import { goto } from "@mateothegreat/svelte5-router";
   import Info from "../components/tickets/Info.svelte";
   import { getParam, type RouteParams } from "../libs/routing";
-  import Edit, { type BodyUpdates } from "../components/tickets/Edit.svelte";
+  import Edit, { type BodyFields } from "../components/tickets/Edit.svelte";
 
   type Props = {
     route: RouteParams<{ id: string }>;
@@ -36,9 +36,9 @@
     }
   };
 
-  let updateBody = $state<BodyUpdates>({});
+  let updateBody = $state<BodyFields>({});
 
-  const onTicketUpdate = (updates: BodyUpdates) => {
+  const onTicketUpdate = (updates: BodyFields) => {
     updateBody = {
       ...updateBody,
       ...updates,
@@ -66,7 +66,7 @@
         />
       </div>
       {#if isEditingBody}
-        <Edit ticket={resp.result} onChange={onTicketUpdate} />
+        <Edit fields={resp.result} onChange={onTicketUpdate} />
       {:else}
         <h1 class="ta-c">{resp.result.title}</h1>
         <div class="body pd">

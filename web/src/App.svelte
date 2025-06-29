@@ -4,6 +4,7 @@
   import { Router, type RouteConfig } from "@mateothegreat/svelte5-router";
   import Ticket from "./pages/Ticket.svelte";
   import Nav from "./components/layout/Nav.svelte";
+  import CreateTicket from "./pages/CreateTicket.svelte";
   const routes: RouteConfig[] = [
     {
       path: "/",
@@ -14,10 +15,13 @@
       component: BackLog,
     },
     {
+      path: "/new/ticket",
+      component: CreateTicket,
+    },
+    {
       path: "/tickets/(?<id>.*)",
       component: Ticket,
     },
-    
   ];
 </script>
 
