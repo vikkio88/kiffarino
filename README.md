@@ -1,4 +1,4 @@
-# @kiffarino/kfr
+# kiffarino/kfr
 
 Kiffarino is a lightweight, local-first project management tool built for developers and small teams who prefer a simple, CLI and web-based workflow.  
 It lets you manage tasks, tickets, and projects directly within your project folder — no complex setups, cloud services, or external tools required.  
@@ -19,7 +19,7 @@ Loosely based on [kiffari](https://github.com/vikkio88/kiffari).
 ## Installation
 
 ```bash
-npm install -g @kiffarino/kfr
+npm install -g kiffarino
 ```
 
 **Help**

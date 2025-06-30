@@ -1,4 +1,5 @@
 be/
 web/
+shared/
 bun.lock
 tsconfig.json
