@@ -42,12 +42,18 @@ export function generate(args: string[]) {
   const ticketsDir = path.join(projectRoot, TICKETS_SUBFOLDER);
   fs.mkdirSync(ticketsDir);
 
-  // adding a test ticket
-  const testTicket = createTicket("Test Ticket", {
-    body: `This is your first ticket inside ${config.baseFolder}/tickets.\n`,
+  // adding some test tickets
+  const backlogTicket = createTicket("Backlog test ticket", {
+    body: `This is your first backlog ticket inside ${config.baseFolder}/tickets.\n`,
     tagsString: "example,"
   });
-  save(testTicket);
+  save(backlogTicket);
+  const todoTicket = createTicket("Todo test ticket", {
+    body: `This is your first TODO ticket, and it is a bug.\n`,
+    status: "todo",
+    type: "bug"
+  });
+  save(todoTicket);
 
   const docsDir = path.join(projectRoot, DOCS_SUBFOLDER);
   fs.mkdirSync(docsDir);
