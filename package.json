@@ -1,22 +1,36 @@
 {
-  "name": "@kiffarino/root",
+  "name": "@kiffarino/kfr",
   "version": "0.0.1",
   "author": "Vincenzo Ciaccio <vincenzo.ciaccio@gmail.com>",
+  "main": "./index.js",
+  "bin": {
+    "kfr": "./index.js"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
-  "description": "A lightweight project management tool via cli",
-  "keywords": [],
+  "description": "Kiffarino (kfr) is a lightweight, local-first CLI tool for managing tasks and tickets, ideal for small dev projects and personal workflows.",
+  "keywords": [
+    "cli",
+    "task-manager",
+    "project-management",
+    "ticketing",
+    "developer-tools",
+    "local-first",
+    "productivity",
+    "issue-tracker",
+    "kiffarino"
+  ],
   "license": "ISC",
   "scripts": {
     "dev:be": "bun --filter '@kiffarino/be' dev",
     "dev": "bun --filter '*' dev",
     "check": "bun --filter '*' check",
     "clean": "rm -rf dist",
-    "build": "bun clean && bun --filter '*' build && mv be/dist dist/ && mv web/dist dist/public",
+    "build": "bun clean && bun --filter '*' build && mv be/dist dist/ && mv web/dist dist/public && cp package.json dist/",
     "start:server": "cd dist && node index.js"
   },
   "type": "module",
