@@ -1,12 +1,16 @@
 # kiffarino/kfr
 
-Kiffarino is a lightweight, local-first project management tool built for developers and small teams who prefer a simple, CLI and web-based workflow.  
-It lets you manage tasks, tickets, and projects directly within your project folder — no complex setups, cloud services, or external tools required.  
+Kiffarino is a lightweight, local-first project management tool built for developers and small teams who prefer a simple, CLI and Web based workflow tracking tool.
+
+It lets you manage tasks, tickets, and projects directly within your project folder — no complex setups, cloud services, or external tools required.
+
 Just fast, minimal, local productivity.
 
-Loosely based on [kiffari](https://github.com/vikkio88/kiffari).
+It's like Jira, but simple and it just works.
 
->Kiffari: from sicilian (Aju) Chiffari = I've got stuff to do.
+Loosely based on another side project of mine: [kiffari](https://github.com/vikkio88/kiffari).
+
+> Kiffari: from sicilian (Aju) Chiffari = I've got stuff to do.
 
 ## ✨ Features
 
@@ -57,8 +61,10 @@ kfr start 5321
 ```
 
 ## TODOs
-- [ ]  Cli
-    - [ ] version
+
+- [ ] Cli
+
+  - [ ] version
 
 - [ ] Tickets
 
