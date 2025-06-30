@@ -1,5 +1,6 @@
 <script lang="ts">
   import { tick, type Snippet } from "svelte";
+  let input: HTMLInputElement | undefined = $state(undefined);
 
   type Props = {
     children: Snippet;
@@ -31,16 +32,28 @@
     expanded = false;
     text = "";
   };
+
+  const expand = async () => {
+    expanded = true;
+    await tick();
+    input?.focus();
+  };
 </script>
 
 {#if !expanded}
-  <button class="n-btn" onclick={() => (expanded = true)}>
+  <button class="n-btn" onclick={expand}>
     {@render children()}
   </button>
 {:else}
   <div class="f r g wrapper">
     <form class="f1" onsubmit={submit}>
-      <input class="w100" {placeholder} bind:value={text} />
+      <input
+        type="text"
+        bind:this={input}
+        class="w100"
+        {placeholder}
+        bind:value={text}
+      />
     </form>
     <button class="n-btn" onclick={cancel}>❌</button>
   </div>
@@ -48,12 +61,18 @@
 
 <style>
   .wrapper {
-    background-color: var(--gray-1-color);
+    background-color: var(--black-2-color);
     padding: 0.5rem 1rem;
     border-radius: var(--border-radius);
   }
 
   form > input {
     font-size: 1.1rem;
+  }
+
+  input[type="text"] {
+    padding: .5rem .8rem;
+    background: var(--black-1-color);
+    color: var(--main-font-color);
   }
 </style>
