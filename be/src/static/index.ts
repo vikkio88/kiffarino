@@ -1,25 +1,40 @@
 import { type Context } from "hono";
 import { serveStatic } from "hono/serve-static";
 import fs from "node:fs";
+import p from "node:path";
+import { fileURLToPath } from "node:url";
+import { isDev } from "../libs/env";
 
-const STATIC_FILES_FOLDER = "./public/";
-const INDEX_PATH = `public/index.html`;
+const STATIC_FOLDER_NAME = "public";
+const INDEX_FILE = "index.html";
+
+function resolvePublicPath(pathInPublic: string) {
+  return isDev()
+    ? p.resolve(getCurrentFilePath(), "..", STATIC_FOLDER_NAME, pathInPublic)
+    : p.resolve(getCurrentFilePath(), STATIC_FOLDER_NAME, pathInPublic);
+}
+
+export function getCurrentFilePath() {
+  return p.dirname(fileURLToPath(import.meta.url));
+}
 
 const staticHandler = serveStatic({
-  root: STATIC_FILES_FOLDER,
+  root: STATIC_FOLDER_NAME,
   getContent: async (path, c: Context) => {
-    //TODO: investigate if I can send a stream
-    if (!fs.existsSync(path)) {
+    const resolvedPath = isDev()
+      ? p.resolve(getCurrentFilePath(), "..", path)
+      : p.resolve(getCurrentFilePath(), path);
+
+    if (!fs.existsSync(resolvedPath)) {
       const isFile = /\.[^\/]+$/.test(path);
       if (isFile) {
-        return fs.readFileSync(INDEX_PATH);
+        return fs.readFileSync(resolvePublicPath(INDEX_FILE));
       }
       c.status(404);
       return c.text("Not Found");
     }
 
-    return fs.readFileSync(path);
+    return fs.readFileSync(resolvedPath);
   },
 });
-
 export default staticHandler;
