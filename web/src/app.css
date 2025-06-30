@@ -6,3 +6,7 @@ ul {
 button.n-btn:hover {
   opacity: 0.8;
 }
+
+button.n-btn:disabled {
+  cursor: not-allowed;
+}
