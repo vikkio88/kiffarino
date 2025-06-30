@@ -4,7 +4,7 @@ import { Link } from "../models/ticket";
 
 describe("parseMd", () => {
   test("parses all metadata fields correctly", () => {
-    const markdown = `<!--
+    const markdown = `---
 id: abc-123
 title: Hello World
 tags: bug,urgent
@@ -13,7 +13,7 @@ priority: 1
 createdAt: 1710000000000
 updatedAt: 1710000100000
 links: [{"type":"blocks","linkedId":"xyz-999"}]
--->
+---
 This is the body.`;
 
     const result = parseMd(markdown);
@@ -31,9 +31,9 @@ This is the body.`;
   });
 
   test("defaults missing values properly", () => {
-    const markdown = `<!--
+    const markdown = `---
 title: Only title
--->
+---
 Only a title is provided.`;
 
     const result = parseMd(markdown);
@@ -51,17 +51,17 @@ Only a title is provided.`;
 
   test("throws if metadata comment is missing", () => {
     const markdown = `# No metadata block\n\nHello.`;
-    expect(() => parseMd(markdown)).toThrow("Missing metadata comment block.");
+    expect(() => parseMd(markdown)).toThrow("Missing frontmatter block.");
   });
 
   test("ignores malformed metadata lines", () => {
-    const markdown = `<!--
+    const markdown = `---
 id: abc
 this is invalid
 title: Something
 also-bad
 status: done
--->
+---
 Body content.`;
 
     const result = parseMd(markdown);
@@ -72,11 +72,11 @@ Body content.`;
   });
 
   test("handles non-numeric or invalid timestamps", () => {
-    const markdown = `<!--
+    const markdown = `---
 title: Bad timestamps
 createdAt: potato
 updatedAt: NaN
--->
+---
 Something`;
 
     const result = parseMd(markdown);
@@ -85,10 +85,10 @@ Something`;
   });
 
   test("handles invalid JSON in links", () => {
-    const markdown = `<!--
+    const markdown = `---
 title: Bad links
 links: not-a-json
--->
+---
 Something`;
 
     const result = parseMd(markdown);
@@ -96,10 +96,10 @@ Something`;
   });
 
   test("filters malformed link entries", () => {
-    const markdown = `<!--
+    const markdown = `---
 title: Mixed links
 links: [{"linkedId":"id1","type":"blocks"},{"foo":"bar"}]
--->
+---
 Test`;
 
     const result = parseMd(markdown);
@@ -108,10 +108,10 @@ Test`;
   });
 
   test("body can contain HTML comments without affecting parse", () => {
-    const markdown = `<!--
+    const markdown = `---
 id: body-test
 title: Embedded comment
--->
+---
 This is body content. <!-- not metadata --> More text.`;
 
     const result = parseMd(markdown);

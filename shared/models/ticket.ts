@@ -105,7 +105,7 @@ export class Ticket {
   ): Ticket {
     const filename = `${id}.md`;
     const now = Date.now();
-    const markdown = `<!--
+    const markdown = `---
 id: ${id}
 title: ${title}
 tags: ${tags && tags.length > 0 ? tags.join(TAG_SEPARATOR) : tagsString}
@@ -115,7 +115,7 @@ priority: 0
 createdAt: ${now}
 updatedAt: ${now}
 links: []
--->
+---
 
 ${body || "Add description"}
 `;
@@ -126,7 +126,7 @@ ${body || "Add description"}
   toMarkdown(): string {
     const lines: string[] = [];
 
-    lines.push("<!--");
+    lines.push("---");
 
     if (this.id) lines.push(`id: ${this.id}`);
     if (this.title) lines.push(`title: ${this.title}`);
@@ -144,7 +144,7 @@ ${body || "Add description"}
         )}`
       );
 
-    lines.push("-->");
+    lines.push("---");
     lines.push("");
     lines.push(this.body);
 

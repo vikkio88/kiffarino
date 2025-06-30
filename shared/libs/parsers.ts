@@ -12,11 +12,11 @@ export function parseMd(markdown: string): {
   updatedAt: number | undefined;
   links: Link[];
 } {
-  const commentRegex = /^<!--([\s\S]*?)-->/;
+  const commentRegex = /^---([\s\S]*?)---/;
   const match = markdown.match(commentRegex);
 
   if (!match) {
-    throw new Error("Missing metadata comment block.");
+    throw new Error("Missing frontmatter block.");
   }
 
   const rawMeta = match[1]!;

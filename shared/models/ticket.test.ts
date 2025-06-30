@@ -3,7 +3,7 @@ import { calculateStatus, Ticket, type TicketStatus } from "./ticket";
 
 describe("Loading Ticket from Markdown", () => {
   test("parses metadata and body correctly, then returns it as its previous state", () => {
-    const markdown = `<!--
+    const markdown = `---
 id: abc-123
 title: Fix layout bug
 tags: one,two,three
@@ -13,7 +13,7 @@ priority: 1
 createdAt: 1718880000000
 updatedAt: 1718880030000
 links: [{"type":"blocks","linkedId":"def-456"}]
--->
+---
 
 This is the body of the ticket.
 It describes what needs to be fixed.`;
@@ -41,13 +41,13 @@ It describes what needs to be fixed.`;
 
 describe("Ticket edge cases", () => {
   test("handles missing timestamps by setting them to null", () => {
-    const markdown = `<!--
+    const markdown = `---
 id: test-id
 title: Ticket with no timestamps
 type: task
 status: todo
 priority: 2
--->
+---
 
 Body content.`;
 
@@ -57,14 +57,14 @@ Body content.`;
   });
 
   test("handles non-numeric timestamps by setting them to null", () => {
-    const markdown = `<!--
+    const markdown = `---
 id: test-id
 title: Ticket with bad timestamps
 status: todo
 priority: 2
 createdAt: banana
 updatedAt: NaN
--->
+---
 
 Some content.`;
 
@@ -74,13 +74,13 @@ Some content.`;
   });
 
   test("handles invalid JSON in links", () => {
-    const markdown = `<!--
+    const markdown = `---
 id: test-id
 title: Invalid links JSON
 status: todo
 priority: 2
 links: not-a-json
--->
+---
 
 Bad links format.`;
 
@@ -94,15 +94,15 @@ Bad links format.`;
 This file is missing the comment block.`;
 
     expect(() => new Ticket(markdown, "no-comment.md")).toThrow(
-      "Missing metadata comment block."
+      "Missing frontmatter block."
     );
   });
 
   test("defaults missing optional fields safely", () => {
-    const markdown = `<!--
+    const markdown = `---
 id: id-123
 title: Minimal metadata
--->
+---
 
 This is a very minimal ticket.`;
 
@@ -113,9 +113,9 @@ This is a very minimal ticket.`;
   });
 
   test("generates random id if missing", () => {
-    const markdown = `<!--
+    const markdown = `---
 title: No ID Ticket
--->
+---
 
 Some content.`;
 
@@ -124,9 +124,9 @@ Some content.`;
   });
 
   test("defaults title if missing", () => {
-    const markdown = `<!--
+    const markdown = `---
 id: just-an-id
--->
+---
 
 No title here.`;
 
@@ -135,11 +135,11 @@ No title here.`;
   });
 
   test("parses tags", () => {
-    const markdown = `<!--
+    const markdown = `---
     id: just-an-id
     title: tagged
     tags: ciao,tag,one
-    -->
+    ---
     No title here.`;
     const ticket = new Ticket(markdown, "file.md");
 
@@ -147,12 +147,12 @@ No title here.`;
   });
 
   test("retains filename on construction", () => {
-    const markdown = `<!--
+    const markdown = `---
 id: abc
 title: Filename test
 status: todo
 priority: 1
--->
+---
 File test.`;
 
     const ticket = new Ticket(markdown, "my-file.md");
@@ -160,13 +160,13 @@ File test.`;
   });
 
   test("handles empty tags gracefully", () => {
-    const markdown = `<!--
+    const markdown = `---
 id: tag-test
 title: Empty tags
 tags:
 status: todo
 priority: 2
--->
+---
 Body here.`;
 
     const ticket = new Ticket(markdown, "empty-tags.md");
@@ -174,14 +174,14 @@ Body here.`;
   });
 
   test("trims and filters tags with empty segments", () => {
-    const markdown = `<!--
+    const markdown = `---
 id: tag-test
 title: Filter empty tags
 tags: one, , two,   , ,three,
 status: todo
 type: task
 priority: 1
--->
+---
 Tags with extra commas and spaces.`;
 
     const ticket = new Ticket(markdown, "weird-tags.md");
@@ -189,13 +189,13 @@ Tags with extra commas and spaces.`;
   });
 
   test("toMarkdown fills in missing dates with current timestamps", () => {
-    const markdown = `<!--
+    const markdown = `---
 id: time-test
 title: Test current timestamp
 status: todo
 type: task
 priority: 1
--->
+---
 Check timestamps.`;
 
     const ticket = new Ticket(markdown, "time.md");
@@ -216,14 +216,14 @@ Check timestamps.`;
 });
 
 test("roundtrip works after modifying fields", () => {
-  const markdown = `<!--
+  const markdown = `---
 id: abc-123
 title: Original
 tags: one,two
 type: task
 status: backlog
 priority: 1
--->
+---
 Original body.`;
 
   const ticket = new Ticket(markdown, "mutate.md");
@@ -289,7 +289,7 @@ describe("calculateStatus", () => {
 
 describe("Loading Ticket from Markdown then returning record", () => {
   test("parses metadata and body correctly, then returns it as its previous state", () => {
-    const markdown = `<!--
+    const markdown = `---
 id: abc-123
 title: Fix layout bug
 tags: one,two,three
@@ -299,7 +299,7 @@ priority: 1
 createdAt: 1718880000000
 updatedAt: 1718880030000
 links: [{"type":"blocks","linkedId":"def-456"}]
--->
+---
 
 This is the body of the ticket.
 It describes what needs to be fixed.`;
