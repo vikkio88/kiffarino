@@ -12,7 +12,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 function getVersion(): string {
   const pathToPackageJson = isDev()
     ? join(__dirname, "..", "..", "..", "..", "package.json")
-    : join(__dirname, "package.json");
+    : join(__dirname, "..", "package.json");
 
   try {
     const content = fs.readFileSync(pathToPackageJson, "utf8");

@@ -1,10 +1,10 @@
 {
-  "name": "@kiffarino/kfr",
+  "name": "kiffarino",
   "version": "0.0.1",
   "author": "Vincenzo Ciaccio <vincenzo.ciaccio@gmail.com>",
   "main": "./index.js",
   "bin": {
-    "kfr": "./index.js"
+    "kfr": "./dist/index.js"
   },
   "devDependencies": {
     "@types/bun": "latest"
@@ -30,7 +30,7 @@
     "dev": "bun --filter '*' dev",
     "check": "bun --filter '*' check",
     "clean": "rm -rf dist",
-    "build": "bun clean && bun --filter '*' build && mv be/dist dist/ && mv web/dist dist/public && cp package.json dist/",
+    "build": "bun clean && bun --filter '*' build && mv be/dist dist/ && mv web/dist dist/public",
     "start:server": "cd dist && node index.js"
   },
   "type": "module",
