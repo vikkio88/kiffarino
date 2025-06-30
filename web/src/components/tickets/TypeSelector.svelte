@@ -17,9 +17,9 @@
   };
 </script>
 
-<div class="f r g ai-center">
+<div class="f r g aic">
   <span>{typeEmojiMap[selectedType]}</span>
-  <select class="n-select" onchange={handleChange} bind:value={selectedType}>
+  <select onchange={handleChange} bind:value={selectedType}>
     {#each ticketTypes as t}
       <option value={t}>
         {typeLabelMap[t]}
@@ -27,3 +27,9 @@
     {/each}
   </select>
 </div>
+
+<style>
+  select {
+    padding: 0.5rem 1rem;
+  }
+</style>
