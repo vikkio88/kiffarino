@@ -8,7 +8,7 @@
     <a href="/backlog">Backlog</a>
   </nav>
   <div data-tooltip="Create Ticket" data-tooltip-position="left">
-    <button class="n-btn add" onclick={() => goto("/new/ticket")}>➕</button>
+    <button class="n-btn add" onclick={() => goto("/new/ticket")}>✏️</button>
   </div>
 </header>
 
