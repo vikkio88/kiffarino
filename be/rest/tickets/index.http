@@ -21,6 +21,10 @@ Content-Type: "application/json"
     "status": "flappo"
 }
 
+### archive
+POST  http://localhost:3003/api/tickets/01JZ3282YH09KWEBWVF5X82REF/archive
+
+
 ### delete
 DELETE http://localhost:3003/api/tickets/01JYF12RS4V9WDTB8AHQT8Y7ZF
 
