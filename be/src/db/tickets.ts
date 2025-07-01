@@ -1,6 +1,6 @@
 import {
   PROJECT_CONFIG_FILENAME,
-  TICKETS_SUBFOLDER,
+  TICKETS_FOLDER,
 } from "@kiffarino/shared/config";
 import { Ticket, type TicketRecord } from "@kiffarino/shared/models";
 
@@ -44,6 +44,35 @@ export function removeTicketFile(
     return true;
   }
 }
+
+export function moveTicketFile(
+  baseFolder: string,
+  ticketsFolder: string,
+  archivedFolder: string,
+  filename: string,
+  newFilename: string
+): boolean {
+  const currentTicketPath = path.join(".", baseFolder, ticketsFolder, filename);
+  if (!fs.existsSync(currentTicketPath)) return false;
+
+  try {
+    const newTicketPath = path.join(
+      ".",
+      baseFolder,
+      archivedFolder,
+      newFilename
+    );
+    fs.copyFileSync(currentTicketPath, newTicketPath);
+    fs.unlinkSync(currentTicketPath);
+    return true;
+  } catch (err) {
+    console.error(
+      `Error whilst moving file "${currentTicketPath}"  to "${archivedFolder}/"`
+    );
+    return true;
+  }
+}
+
 export function loadTicketFromFile(
   baseFolder: string,
   ticketsFolder: string,
@@ -81,7 +110,7 @@ export async function save(ticket: Ticket, isUpdate = false) {
   const basePath = config.baseFolder;
   try {
     fs.writeFileSync(
-      path.join(".", basePath, TICKETS_SUBFOLDER, ticket.filename),
+      path.join(".", basePath, TICKETS_FOLDER, ticket.filename),
       ticket.toMarkdown()
     );
     return true;
