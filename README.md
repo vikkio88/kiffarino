@@ -56,15 +56,14 @@ Starts the Kiffarino server locally.
 By default, it runs on port 3003. You can specify a different port like this:
 
 ```bash
-kfr start ## <- will start the server on port 3003
-kfr start 5321
+kfr start # <- will start the server on port 3003
+kfr start 5321 # <- will start the server on port 5321
 ```
 
 ## TODOs
 
-- [ ] Cli
-
-  - [ ] version
+- [x] Cli
+  - [x] version
 
 - [ ] Tickets
 
@@ -74,9 +73,11 @@ kfr start 5321
     - [x] Update
     - [x] Delete
     - [x] Move
-    - [ ] Archive
+    - [x] Archive
     - [ ] Link
     - [x] Tags CRUD
+    - [ ] Priority Ordering
+
   - [ ] FE
     - [x] Create
     - [x] Read
@@ -87,6 +88,7 @@ kfr start 5321
     - [ ] Link
     - [ ] Tags CRUD
     - [ ] Tags Search
+    - [ ] Priority CRUD
 
 - [ ] Docs
 
@@ -98,12 +100,15 @@ kfr start 5321
 
 - Nice to have
   - [ ] Tags
-    - [ ] Implement Tags parsing
+    - [x] Implement Tags parsing
     - [ ] Implement Tags Filters/Update/Create (zod)
+
   - [x] Ticket type
   - [ ] Short code?
   - [ ] Markdown plugins (like todo checkboxes)
-    - [ ] Move config to frontmatter
+    - [x] Move config to frontmatter
     - [ ] Add them in multiple sections so you can have different parts of the page
   - [ ] Epic link/Milestone
+
   - [ ] Add images on a subfolder and be able to serve it via public serve in api
+    - [ ] Folder is generated need to link static serve to local folder
