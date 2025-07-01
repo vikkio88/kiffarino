@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 import { removeTicketFile } from "../../../db/tickets";
-import { TICKETS_SUBFOLDER } from "@kiffarino/shared";
+import { TICKETS_FOLDER } from "@kiffarino/shared";
 import { loadConfig } from "../../../libs/config";
 import { read, write } from "../../../db";
 
@@ -18,7 +18,7 @@ export async function del(c: Context) {
   await write();
 
   const { baseFolder } = loadConfig();
-  const result = removeTicketFile(baseFolder, TICKETS_SUBFOLDER, filename);
+  const result = removeTicketFile(baseFolder, TICKETS_FOLDER, filename);
 
   return result ? c.json({}, 200) : c.json({}, 500);
 }

@@ -1,5 +1,5 @@
 import type { Context } from "hono";
-import { Ticket, TICKETS_SUBFOLDER } from "@kiffarino/shared";
+import { Ticket, TICKETS_FOLDER } from "@kiffarino/shared";
 import { loadTicketFromFile, save } from "../../../db/tickets";
 import { loadConfig } from "../../../libs/config";
 import { moveTicketSchema } from "./schemas";
@@ -26,7 +26,7 @@ export async function move(c: Context) {
   const { baseFolder } = loadConfig();
   const ticket = loadTicketFromFile(
     baseFolder,
-    TICKETS_SUBFOLDER,
+    TICKETS_FOLDER,
     ticketRecord.filename
   );
 

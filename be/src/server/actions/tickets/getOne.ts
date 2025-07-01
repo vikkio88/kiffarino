@@ -3,7 +3,7 @@ import { loadTicketFromFile } from "../../../db/tickets";
 import {
   type Ticket,
   type ApiResult,
-  TICKETS_SUBFOLDER,
+  TICKETS_FOLDER,
 } from "@kiffarino/shared";
 import { loadConfig } from "../../../libs/config";
 import { read } from "../../../db";
@@ -21,7 +21,7 @@ export async function getOne(c: Context) {
   const { baseFolder } = loadConfig();
   const ticket = loadTicketFromFile(
     baseFolder,
-    TICKETS_SUBFOLDER,
+    TICKETS_FOLDER,
     ticketRecord.filename
   );
 
