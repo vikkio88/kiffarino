@@ -10,7 +10,13 @@ const INDEX_FILE = "index.html";
 
 function resolvePublicPath(pathInPublic: string) {
   return isDev()
-    ? p.resolve(getCurrentFilePath(), "..", STATIC_FOLDER_NAME, pathInPublic)
+    ? p.resolve(
+        getCurrentFilePath(),
+        "..",
+        "..",
+        STATIC_FOLDER_NAME,
+        pathInPublic
+      )
     : p.resolve(getCurrentFilePath(), STATIC_FOLDER_NAME, pathInPublic);
 }
 
@@ -22,7 +28,7 @@ const staticHandler = serveStatic({
   root: STATIC_FOLDER_NAME,
   getContent: async (path, c: Context) => {
     const resolvedPath = isDev()
-      ? p.resolve(getCurrentFilePath(), "..", path)
+      ? p.resolve(getCurrentFilePath(), "..", "..", path)
       : p.resolve(getCurrentFilePath(), path);
 
     if (!fs.existsSync(resolvedPath)) {
