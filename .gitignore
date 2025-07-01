@@ -21,5 +21,7 @@ dist/
 *.njsproj
 *.sln
 *.sw?
+.kfrc
+kfr-project/
 
 

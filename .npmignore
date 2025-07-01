@@ -3,3 +3,5 @@ web/
 shared/
 bun.lock
 tsconfig.json
+.kfrc
+kfr-project/
