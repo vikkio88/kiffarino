@@ -12,8 +12,8 @@ export function parseMd(markdown: string): {
   updatedAt: number | undefined;
   links: Link[];
 } {
-  const commentRegex = /^---([\s\S]*?)---/;
-  const match = markdown.match(commentRegex);
+  const frontmatterRegex = /^---\s*\r?\n([\s\S]*?)\r?\n---\s*/;
+  const match = markdown.match(frontmatterRegex);
 
   if (!match) {
     throw new Error("Missing frontmatter block.");
@@ -55,7 +55,7 @@ export function parseMd(markdown: string): {
     }
   }
 
-  const body = markdown.replace(commentRegex, "").trim();
+  const body = markdown.replace(frontmatterRegex, "").trim();
 
   return {
     id,

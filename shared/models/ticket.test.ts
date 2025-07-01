@@ -136,10 +136,10 @@ No title here.`;
 
   test("parses tags", () => {
     const markdown = `---
-    id: just-an-id
-    title: tagged
-    tags: ciao,tag,one
-    ---
+id: just-an-id
+title: tagged
+tags: ciao,tag,one
+---
     No title here.`;
     const ticket = new Ticket(markdown, "file.md");
 

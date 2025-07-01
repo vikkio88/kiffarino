@@ -118,6 +118,57 @@ This is body content. <!-- not metadata --> More text.`;
     expect(result.body).toContain("<!-- not metadata -->");
     expect(result.title).toBe("Embedded comment");
   });
+  test("body with multiple HTML comments stays intact", () => {
+    const markdown = `---
+id: comment-test
+title: Comments inside body
+---
+This is some text. <!-- first comment -->
+More text here. <!-- second comment --> End of body.`;
+
+    const result = parseMd(markdown);
+    expect(result.body).toContain("<!-- first comment -->");
+    expect(result.body).toContain("<!-- second comment -->");
+    expect(result.title).toBe("Comments inside body");
+  });
+
+  test("body with multiline HTML comments preserved", () => {
+    const markdown = `---
+id: multiline-comment
+title: Multiline HTML comment
+---
+Line 1
+<!--
+This is a
+multiline comment
+-->
+Line 2`;
+
+    const result = parseMd(markdown);
+    expect(result.body).toContain("<!--");
+    expect(result.body).toContain("multiline comment");
+    expect(result.body).toContain("-->");
+    expect(result.title).toBe("Multiline HTML comment");
+  });
+
+  test("body with other comment styles preserved", () => {
+    const markdown = `---
+id: other-comments
+title: Other comment styles
+---
+Normal text
+// single line comment style in body?
+# hash style comment in body?
+/* multi-line
+comment style in body? */
+End of body.`;
+
+    const result = parseMd(markdown);
+    expect(result.body).toContain("// single line comment style in body?");
+    expect(result.body).toContain("# hash style comment in body?");
+    expect(result.body).toContain("/* multi-line");
+    expect(result.title).toBe("Other comment styles");
+  });
 });
 
 describe("parseJsTimestamp", () => {

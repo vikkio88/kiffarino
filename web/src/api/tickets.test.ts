@@ -3,6 +3,8 @@ import { del, get, post, put } from "./http";
 import { TICKETS_API } from "./shared";
 import { parse, u } from "./libs";
 
+import fs from "node:fs";
+
 type LocalTicketStatus = "idea" | "backlog" | "todo" | "inProgress" | "done";
 type LocalTicket = {
   id: string;
@@ -115,6 +117,28 @@ describe("Tickets", () => {
     res = await get(u(TICKETS_API, id));
     expect(res.status).toBe(404);
   });
+
+  test("archiving Ticket", async () => {
+    let res = await post(TICKETS_API, {
+      title: "archiving test",
+      body: "someBody",
+    });
+    expect(res.status).toBe(201);
+    let result = await parse<{
+      result: LocalTicket;
+    }>(res);
+    const ticket = result!.result;
+    const id = ticket.id;
+
+    res = await post<{ status: LocalTicketStatus }>(
+      u(TICKETS_API, id, "archive")
+    );
+    expect(res.status).toBe(200);
+
+    res = await get(u(TICKETS_API, id));
+    expect(res.status).toBe(404);
+  });
+
   test("filters", async () => {
     const createdIds: string[] = [];
 
