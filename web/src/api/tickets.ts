@@ -64,6 +64,11 @@ export async function deleteTicket(id: string): Promise<boolean> {
   return resp.status === 200;
 }
 
+export async function archive(id: string): Promise<boolean> {
+  const resp = await post(u(TICKETS_API, id, "archive"));
+  return resp.status === 200;
+}
+
 export async function create(ticket: Partial<Ticket>): Promise<boolean> {
   const resp = await post(TICKETS_API, ticket);
   return resp.status === 201;

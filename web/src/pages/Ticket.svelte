@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { one, deleteTicket, update } from "../api/tickets";
+  import { one, deleteTicket, update, archive } from "../api/tickets";
   import FCP from "../components/layout/FullPageCentre.svelte";
   import Renderer from "../components/md/Renderer.svelte";
   import Spinner from "../components/shared/Spinner.svelte";
@@ -31,6 +31,13 @@
 
   const onDelete = async () => {
     const result = await deleteTicket(id);
+    if (result) {
+      goto("/");
+    }
+  };
+
+  const onArchive = async () => {
+    const result = await archive(id);
     if (result) {
       goto("/");
     }
@@ -93,10 +100,9 @@
             ❌
           </button>
         {:else}
-          <ConfirmBtn onConfirm={onDelete}>🗑️</ConfirmBtn>
-          <!-- TODO: Implement Delete -->
-          <!-- <ConfirmBtn onConfirm={() => console.log("archive")}>🗄️</ConfirmBtn> -->
-          <button class="n-btn" onclick={() => (isEditingBody = true)}>
+          <ConfirmBtn tooltip="Delete" onConfirm={onDelete}>🗑️</ConfirmBtn>
+          <ConfirmBtn tooltip="Archive" onConfirm={onArchive}>🗄️</ConfirmBtn>
+          <button data-tooltip="Edit" class="n-btn" onclick={() => (isEditingBody = true)}>
             📝
           </button>
         {/if}
@@ -118,6 +124,7 @@
 
   .edit {
     font-size: 1.5rem;
+    position: relative;
   }
 
   .bg {

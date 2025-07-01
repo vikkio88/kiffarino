@@ -1,14 +1,24 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
 
-  type Props = { children: Snippet; onConfirm: () => void };
+  type Props = {
+    tooltip?: string;
+    position?: "top" | "right" | "left" | "bottom";
+    children: Snippet;
+    onConfirm: () => void;
+  };
 
-  const { onConfirm, children }: Props = $props();
+  const { tooltip, position = "top", onConfirm, children }: Props = $props();
   let clicked = $state(false);
 </script>
 
 {#if !clicked}
-  <button class="n-btn" onclick={() => (clicked = true)}>
+  <button
+    class="n-btn"
+    data-tooltip={tooltip}
+    data-tooltip-position={tooltip ? position : undefined}
+    onclick={() => (clicked = true)}
+  >
     {@render children()}
   </button>
 {:else}
@@ -19,8 +29,10 @@
       onclick={() => {
         onConfirm();
         clicked = false;
-      }}>✅</button
+      }}
     >
+      ✅
+    </button>
   </div>
 {/if}
 
