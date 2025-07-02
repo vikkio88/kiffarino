@@ -4,6 +4,7 @@ import { cors } from "hono/cors";
 import { NAME, SERVER_PORT } from "@kiffarino/shared/config";
 import staticHandler from "../static";
 import tickets from "./actions/tickets";
+import assets from "./actions/assets";
 
 const server = new Hono();
 
@@ -25,10 +26,11 @@ server.get("/health", (c) => {
 
 const api = new Hono().basePath("/api");
 api.route("/", tickets);
+api.route("/", assets);
 
 server.route("/", api);
 
-// SPA serving
+// SPA & Static Assets serving
 server.use("/*", staticHandler);
 
 export const startServer = (forcedPort?: number) => {
@@ -48,15 +50,14 @@ export const startServer = (forcedPort?: number) => {
     }
   );
 
+  // Graceful shutdown on Ctrl+C
+  process.on("SIGINT", () => {
+    console.log("\n🛑 Received SIGINT. Shutting down...");
+    process.exit(0);
+  });
 
-   // Graceful shutdown on Ctrl+C
-    process.on("SIGINT", () => {
-      console.log("\n🛑 Received SIGINT. Shutting down...");
-      process.exit(0);
-    });
-
-    process.on("SIGTERM", () => {
-      console.log("\n🛑 Received SIGTERM. Shutting down...");
-      process.exit(0);
-    });
+  process.on("SIGTERM", () => {
+    console.log("\n🛑 Received SIGTERM. Shutting down...");
+    process.exit(0);
+  });
 };

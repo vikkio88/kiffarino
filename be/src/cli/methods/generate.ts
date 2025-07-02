@@ -4,7 +4,7 @@ import {
   ARCHIVED_TICKETS_FOLDER,
   DOCS_SUBFOLDER,
   PROJECT_CONFIG_FILENAME,
-  ASSETS_FOLDER,
+  LOCAL_ASSETS_FOLDER,
   TICKETS_FOLDER,
 } from "@kiffarino/shared/config";
 import { loadConfig, type ProjectConfig } from "../../libs/config";
@@ -72,7 +72,7 @@ export function generate(args: string[]) {
   fs.mkdirSync(archivedDir);
 
   // Images/Static Assets
-  const assetsDir = path.join(projectRoot, ASSETS_FOLDER);
+  const assetsDir = path.join(projectRoot, LOCAL_ASSETS_FOLDER);
   fs.mkdirSync(assetsDir);
 
   const docsDir = path.join(projectRoot, DOCS_SUBFOLDER);

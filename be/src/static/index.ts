@@ -4,6 +4,8 @@ import fs from "node:fs";
 import p from "node:path";
 import { fileURLToPath } from "node:url";
 import { isDev } from "../libs/env";
+import { loadConfig } from "../libs/config";
+import { LOCAL_ASSETS_FOLDER } from "@kiffarino/shared";
 
 const STATIC_FOLDER_NAME = "public";
 const INDEX_FILE = "index.html";
@@ -26,18 +28,32 @@ export function getCurrentFilePath() {
 
 const staticHandler = serveStatic({
   root: STATIC_FOLDER_NAME,
-  getContent: async (path, c: Context) => {
+  getContent: async (path: string, c: Context) => {
+    const urlPath = c.req.path;
+    const isFile = p.extname(urlPath) !== "";
+
+    // check for file in the project assets
+    if (isFile && path.includes(LOCAL_ASSETS_FOLDER)) {
+      const { baseFolder } = loadConfig();
+      const localAssetPath = p.resolve(baseFolder, LOCAL_ASSETS_FOLDER);
+      const relativePath = path.replace(/^(public\/|static\/)+/, "");
+      const fullAssetPath = p.join(localAssetPath, relativePath);
+      if (fs.existsSync(fullAssetPath)) {
+        return fs.readFileSync(fullAssetPath);
+      }
+    }
+
     const resolvedPath = isDev()
       ? p.resolve(getCurrentFilePath(), "..", "..", path)
       : p.resolve(getCurrentFilePath(), path);
 
     if (!fs.existsSync(resolvedPath)) {
-      const isFile = /\.[^\/]+$/.test(path);
       if (isFile) {
-        return fs.readFileSync(resolvePublicPath(INDEX_FILE));
+        c.status(404);
+        return c.text("Not Found");
       }
-      c.status(404);
-      return c.text("Not Found");
+      
+      return fs.readFileSync(resolvePublicPath(INDEX_FILE));
     }
 
     return fs.readFileSync(resolvedPath);
