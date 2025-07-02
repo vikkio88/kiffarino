@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { TitledLink } from "@kiffarino/shared";
+  // import type { TitledLink } from "@kiffarino/shared";
 
   export type BodyFields = { title?: string; body?: string };
 
@@ -12,7 +12,7 @@
   let title = $state<string>(ticket.title || "");
   let body = $state<string>(ticket.body || "");
 
-  let links = $state<TitledLink[]>([]);
+  // let links = $state<TitledLink[]>([]);
 </script>
 
 <input
