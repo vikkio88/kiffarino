@@ -2,7 +2,7 @@
 get http://localhost:3003/api/tickets?statuses=todo,inProgress,backlog
 
 ### getOne
-get http://localhost:3003/api/tickets/01JYF1PE3Y8NHDXVVG66V1T3PF
+get http://localhost:3003/api/tickets/01JZ5QYV4RF86W1NHP2S9VACN6
 
 ### udpate
 PUT  http://localhost:3003/api/tickets/01JYRK01WZ69BYMSTDHMM5QR80

@@ -1,0 +1,5 @@
+### Filter
+get http://localhost:3003/api/assets
+
+### One
+get http://localhost:3003/lollo.png
