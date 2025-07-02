@@ -84,8 +84,12 @@ kfr start 5321 # <- will start the server on port 5321
     - [x] Update
     - [x] Delete
     - [x] Move
-    - [ ] Archive
+    - [x] Archive
     - [ ] Link
+      - [ ] Search ticket to link
+        - [x] BE Search
+        - [x] Title Search moved to its own component
+
     - [ ] Tags CRUD
     - [ ] Tags Search
     - [ ] Priority CRUD
@@ -99,6 +103,8 @@ kfr start 5321 # <- will start the server on port 5321
   - [ ] Archive
 
 - Nice to have
+  - [ ] Drag&Drop for Board
+  - [ ] Routes to fetch Archived tickets
   - [ ] Tags
     - [x] Implement Tags parsing
     - [ ] Implement Tags Filters/Update/Create (zod)
@@ -108,7 +114,9 @@ kfr start 5321 # <- will start the server on port 5321
   - [ ] Markdown plugins (like todo checkboxes)
     - [x] Move config to frontmatter
     - [ ] Add them in multiple sections so you can have different parts of the page
+    - [ ] Imgs !\[Alt text\]\(/static/something.svg "a title"\)
   - [ ] Epic link/Milestone
 
   - [ ] Add images on a subfolder and be able to serve it via public serve in api
+    - [ ] Picker to search for assets in public folder
     - [ ] Folder is generated need to link static serve to local folder
