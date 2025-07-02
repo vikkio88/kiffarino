@@ -1,3 +1,7 @@
+:root {
+  --form-borders: 2px solid var(--gray-color);
+}
+
 ul {
   all: unset;
   list-style: none;
