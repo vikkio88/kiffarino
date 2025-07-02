@@ -58,8 +58,8 @@
 </script>
 
 {#if isEditing}
-  <StatusSelector {status} onChange={onStatusChange} />
   <TypeSelector {type} onChange={onTypeChange} />
+  <StatusSelector {status} onChange={onStatusChange} />
 
   {#if id}
     <div class="f r g">
@@ -68,7 +68,7 @@
     </div>
   {/if}
 {:else}
-  <Status {status} extended />
   <Type {type} extended />
+  <Status {status} extended />
   <button class="n-btn" onclick={() => (isEditing = true)}> ⚙️ </button>
 {/if}
