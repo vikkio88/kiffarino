@@ -12,7 +12,6 @@ status: inProgress
 priority: 1
 createdAt: 1718880000000
 updatedAt: 1718880030000
-links: [{"type":"blocks","linkedId":"def-456"}]
 ---
 
 This is the body of the ticket.
@@ -28,9 +27,6 @@ It describes what needs to be fixed.`;
     expect(ticket.priority).toBe(1);
     expect(ticket.createdAt).toBe(1718880000000);
     expect(ticket.updatedAt).toBe(1718880030000);
-    expect(ticket.links).toHaveLength(1);
-    expect(ticket.links[0]!.linkedId).toBe("def-456");
-    expect(ticket.links[0]!.type).toBe("blocks");
     expect(ticket.body).toContain("This is the body of the ticket");
     expect(ticket.filename).toBe("testTicket.md");
 

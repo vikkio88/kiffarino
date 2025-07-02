@@ -4,6 +4,6 @@ export const EXEC_NAME = "kfr";
 export const PROJECT_CONFIG_FILENAME = ".kfrc";
 export const TICKETS_FOLDER = "tickets";
 export const ARCHIVED_TICKETS_FOLDER = "archived";
-export const ASSETS_FOLDER = "assets";
+export const LOCAL_ASSETS_FOLDER = "static";
 export const DOCS_SUBFOLDER = "docs";
 export const DB_FILENAME = "db.json";

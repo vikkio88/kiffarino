@@ -1,4 +1,4 @@
-import { Link, type TicketStatus, type TicketType } from "../models/ticket";
+import { type TicketStatus, type TicketType } from "../models/ticket";
 
 export function parseMd(markdown: string): {
   id: string;
@@ -10,7 +10,6 @@ export function parseMd(markdown: string): {
   priority: number;
   createdAt: number | undefined;
   updatedAt: number | undefined;
-  links: Link[];
 } {
   const frontmatterRegex = /^---\s*\r?\n([\s\S]*?)\r?\n---\s*/;
   const match = markdown.match(frontmatterRegex);
@@ -41,20 +40,6 @@ export function parseMd(markdown: string): {
   const createdAt = parseJsTimestamp(metaMap["createdAt"]);
   const updatedAt = parseJsTimestamp(metaMap["updatedAt"]);
 
-  let links: Link[] = [];
-  if (metaMap["links"]) {
-    try {
-      const raw = JSON.parse(metaMap["links"]);
-      if (Array.isArray(raw)) {
-        links = raw
-          .filter((link) => typeof link === "object" && link.linkedId)
-          .map((link) => new Link(link.linkedId, link.type));
-      }
-    } catch (e) {
-      console.warn(`⚠️ Failed to parse links for ticket ${id}`);
-    }
-  }
-
   const body = markdown.replace(frontmatterRegex, "").trim();
 
   return {
@@ -67,7 +52,6 @@ export function parseMd(markdown: string): {
     priority,
     createdAt,
     updatedAt,
-    links,
   };
 }
 

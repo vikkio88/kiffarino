@@ -1,11 +1,12 @@
 import path from "node:path";
 import { Low } from "lowdb";
 import { JSONFile } from "lowdb/node";
-import { DB_FILENAME, type TicketRecord } from "@kiffarino/shared";
+import { DB_FILENAME, Link, type TicketRecord } from "@kiffarino/shared";
 import { loadConfig } from "../libs/config";
 
 type DBSchema = {
   tickets: TicketRecord[];
+  links: Record<string, Link[]>;
 };
 
 let db: Low<DBSchema>;
@@ -14,7 +15,7 @@ export function makeDb() {
     const { baseFolder } = loadConfig();
     const file = path.join(baseFolder, DB_FILENAME);
     const adapter = new JSONFile<DBSchema>(file);
-    const defaultData: DBSchema = { tickets: [] };
+    const defaultData: DBSchema = { tickets: [], links: {} };
 
     db = new Low<DBSchema>(adapter, defaultData);
   }

@@ -1,16 +1,6 @@
 import { parseMd } from "../libs/parsers";
+import { type Link, TitledLink } from "./links";
 
-export type LinkType = "blockedBy" | "blocks" | "linked";
-
-export class Link {
-  type: LinkType = "linked";
-  linkedId: string;
-
-  constructor(linkedId: string, type: LinkType) {
-    this.linkedId = linkedId;
-    this.type = type;
-  }
-}
 export const ticketStatuses = [
   "idea",
   "backlog",
@@ -56,7 +46,8 @@ export class Ticket {
   type: TicketType;
   status: TicketStatus;
   priority: number;
-  links: Link[] = [];
+  #linkIds: Link[] = [];
+  links: TitledLink[] = [];
   body: string;
   filename: string;
 
@@ -71,7 +62,6 @@ export class Ticket {
       priority,
       createdAt,
       updatedAt,
-      links = [],
     } = parseMd(markdownBody);
 
     this.id = id;
@@ -88,8 +78,30 @@ export class Ticket {
     this.priority = priority;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
-    this.links = links;
+
+    // TODO: need to bootstrap them from db
+    this.#linkIds = [];
+    this.links = [];
+    //
+
     this.filename = filename;
+  }
+
+  linkIds(): Link[] {
+    return this.#linkIds;
+  }
+
+  hasLinks(): boolean {
+    return this.#linkIds.length > 0;
+  }
+
+  loadLinks(tickets: Record<string, TicketRecord>) {
+    for (const l of this.#linkIds) {
+      const t = tickets[l.linkedId];
+      if (!t) continue;
+
+      this.links.push(new TitledLink(l, t.title));
+    }
   }
 
   static make(
@@ -114,7 +126,6 @@ status: ${status}
 priority: 0
 createdAt: ${now}
 updatedAt: ${now}
-links: []
 ---
 
 ${body || "Add description"}
@@ -137,13 +148,6 @@ ${body || "Add description"}
       lines.push(`priority: ${this.priority}`);
     lines.push(`createdAt: ${this.createdAt ?? Date.now()}`);
     lines.push(`updatedAt: ${this.updatedAt ?? Date.now()}`);
-    if (this.links.length > 0)
-      lines.push(
-        `links: ${JSON.stringify(
-          this.links.map((l) => ({ type: l.type, linkedId: l.linkedId }))
-        )}`
-      );
-
     lines.push("---");
     lines.push("");
     lines.push(this.body);
