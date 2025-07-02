@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { TitledLink } from "@kiffarino/shared";
+
   export type BodyFields = { title?: string; body?: string };
 
   type Props = {
@@ -9,12 +11,33 @@
   const { fields: ticket, onChange }: Props = $props();
   let title = $state<string>(ticket.title || "");
   let body = $state<string>(ticket.body || "");
+
+  let links = $state<TitledLink[]>([]);
 </script>
 
-<input onchange={() => onChange({ title })} bind:value={title} placeholder="Ticket Title..." />
+<input
+  onchange={() => onChange({ title })}
+  bind:value={title}
+  placeholder="Ticket Title..."
+/>
 
 <div class="body pd">
-  <textarea onchange={() => onChange({ body })} bind:value={body} placeholder="Add a description..."></textarea>
+  <textarea
+    onchange={() => onChange({ body })}
+    bind:value={body}
+    placeholder="Add a description..."
+  ></textarea>
+</div>
+
+<div class="links pd">
+  <h4>Link Ticket</h4>
+  <ul>
+    {#each links as link}
+      <li>{link.type} {link.title}</li>
+    {:else}
+      <button>Link</button>
+    {/each}
+  </ul>
 </div>
 
 <style>
