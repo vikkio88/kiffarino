@@ -5,10 +5,10 @@
   import Spinner from "../components/shared/Spinner.svelte";
   import ListItem from "../components/tickets/ListItem.svelte";
   import { emojiMap, statusLabelMap } from "../components/tickets/status";
+  import TitleSearch from "../components/tickets/TitleSearch.svelte";
 
   let statusFilter: HTMLDetailsElement;
   let statuses: TicketStatus[] | undefined = $state(["backlog"]);
-  let titleFilter: string | undefined = $state("");
   let title: string | undefined = $state(undefined);
   const backLogPromise = $derived(filter({ statuses, title }));
 
@@ -38,35 +38,22 @@
     statuses = undefined;
   };
 
-  const search = (e: SubmitEvent) => {
-    e.preventDefault();
-
-    title = titleFilter;
+  const onSearch = (value: string) => {
+    title = value;
   };
 </script>
 
 <div class="f1 f c w100">
   <h1 class="ta-c">Backlog</h1>
   <div class="f r spa g pd">
-    <form class="search" onsubmit={search}>
-      <input
-        type="text"
-        bind:value={titleFilter}
-        class="w100"
-        placeholder="Search title..."
-      />
-      <button
-        class="n-btn"
-        type="button"
-        disabled={!title}
-        onclick={() => {
-          titleFilter = "";
+    <div class="titleSearch">
+      <TitleSearch
+        {onSearch}
+        onReset={() => {
           title = undefined;
         }}
-      >
-        ❌
-      </button>
-    </form>
+      />
+    </div>
     <details class="dropdownFilter f1" bind:this={statusFilter}>
       <summary
         >{statuses && statuses.length
@@ -115,20 +102,17 @@
 </div>
 
 <style>
-  .search {
+  .titleSearch {
     flex: 3;
-    display: flex;
-    border: 1px solid var(--gray-color);
-    border-radius: var(--border-radius);
   }
   .dropdownFilter {
     position: relative;
   }
-  
+
   summary {
     cursor: pointer;
     padding: 1rem;
-    border: 1px solid var(--gray-color);
+    border: var(--form-borders);
     border-radius: var(--border-radius);
   }
 
