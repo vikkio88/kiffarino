@@ -29,7 +29,7 @@
   ></textarea>
 </div>
 
-<div class="links pd">
+<!-- <div class="links pd">
   <h4>Link Ticket</h4>
   <ul>
     {#each links as link}
@@ -38,7 +38,7 @@
       <button>Link</button>
     {/each}
   </ul>
-</div>
+</div> -->
 
 <style>
   .body {
