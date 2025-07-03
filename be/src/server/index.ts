@@ -28,6 +28,8 @@ const api = new Hono().basePath("/api");
 api.route("/", tickets);
 api.route("/", assets);
 
+api.all("*", (c) => c.json({}, 400));
+
 server.route("/", api);
 
 // SPA & Static Assets serving
