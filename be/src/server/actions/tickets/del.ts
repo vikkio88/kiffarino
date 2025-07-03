@@ -3,6 +3,7 @@ import { removeTicketFile } from "../../../db/tickets";
 import { TICKETS_FOLDER } from "@kiffarino/shared";
 import { loadConfig } from "../../../libs/config";
 import { read, write } from "../../../db";
+import { removeFromLinks } from "../../../db/links";
 
 export async function del(c: Context) {
   const id = c.req.param("id");
@@ -15,10 +16,14 @@ export async function del(c: Context) {
 
   const { filename } = ticketToDelete;
   db.tickets = db.tickets.filter((t) => t.id !== ticketToDelete.id);
-  await write();
 
   const { baseFolder } = loadConfig();
   const result = removeTicketFile(baseFolder, TICKETS_FOLDER, filename);
+
+  if (db.links[id]) {
+    db.links = removeFromLinks(db.links, id);
+  }
+  await write();
 
   return result ? c.json({}, 200) : c.json({}, 500);
 }
