@@ -7,6 +7,8 @@ import { update } from "./update";
 import { move } from "./move";
 import { board } from "./board";
 import { archive } from "./archive";
+import { addLink } from "./addLink";
+import { removeLink } from "./removeLink";
 
 const tickets = new Hono().basePath("/tickets");
 tickets.get("/board", board);
@@ -16,8 +18,8 @@ tickets.put("/:id/move", move);
 tickets.put("/:id", update);
 tickets.post("/:id/archive", archive);
 
-//TODO: Implement
-tickets.put("/:id/link", getOne);
+tickets.post("/:id/link", addLink);
+tickets.delete("/:id/link/:linkedId", removeLink);
 
 tickets.delete("/:id", del);
 tickets.post("/", create);

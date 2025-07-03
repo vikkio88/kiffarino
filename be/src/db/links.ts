@@ -1,8 +1,8 @@
-import { Link, type LinkType, type Ticket } from "@kiffarino/shared";
+import { Link, type LinkType, type TicketRecord } from "@kiffarino/shared";
 
 export function createLink(
-  ticket: Partial<Ticket>,
-  other: Partial<Ticket>,
+  ticket: Partial<TicketRecord>,
+  other: Partial<TicketRecord>,
   type: LinkType
 ): [string, Link, string, Link] {
   if (!ticket.id || !other.id) throw new Error("Both tickets must have an id");
@@ -56,4 +56,46 @@ export function removeLink(
       (l) => l.linkedId !== linkB.linkedId || l.type !== linkB.type
     ),
   };
+}
+
+export function unlinkTickets(
+  links: Record<string, Link[]>,
+  ticketA: Partial<TicketRecord>,
+  ticketB: Partial<TicketRecord>
+): Record<string, Link[]> {
+  if (!ticketA.id || !ticketB.id)
+    throw new Error("Both tickets must have an id");
+
+  return {
+    ...links,
+    [ticketA.id]: (links[ticketA.id] || []).filter(
+      (l) => l.linkedId !== ticketB.id
+    ),
+    [ticketB.id]: (links[ticketB.id] || []).filter(
+      (l) => l.linkedId !== ticketA.id
+    ),
+  };
+}
+
+export function removeFromLinks(
+  links: Record<string, Link[]>,
+  targetId: string
+): Record<string, Link[]> {
+  const related = links[targetId] || [];
+
+  const result = { ...links };
+
+  delete result[targetId];
+
+  for (const link of related) {
+    result[link.linkedId] = (result[link.linkedId] || []).filter(
+      (l) => l.linkedId !== targetId
+    );
+
+    if (result[link.linkedId]?.length === 0) {
+      delete result[link.linkedId];
+    }
+  }
+
+  return result;
 }

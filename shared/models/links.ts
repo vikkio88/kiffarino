@@ -1,4 +1,5 @@
-export type LinkType = "blockedBy" | "linked" | "blocks";
+export const linkTypes = ["blockedBy", "linked", "blocks"] as const;
+export type LinkType = (typeof linkTypes)[number];
 
 export class Link {
   type: LinkType = "linked";

@@ -1,4 +1,5 @@
 import {
+  linkTypes,
   ticketStatuses,
   ticketTypes,
   type TicketStatus,
@@ -7,6 +8,7 @@ import z from "zod/v4";
 
 const status = z.enum(ticketStatuses);
 const type = z.enum(ticketTypes);
+const linkType = z.enum(linkTypes);
 
 export const createTicketSchema = z.object({
   title: z.string(),
@@ -42,4 +44,9 @@ export const updateTicketSchema = z.object({
   status: status.optional(),
   priority: z.coerce.number().optional(),
   tags: z.union([z.tuple([]), z.array(z.string().min(2))]).optional(),
+});
+
+export const addLinkSchema = z.object({
+  linkedId: z.string(),
+  type: linkType,
 });

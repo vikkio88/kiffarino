@@ -46,7 +46,6 @@ export class Ticket {
   type: TicketType;
   status: TicketStatus;
   priority: number;
-  #linkIds: Link[] = [];
   links: TitledLink[] = [];
   body: string;
   filename: string;
@@ -80,23 +79,14 @@ export class Ticket {
     this.updatedAt = updatedAt;
 
     // TODO: need to bootstrap them from db
-    this.#linkIds = [];
     this.links = [];
     //
 
     this.filename = filename;
   }
 
-  linkIds(): Link[] {
-    return this.#linkIds;
-  }
-
-  hasLinks(): boolean {
-    return this.#linkIds.length > 0;
-  }
-
-  loadLinks(tickets: Record<string, TicketRecord>) {
-    for (const l of this.#linkIds) {
+  loadLinks(links: Link[], tickets: Record<string, TicketRecord>) {
+    for (const l of links) {
       const t = tickets[l.linkedId];
       if (!t) continue;
 

@@ -12,6 +12,11 @@ type LocalTicket = {
   body: string;
   tags: string[];
   type: string;
+  links: {
+    linkedId: string;
+    title: string;
+    type: "linked" | "blocks" | "blockedBy";
+  }[];
   status: LocalTicketStatus;
 };
 
@@ -207,5 +212,186 @@ describe("Tickets", () => {
       const res = await del(u(TICKETS_API, id));
       expect(res.status).toBe(200);
     }
+  });
+
+  test("Linking Tickets", async () => {
+    let res = await post(TICKETS_API, {
+      title: "Ticket A",
+      body: "first ticket",
+    });
+    expect(res.status).toBe(201);
+    let result = await parse<{ result: LocalTicket }>(res);
+    const ticketA = result!.result;
+    const idA = ticketA.id;
+
+    res = await post(TICKETS_API, { title: "Ticket B", body: "second ticket" });
+    expect(res.status).toBe(201);
+    result = await parse<{ result: LocalTicket }>(res);
+    const ticketB = result!.result;
+    const idB = ticketB.id;
+
+    res = await post(u(TICKETS_API, idB, "link"), {
+      type: "blockedBy",
+      linkedId: idA,
+    });
+    expect(res.status).toBe(201);
+
+    res = await get(u(TICKETS_API, idB));
+    result = await parse<{ result: LocalTicket }>(res);
+    const linksB = result!.result.links;
+    expect(Array.isArray(linksB)).toBe(true);
+    expect(
+      linksB.find((l) => l.linkedId === idA && l.type === "blockedBy")
+    ).toBeTruthy();
+
+    res = await get(u(TICKETS_API, idA));
+    result = await parse<{ result: LocalTicket }>(res);
+    const linksA = result!.result.links;
+    expect(Array.isArray(linksA)).toBe(true);
+    expect(
+      linksA.find((l) => l.linkedId === idB && l.type === "blocks")
+    ).toBeTruthy();
+
+    await del(u(TICKETS_API, idA));
+    await del(u(TICKETS_API, idB));
+  });
+
+  test("Self-linking is not allowed", async () => {
+    let res = await post(TICKETS_API, {
+      title: "Self Link",
+      body: "Self",
+    });
+    expect(res.status).toBe(201);
+    let result = await parse<{ result: LocalTicket }>(res);
+    const id = result!.result.id;
+
+    res = await post(u(TICKETS_API, id, "link"), {
+      type: "linked",
+      linkedId: id,
+    });
+
+    expect(res.status).toBeGreaterThanOrEqual(400);
+
+    res = await get(u(TICKETS_API, id));
+    result = await parse<{ result: LocalTicket }>(res);
+    const links = result!.result.links;
+    expect(links.length).toBe(0);
+
+    await del(u(TICKETS_API, id));
+  });
+
+  test("Duplicate links are not allowed", async () => {
+    let res = await post(TICKETS_API, {
+      title: "A",
+      body: "a",
+    });
+    expect(res.status).toBe(201);
+    let result = await parse<{ result: LocalTicket }>(res);
+    const idA = result!.result.id;
+
+    res = await post(TICKETS_API, {
+      title: "B",
+      body: "b",
+    });
+    expect(res.status).toBe(201);
+    result = await parse<{ result: LocalTicket }>(res);
+    const idB = result!.result.id;
+
+    res = await post(u(TICKETS_API, idA, "link"), {
+      type: "linked",
+      linkedId: idB,
+    });
+    expect(res.status).toBe(201);
+
+    res = await post(u(TICKETS_API, idA, "link"), {
+      type: "linked",
+      linkedId: idB,
+    });
+    expect(res.status).toBeGreaterThanOrEqual(400);
+
+    res = await get(u(TICKETS_API, idA));
+    result = await parse<{ result: LocalTicket }>(res);
+    const linksA = result!.result.links.filter(
+      (l) => l.linkedId === idB && l.type === "linked"
+    );
+    expect(linksA.length).toBe(1);
+
+    res = await get(u(TICKETS_API, idB));
+    result = await parse<{ result: LocalTicket }>(res);
+    const linksB = result!.result.links.filter(
+      (l) => l.linkedId === idA && l.type === "linked"
+    );
+    expect(linksB.length).toBe(1);
+
+    await del(u(TICKETS_API, idA));
+    await del(u(TICKETS_API, idB));
+  });
+
+  test("unlinking removes both directional links", async () => {
+    let res = await post(TICKETS_API, {
+      title: "Parent",
+      body: "parent body",
+    });
+    expect(res.status).toBe(201);
+    let result = await parse<{ result: LocalTicket }>(res);
+    const parent = result!.result;
+    const idA = parent.id;
+
+    res = await post(TICKETS_API, {
+      title: "Child",
+      body: "child body",
+    });
+    expect(res.status).toBe(201);
+    result = await parse<{ result: LocalTicket }>(res);
+    const child = result!.result;
+    const idB = child.id;
+
+    res = await post(u(TICKETS_API, idA, "link"), {
+      type: "blocks",
+      linkedId: idB,
+    });
+    expect(res.status).toBe(201);
+
+    res = await del(u(TICKETS_API, idA, "link", idB));
+    expect(res.status).toBe(200);
+
+    res = await get(u(TICKETS_API, idA));
+    result = await parse<{ result: LocalTicket }>(res);
+
+    expect(result!.result.links.length).toBe(0);
+
+    res = await get(u(TICKETS_API, idB));
+    result = await parse<{ result: LocalTicket }>(res);
+    expect(result!.result.links.length).toBe(0);
+
+    await del(u(TICKETS_API, idA));
+    await del(u(TICKETS_API, idB));
+  });
+
+  test("deleting a ticket removes links from others", async () => {
+    let res = await post(TICKETS_API, { title: "A" });
+    expect(res.status).toBe(201);
+    let result = await parse<{ result: LocalTicket }>(res);
+    const idA = result!.result.id;
+
+    res = await post(TICKETS_API, { title: "B" });
+    expect(res.status).toBe(201);
+    result = await parse<{ result: LocalTicket }>(res);
+    const idB = result!.result.id;
+
+    res = await post(u(TICKETS_API, idA, "link"), {
+      type: "linked",
+      linkedId: idB,
+    });
+    expect(res.status).toBe(201);
+
+    res = await del(u(TICKETS_API, idA));
+    expect(res.status).toBe(200);
+
+    res = await get(u(TICKETS_API, idB));
+    result = await parse<{ result: LocalTicket }>(res);
+    expect(result!.result.links.length).toBe(0);
+
+    await del(u(TICKETS_API, idB));
   });
 });
