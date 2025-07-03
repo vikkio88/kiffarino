@@ -74,7 +74,7 @@ kfr start 5321 # <- will start the server on port 5321
     - [x] Delete
     - [x] Move
     - [x] Archive
-    - [ ] Link
+    - [x] Link
     - [x] Tags CRUD
     - [ ] Priority Ordering
 
@@ -101,6 +101,9 @@ kfr start 5321 # <- will start the server on port 5321
   - [ ] Update
   - [ ] Delete
   - [ ] Archive
+
+- Bugs
+  - Sending malformed JSON gives a 500
 
 - Nice to have
   - [ ] Drag&Drop for Board
