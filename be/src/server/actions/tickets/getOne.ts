@@ -33,17 +33,18 @@ export async function getOne(c: Context) {
     return c.json({ error: "Not Found" }, 404);
   }
 
-  if (ticket.hasLinks()) {
-    const ids = ticket.linkIds().map((l) => l.linkedId);
+  // if  current ticket has links
+  const currentTicketLinks = db.links[id];
+  if (currentTicketLinks && currentTicketLinks.length > 0) {
+    const ids = db.links[id]!.map((l) => l.linkedId);
     const t = db.tickets
       .filter((t) => ids.includes(t.id))
       .reduce((acc, ticket) => {
         acc[ticket.id] = ticket;
         return acc;
       }, {} as Record<string, TicketRecord>);
-    //TODO: maybe report a broken link
 
-    ticket.loadLinks(t);
+    ticket.loadLinks(currentTicketLinks, t);
   }
 
   return c.json<ApiResult<Ticket>>({ result: ticket }, 200);
