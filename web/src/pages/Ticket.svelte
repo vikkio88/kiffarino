@@ -64,54 +64,60 @@
   </FCP>
 {:then resp}
   {#if resp?.result}
-    <div class="f1 pd">
-      <div class="head">
-        <Info
-          id={resp.result.id}
-          status={resp.result.status}
-          type={resp.result.type}
-          onSuccess={refresh}
-        />
-      </div>
-      {#if isEditingBody}
-        <Edit fields={resp.result} onChange={onTicketUpdate} />
-      {:else}
-        <h1 class="ta-c">{resp.result.title}</h1>
-        <div class="body pd">
-          <Renderer text={resp.result.body} />
+    <div class="f1 f c pd">
+      <div class="ticket">
+        <div class="head">
+          <Info
+            id={resp.result.id}
+            status={resp.result.status}
+            type={resp.result.type}
+            onSuccess={refresh}
+          />
         </div>
-      {/if}
-      <LinksEditor links={resp.result.links} />
-    </div>
-    <div class="bottom">
-      <div class="f c">
-        <span data-tooltip={cd(resp.result.createdAt)}>
-          🆕 {ago(resp.result.createdAt)}
-        </span>
-        <span data-tooltip={cd(resp.result.updatedAt)}>
-          ✏️ {ago(resp.result.updatedAt)}
-        </span>
-      </div>
-
-      <!-- <div>Links/Tags</div> -->
-
-      <div class="edit f rc g" class:bg={isEditingBody}>
         {#if isEditingBody}
-          <button class="n-btn" onclick={onUpdate}> 💾 </button>
-          <button class="n-btn" onclick={() => (isEditingBody = false)}>
-            ❌
-          </button>
+          <Edit fields={resp.result} onChange={onTicketUpdate} />
         {:else}
-          <ConfirmBtn tooltip="Delete" onConfirm={onDelete}>🗑️</ConfirmBtn>
-          <ConfirmBtn tooltip="Archive" onConfirm={onArchive}>🗄️</ConfirmBtn>
-          <button
-            data-tooltip="Edit"
-            class="n-btn"
-            onclick={() => (isEditingBody = true)}
-          >
-            📝
-          </button>
+          <h1 class="ta-c">{resp.result.title}</h1>
+          <div class="body pd">
+            <Renderer text={resp.result.body} />
+          </div>
         {/if}
+      </div>
+      <details>
+        <summary>Links 🔗</summary>
+        <LinksEditor
+          links={resp.result.links}
+          onSuccess={() => console.log("On add link success")}
+        />
+      </details>
+      <div class="bottom">
+        <div class="f c">
+          <span data-tooltip={cd(resp.result.createdAt)}>
+            🆕 {ago(resp.result.createdAt)}
+          </span>
+          <span data-tooltip={cd(resp.result.updatedAt)}>
+            ✏️ {ago(resp.result.updatedAt)}
+          </span>
+        </div>
+
+        <div class="edit f rc g" class:bg={isEditingBody}>
+          {#if isEditingBody}
+            <button class="n-btn" onclick={onUpdate}> 💾 </button>
+            <button class="n-btn" onclick={() => (isEditingBody = false)}>
+              ❌
+            </button>
+          {:else}
+            <ConfirmBtn tooltip="Delete" onConfirm={onDelete}>🗑️</ConfirmBtn>
+            <ConfirmBtn tooltip="Archive" onConfirm={onArchive}>🗄️</ConfirmBtn>
+            <button
+              data-tooltip="Edit"
+              class="n-btn"
+              onclick={() => (isEditingBody = true)}
+            >
+              📝
+            </button>
+          {/if}
+        </div>
       </div>
     </div>
   {:else}
@@ -122,6 +128,9 @@
 {/await}
 
 <style>
+  .ticket {
+    flex: 5;
+  }
   .body {
     font-size: 1.2rem;
     height: 70%;
@@ -133,18 +142,26 @@
     position: relative;
   }
 
+  details {
+    padding: var(--pad);
+  }
+
+  summary {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+  }
+
   .bg {
     background-color: var(--gray-1-color);
     padding: 0.1rem 0.5rem;
     border-radius: var(--border-radius);
   }
   .bottom {
-    position: absolute;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     padding: 1rem;
-    bottom: 0;
+
     width: 100%;
     background-color: var(--black-2-color);
   }

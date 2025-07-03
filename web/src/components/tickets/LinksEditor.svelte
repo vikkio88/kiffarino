@@ -1,49 +1,90 @@
 <script lang="ts">
-  import type { TitledLink } from "@kiffarino/shared";
+  import type { LinkType, TicketRecord, TitledLink } from "@kiffarino/shared";
   import { typeEmojiMap, typeLabelMap } from "./linkType";
+  import TitleSearch from "./TitleSearch.svelte";
 
-  type Props = { links: TitledLink[] };
+  type Props = { links: TitledLink[]; onSuccess: () => void };
 
-  const { links }: Props = $props();
+  const { links, onSuccess }: Props = $props();
 
   const hasNoLinks = links.length < 1;
+
+  let selectedTicketToAdd: TicketRecord | undefined = $state();
+  let selectedType: LinkType = $state("linked");
+  let isAddingLink = $state(false);
+  let canAdd = $derived(Boolean(selectedTicketToAdd) && Boolean(selectedType));
+
+  const onReset = () => {
+    selectedTicketToAdd = undefined;
+  };
+
+  const onCancel = () => {
+    onReset();
+    isAddingLink = false;
+  };
+  const add = () => {
+    console.log("adding link");
+    isAddingLink = false;
+    onSuccess();
+  };
 </script>
 
 <div class="wrapper">
-  <ul>
-    {#each links as link}
-      <li>
-        <div
-          class="link"
-          data-tooltip={typeLabelMap[link.type]}
-          data-tooltip-position="right"
-        >
-          <a href={`/tickets/${link.linkedId}`}>
-            {link.title}
-          </a>
-          {typeEmojiMap[link.type]}
-        </div>
-      </li>
-    {/each}
-  </ul>
-  <button class="n-btn" class:hasNoLinks> Add Link 🖇️ </button>
+  {#if isAddingLink}
+    <div class="f r g spb">
+      <TitleSearch
+        clearIcon="🧹"
+        onSearch={(title) => console.log({ title })}
+        {onReset}
+      />
+      <div class="f r g">
+        <button class="n-btn" class:hasNoLinks disabled={!canAdd} onclick={add}>
+          ✅
+        </button>
+        <button class="n-btn" class:hasNoLinks onclick={onCancel}>❌</button>
+      </div>
+    </div>
+  {:else}
+    <ul>
+      {#each links as link}
+        <li>
+          <div
+            class="link"
+            data-tooltip={typeLabelMap[link.type]}
+            data-tooltip-position="right"
+          >
+            <a href={`/tickets/${link.linkedId}`}>
+              {link.title}
+            </a>
+            {typeEmojiMap[link.type]}
+          </div>
+        </li>
+      {/each}
+    </ul>
+    <button
+      class="n-btn"
+      class:hasNoLinks
+      onclick={() => (isAddingLink = true)}
+    >
+      Add Link
+    </button>
+  {/if}
 </div>
 
 <style>
   .wrapper {
     padding: var(--pad);
-    position: absolute;
     border: var(--borders);
     border-radius: var(--border-radius);
     background-color: var(--black-2-color);
-    width: 250px;
+    width: 350px;
   }
 
   button.n-btn {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-weight: 700;
+    font-weight: bold;
     font-size: 1.1rem;
     color: var(--primary-color);
     margin-top: 1rem;

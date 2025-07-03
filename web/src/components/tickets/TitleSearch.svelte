@@ -1,7 +1,11 @@
 <script lang="ts">
-  type Props = { onSearch: (title: string) => void; onReset: () => void };
+  type Props = {
+    clearIcon?: string;
+    onSearch: (title: string) => void;
+    onReset: () => void;
+  };
 
-  const { onSearch, onReset }: Props = $props();
+  const { onSearch, onReset, clearIcon = "❌" }: Props = $props();
 
   let title: undefined | string = $state(undefined);
 
@@ -32,7 +36,7 @@
         onReset();
       }}
     >
-      ❌
+      {clearIcon}
     </button>
   </div>
 </form>
