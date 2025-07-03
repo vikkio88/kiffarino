@@ -9,6 +9,7 @@
   import Info from "../components/tickets/Info.svelte";
   import { getParam, type RouteParams } from "../libs/routing";
   import Edit, { type BodyFields } from "../components/tickets/Edit.svelte";
+  import LinksEditor from "../components/tickets/LinksEditor.svelte";
 
   type Props = {
     route: RouteParams<{ id: string }>;
@@ -80,6 +81,7 @@
           <Renderer text={resp.result.body} />
         </div>
       {/if}
+      <LinksEditor links={resp.result.links} />
     </div>
     <div class="bottom">
       <div class="f c">
@@ -102,7 +104,11 @@
         {:else}
           <ConfirmBtn tooltip="Delete" onConfirm={onDelete}>🗑️</ConfirmBtn>
           <ConfirmBtn tooltip="Archive" onConfirm={onArchive}>🗄️</ConfirmBtn>
-          <button data-tooltip="Edit" class="n-btn" onclick={() => (isEditingBody = true)}>
+          <button
+            data-tooltip="Edit"
+            class="n-btn"
+            onclick={() => (isEditingBody = true)}
+          >
             📝
           </button>
         {/if}

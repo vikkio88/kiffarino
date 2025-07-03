@@ -29,17 +29,6 @@
   ></textarea>
 </div>
 
-<!-- <div class="links pd">
-  <h4>Link Ticket</h4>
-  <ul>
-    {#each links as link}
-      <li>{link.type} {link.title}</li>
-    {:else}
-      <button>Link</button>
-    {/each}
-  </ul>
-</div> -->
-
 <style>
   .body {
     font-size: 1.2rem;
