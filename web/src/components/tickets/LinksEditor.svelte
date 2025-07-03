@@ -1,7 +1,14 @@
 <script lang="ts">
-  import type { LinkType, TicketRecord, TitledLink } from "@kiffarino/shared";
+  import {
+    linkTypes,
+    type LinkType,
+    type TicketRecord,
+    type TitledLink,
+  } from "@kiffarino/shared";
   import { typeEmojiMap, typeLabelMap } from "./linkType";
   import TitleSearch from "./TitleSearch.svelte";
+  import { tick } from "svelte";
+  import { filter } from "../../api/tickets";
 
   type Props = { links: TitledLink[]; onSuccess: () => void };
 
@@ -12,37 +19,86 @@
   let selectedTicketToAdd: TicketRecord | undefined = $state();
   let selectedType: LinkType = $state("linked");
   let isAddingLink = $state(false);
+  let isLinking = $state(false);
   let canAdd = $derived(Boolean(selectedTicketToAdd) && Boolean(selectedType));
+  let results: undefined | TicketRecord[] = $state();
 
   const onReset = () => {
     selectedTicketToAdd = undefined;
+    results = undefined;
   };
 
   const onCancel = () => {
     onReset();
+    isLinking = false;
     isAddingLink = false;
   };
+
+  const onSearch = async (title: string) => {
+    const res = await filter({ title });
+    if (!res) {
+      results = [];
+    }
+
+    results = res?.result ?? [];
+  };
+
   const add = () => {
-    console.log("adding link");
-    isAddingLink = false;
+    console.log("adding link", {
+      ticket: selectedTicketToAdd,
+      type: selectedType,
+    });
+    onCancel();
     onSuccess();
+  };
+
+  const select = (ticket: TicketRecord) => {
+    results = undefined;
+    selectedTicketToAdd = ticket;
+    isLinking = true;
   };
 </script>
 
 <div class="wrapper">
   {#if isAddingLink}
+    {#if isLinking}
+      <div class="f rc g">
+        <span>
+          {selectedTicketToAdd?.title}
+        </span>
+        <div>
+          <span>{typeEmojiMap[selectedType]}</span>
+          <select bind:value={selectedType}>
+            {#each linkTypes as t}
+              <option value={t}>
+                {typeLabelMap[t]}
+              </option>
+            {/each}
+          </select>
+        </div>
+      </div>
+    {/if}
     <div class="f r g spb">
-      <TitleSearch
-        clearIcon="🧹"
-        onSearch={(title) => console.log({ title })}
-        {onReset}
-      />
+      {#if !isLinking}
+        <TitleSearch clearIcon="🧹" {onSearch} {onReset} />
+      {/if}
       <div class="f r g">
         <button class="n-btn" class:hasNoLinks disabled={!canAdd} onclick={add}>
           ✅
         </button>
         <button class="n-btn" class:hasNoLinks onclick={onCancel}>❌</button>
       </div>
+    </div>
+    <div class="searchResult" class:hasResults={Boolean(results)}>
+      {#if results}
+        {#each results as ticket}
+          <button class="n-btn" onclick={() => select(ticket)}>
+            {ticket.title}
+          </button>
+        {:else}
+          <span>No tickets...</span>
+        {/each}
+      {/if}
     </div>
   {:else}
     <ul>
@@ -73,6 +129,7 @@
 
 <style>
   .wrapper {
+    position: relative;
     padding: var(--pad);
     border: var(--borders);
     border-radius: var(--border-radius);
@@ -139,5 +196,47 @@
   .link a:focus {
     color: var(--primary-color);
     text-decoration: underline;
+  }
+
+  .searchResult {
+    position: relative;
+    margin-top: 1rem;
+    padding: 0.5em;
+    border: 1px solid var(--gray-color);
+    background-color: var(--black-2-color);
+    border-radius: 6px;
+    flex-direction: column;
+    gap: 0.25em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+    display: none;
+    transform: scale(0.98);
+    pointer-events: none;
+  }
+
+  .hasResults {
+    display: flex;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+
+  .searchResult button {
+    all: unset;
+    cursor: pointer;
+    padding: 0.4em 0.6em;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    color: var(--main-font-color);
+  }
+  .searchResult button:hover {
+    background-color: var(--black-3-color);
+  }
+
+  select {
+    padding: 0.5rem 1rem;
   }
 </style>
