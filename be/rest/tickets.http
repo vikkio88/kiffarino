@@ -2,7 +2,19 @@
 get http://localhost:3003/api/tickets?statuses=todo,inProgress,backlog
 
 ### getOne
-get http://localhost:3003/api/tickets/01JZ5QYV4RF86W1NHP2S9VACN6
+get http://localhost:3003/api/tickets/01JZ5WE7A0RQTNFY0B188D8HVG
+
+### link
+POST  http://localhost:3003/api/tickets/01JZ8CRNQ7S69AHR9X541A97ZR/link
+Content-Type: "application/json"
+
+{
+    "type": "linked",
+    "linkedId": "01JZ8E15XQ8CZ71KXKJT6TXDG6"
+}
+
+### unlink
+DELETE  http://localhost:3003/api/tickets/01JZ5WE7A1ZKRXG2WW1DWFPJPQ/link/01JZ5WE7A0RQTNFY0B188D8HVG
 
 ### udpate
 PUT  http://localhost:3003/api/tickets/01JYRK01WZ69BYMSTDHMM5QR80
@@ -26,7 +38,7 @@ POST  http://localhost:3003/api/tickets/01JZ3282YH09KWEBWVF5X82REF/archive
 
 
 ### delete
-DELETE http://localhost:3003/api/tickets/01JYF12RS4V9WDTB8AHQT8Y7ZF
+DELETE http://localhost:3003/api/tickets/01JZ837XDVDS9QSMQT7Y9HBTH0
 
 ### Create
 
@@ -34,8 +46,7 @@ post http://localhost:3003/api/tickets
 Content-Type: "application/json"
 
 {
-    "title": "Thingy333",
+    "title": "Make some stuff with the thing",
     "body": "Bloppo Blippo",
-    "status": "inProgress",
-    "tags":["mario", "cacca"]
+    "status": "todo"
 }
