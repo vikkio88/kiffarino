@@ -26,6 +26,7 @@
   ],
   "license": "ISC",
   "scripts": {
+    "be:clean": "cd be && bun start generate -f",
     "dev:be": "bun --filter '@kiffarino/be' dev",
     "dev": "bun --filter '*' dev",
     "check": "bun --filter '*' check",
