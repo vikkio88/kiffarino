@@ -1,3 +1,5 @@
+![Kiffarino Logo](/assets//logo.svg)
+
 # kiffarino/kfr
 
 Kiffarino is a lightweight, local-first project management tool built for developers and small teams who prefer a simple, CLI and Web based workflow tracking tool.
@@ -11,6 +13,7 @@ It's like Jira, but simple and it just works.
 Loosely based on another side project of mine: [kiffari](https://github.com/vikkio88/kiffari).
 
 > Kiffari: from sicilian (Aju) Chiffari = I've got stuff to do.
+
 
 ## ✨ Features
 
@@ -63,11 +66,13 @@ kfr start 5321 # <- will start the server on port 5321
 ## TODOs
 
 - [x] Cli
+
   - [x] version
 
 - [ ] Tickets
 
   - [ ] BE
+
     - [x] Create
     - [x] Read
     - [x] Update
@@ -79,19 +84,21 @@ kfr start 5321 # <- will start the server on port 5321
     - [ ] Priority Ordering
 
   - [ ] FE
+
     - [x] Create
     - [x] Read
     - [x] Update
     - [x] Delete
     - [x] Move
     - [x] Archive
-    - [ ] Link
-      - [ ] Search ticket to link
+    - [ ] Show/Set Priority
+    - [x] Link
+
+      - [x] Search ticket to link
         - [x] BE Search
         - [x] Title Search moved to its own component
 
-    - [ ] Tags CRUD
-    - [ ] Tags Search
+    - [x] Tags CRUD on Ticket
     - [ ] Priority CRUD
 
 - [ ] Docs
@@ -103,14 +110,18 @@ kfr start 5321 # <- will start the server on port 5321
   - [ ] Archive
 
 - Bugs
+
   - Sending malformed JSON gives a 500
 
 - Nice to have
+
+  - [ ] Abstract db ops to drivers so could swap db for something else
   - [ ] Drag&Drop for Board
   - [ ] Routes to fetch Archived tickets
   - [ ] Tags
+    - [ ] Tags Search/Autocomplete
     - [x] Implement Tags parsing
-    - [ ] Implement Tags Filters/Update/Create (zod)
+    - [x] Implement Tags Filters/Update/Create (zod)
 
   - [x] Ticket type
   - [ ] Short code?
