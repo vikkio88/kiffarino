@@ -48,5 +48,6 @@ Content-Type: "application/json"
 {
     "title": "Make some stuff with the thing",
     "body": "Bloppo Blippo",
-    "status": "todo"
+    "status": "todo",
+    "tags": ["cocco", "meddo", "polpo"]
 }
