@@ -6,9 +6,16 @@
     position?: "top" | "right" | "left" | "bottom";
     children: Snippet;
     onConfirm: () => void;
+    confirmLabel?: string;
   };
 
-  const { tooltip, position = "top", onConfirm, children }: Props = $props();
+  const {
+    confirmLabel = "✅",
+    tooltip,
+    position = "top",
+    onConfirm,
+    children,
+  }: Props = $props();
   let clicked = $state(false);
 </script>
 
@@ -31,7 +38,7 @@
         clicked = false;
       }}
     >
-      ✅
+      {confirmLabel}
     </button>
   </div>
 {/if}
