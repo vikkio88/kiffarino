@@ -7,6 +7,7 @@ import { loadConfig } from "../libs/config";
 type DBSchema = {
   tickets: TicketRecord[];
   links: Record<string, Link[]>;
+  tags: string[];
 };
 
 let db: Low<DBSchema>;
@@ -15,7 +16,11 @@ export function makeDb() {
     const { baseFolder } = loadConfig();
     const file = path.join(baseFolder, DB_FILENAME);
     const adapter = new JSONFile<DBSchema>(file);
-    const defaultData: DBSchema = { tickets: [], links: {} };
+    const defaultData: DBSchema = {
+      tickets: [],
+      links: {},
+      tags: [],
+    };
 
     db = new Low<DBSchema>(adapter, defaultData);
   }
