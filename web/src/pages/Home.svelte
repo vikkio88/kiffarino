@@ -1,5 +1,6 @@
 <script lang="ts">
   import Board from "../components/board/Board.svelte";
+  import logo from "../assets/favicon.svg";
 </script>
 
 <Board />
@@ -7,7 +8,7 @@
 <div class="bottom">
   <span>
     <a href="https://github.com/vikkio88/kiffarino" target="_blank">
-      🧑‍💻 kiffarino
+      <img class="logo" src={logo} alt="Kiffarino Logo" /> kiffarino
     </a>
   </span>
 </div>
@@ -29,5 +30,9 @@
 
   .bottom > span > a:hover {
     color: var(--primary-color);
+  }
+
+  .logo {
+    width: 1rem;
   }
 </style>
