@@ -1,0 +1,10 @@
+### Filter
+get http://localhost:3003/api/tags?tag="ia"
+
+### Create
+post http://localhost:3003/api/tags
+Content-Type: "application/json"
+
+{
+    "tag": "Ma"
+}
