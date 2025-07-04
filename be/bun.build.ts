@@ -2,6 +2,7 @@ const result = await Bun.build({
   entrypoints: ["./src/index.ts"],
   outdir: "./dist",
   target: "node",
+  minify: true,
 });
 
 if (!result.success) {

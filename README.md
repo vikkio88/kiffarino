@@ -18,7 +18,7 @@ Loosely based on another side project of mine: [kiffari](https://github.com/vikk
 ## ✨ Features
 
 - 🗃️ **Local-first ticket and task management** — Everything is stored locally in plain files, no cloud required.
-- ⚡ **Lightweight** — Minimal dependencies, with a total size of ~600 KB.
+- ⚡ **Lightweight** — Minimal dependencies, with a total size of ~420 KB.
 - 🏷️ **Flexible ticketing** — Supports tags, filters, and status tracking out of the box.
 - 🛠️ **Modern stack** — Built with TypeScript, Bun, and Svelte 5.
 - 📝 **Markdown-based tickets** — Tickets are just Markdown files you can open and edit manually anytime.
