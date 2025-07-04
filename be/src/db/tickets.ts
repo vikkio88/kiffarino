@@ -8,6 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { loadConfig, type ProjectConfig } from "../libs/config";
 import db from ".";
+import { upsertMultiTags } from "./tags";
 
 export const sort = {
   byUpdatedASC: (a: TicketRecord, b: TicketRecord) =>
@@ -105,6 +106,14 @@ export async function save(ticket: Ticket, isUpdate = false) {
       ticket.toRecord(),
     ];
   }
+
+  //TODO: add tags refresh
+  if (ticket.tags.length > 0) {
+    const oldTags = db().data.tags;
+    const [newTags] = upsertMultiTags(ticket.tags, oldTags);
+    db().data.tags = newTags;
+  }
+
   await db().write();
 
   const basePath = config.baseFolder;
