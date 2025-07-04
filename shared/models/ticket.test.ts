@@ -1,5 +1,5 @@
 import { describe, test, expect } from "bun:test";
-import { calculateStatus, Ticket, type TicketStatus } from "./ticket";
+import { calculateStatus, Ticket, toTag, type TicketStatus } from "./ticket";
 
 describe("Loading Ticket from Markdown", () => {
   test("parses metadata and body correctly, then returns it as its previous state", () => {
@@ -317,5 +317,14 @@ It describes what needs to be fixed.`;
       updatedAt: 1718880030000,
       filename: "testTicket.md",
     });
+  });
+});
+
+describe("toTag", () => {
+  test("converts string to kebab-case and strips special characters", () => {
+    expect(toTag(" Front End! ")).toBe("front-end");
+    expect(toTag("BACK_end  ")).toBe("backend");
+    expect(toTag("tag#123!!")).toBe("tag123");
+    expect(toTag("multi   space")).toBe("multi-space");
   });
 });

@@ -1,6 +1,18 @@
 import { parseMd } from "../libs/parsers";
 import { type Link, TitledLink } from "./links";
 
+export function toTag(newTag: string): string {
+  return (
+    newTag
+      .trim()
+      .toLowerCase()
+      // replacing spaces with dashes
+      .replace(/\s+/g, "-")
+      // removing special characters
+      .replace(/[^a-z0-9\-]/g, "")
+  );
+}
+
 export const ticketStatuses = [
   "idea",
   "backlog",
@@ -68,7 +80,7 @@ export class Ticket {
     this.tags = tags
       ? tags
           .split(TAG_SEPARATOR)
-          .map((t) => t.trim())
+          .map((t) => toTag(t.trim()))
           .filter(Boolean)
       : [];
     this.body = body;
