@@ -56,7 +56,6 @@ export function generate(args: string[]) {
 
   const backlogTicket = createTicket("Backlog test ticket", {
     body: `This is your first backlog ticket inside ${config.baseFolder}/tickets.\n`,
-    tagsString: "example,",
   });
   save(backlogTicket);
 
