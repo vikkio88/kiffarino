@@ -1,27 +1,41 @@
 <script lang="ts">
   import {
+    Link,
     linkTypes,
+    TitledLink,
     type LinkType,
     type TicketRecord,
-    type TitledLink,
   } from "@kiffarino/shared";
   import { typeEmojiMap, typeLabelMap } from "./linkType";
   import TitleSearch from "./TitleSearch.svelte";
-  import { tick } from "svelte";
-  import { filter } from "../../api/tickets";
+  import { createLink, filter, removeLink } from "../../api/tickets";
+  import ConfirmBtn from "../shared/ConfirmBtn.svelte";
 
-  type Props = { links: TitledLink[]; onSuccess: () => void };
+  type Props = { links: TitledLink[]; ticketId: string };
 
-  const { links, onSuccess }: Props = $props();
+  type Stage = "display" | "selecting" | "linking";
 
-  const hasNoLinks = links.length < 1;
+  const { links, ticketId }: Props = $props();
+
+  let localLinks = $state(links);
+  let hasNoLinks = $derived(localLinks.length < 1);
+
+  let stage: Stage = $state("display");
 
   let selectedTicketToAdd: TicketRecord | undefined = $state();
   let selectedType: LinkType = $state("linked");
-  let isAddingLink = $state(false);
-  let isLinking = $state(false);
   let canAdd = $derived(Boolean(selectedTicketToAdd) && Boolean(selectedType));
   let results: undefined | TicketRecord[] = $state();
+
+  const onDelete = async (linkedId: string) => {
+    const result = await removeLink(ticketId, linkedId);
+    if (result) {
+      localLinks = localLinks.filter((l) => l.linkedId !== linkedId);
+      return;
+    }
+
+    //TODO: handle error in case the removing operation failed
+  };
 
   const onReset = () => {
     selectedTicketToAdd = undefined;
@@ -30,8 +44,7 @@
 
   const onCancel = () => {
     onReset();
-    isLinking = false;
-    isAddingLink = false;
+    stage = "display";
   };
 
   const onSearch = async (title: string) => {
@@ -40,46 +53,58 @@
       results = [];
     }
 
-    results = res?.result ?? [];
+    results = (res?.result ?? []).filter(
+      (t) =>
+        t.id !== ticketId && !localLinks.map((l) => l.linkedId).includes(t.id)
+    );
   };
 
-  const add = () => {
-    console.log("adding link", {
-      ticket: selectedTicketToAdd,
-      type: selectedType,
-    });
+  const add = async () => {
+    if (!selectedTicketToAdd) {
+      return;
+    }
+
+    const newLink = new Link(selectedTicketToAdd.id, selectedType);
+
+    const result = await createLink(ticketId, newLink);
+    if (result) {
+      localLinks.push(new TitledLink(newLink, selectedTicketToAdd.title));
+      onCancel();
+      return;
+    }
+
+    // TODO: handle error
     onCancel();
-    onSuccess();
   };
 
   const select = (ticket: TicketRecord) => {
     results = undefined;
     selectedTicketToAdd = ticket;
-    isLinking = true;
+    stage = "linking";
   };
 </script>
 
 <div class="wrapper">
-  {#if isAddingLink}
-    {#if isLinking}
-      <div class="f rc g">
-        <span>
-          {selectedTicketToAdd?.title}
-        </span>
-        <div>
-          <span>{typeEmojiMap[selectedType]}</span>
-          <select bind:value={selectedType}>
-            {#each linkTypes as t}
-              <option value={t}>
-                {typeLabelMap[t]}
-              </option>
-            {/each}
-          </select>
-        </div>
-      </div>
-    {/if}
+  {#if stage === "selecting" || stage === "linking"}
     <div class="f r g spb">
-      {#if !isLinking}
+      {#if stage === "linking"}
+        <div class="f rc g">
+          <span>
+            {selectedTicketToAdd?.title}
+          </span>
+          <div>
+            <span>{typeEmojiMap[selectedType]}</span>
+            <select bind:value={selectedType}>
+              {#each linkTypes as t}
+                <option value={t}>
+                  {typeLabelMap[t]}
+                </option>
+              {/each}
+            </select>
+          </div>
+        </div>
+      {/if}
+      {#if stage === "selecting"}
         <TitleSearch clearIcon="🧹" {onSearch} {onReset} />
       {/if}
       <div class="f r g">
@@ -100,10 +125,15 @@
         {/each}
       {/if}
     </div>
-  {:else}
+  {/if}
+  {#if stage === "display"}
     <ul>
-      {#each links as link}
-        <li>
+      {#each localLinks as link}
+        <li class="f g">
+          <ConfirmBtn
+            tooltip="Remove Link"
+            onConfirm={() => onDelete(link.linkedId)}>🗑️</ConfirmBtn
+          >
           <div
             class="link"
             data-tooltip={typeLabelMap[link.type]}
@@ -118,12 +148,10 @@
       {/each}
     </ul>
     <button
-      class="n-btn"
+      class="n-btn add"
       class:hasNoLinks
-      onclick={() => (isAddingLink = true)}
+      onclick={() => (stage = "selecting")}>➕ Link</button
     >
-      Add Link
-    </button>
   {/if}
 </div>
 
@@ -154,6 +182,14 @@
     margin-bottom: 1rem;
   }
 
+  .add.n-btn {
+    color: var(--main-font-color);
+  }
+  .add.n-btn:hover {
+    background-color: var(--black-1-color);
+    color: var(--main-font-color);
+  }
+
   ul {
     list-style: none;
     padding: 0;
@@ -161,10 +197,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-  }
-
-  li {
-    display: flex;
   }
 
   .link {
@@ -175,6 +207,7 @@
     padding: 0.5rem 1rem;
     display: flex;
     align-items: center;
+    max-width: 280px;
     gap: 0.7rem;
     flex: 1;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -187,7 +220,7 @@
     flex: 1;
     color: var(--main-font-color);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
