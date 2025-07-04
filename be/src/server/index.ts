@@ -5,6 +5,7 @@ import { NAME, SERVER_PORT } from "@kiffarino/shared/config";
 import staticHandler from "../static";
 import tickets from "./actions/tickets";
 import assets from "./actions/assets";
+import tags from "./actions/tags";
 
 const server = new Hono();
 
@@ -27,6 +28,7 @@ server.get("/health", (c) => {
 const api = new Hono().basePath("/api");
 api.route("/", tickets);
 api.route("/", assets);
+api.route("/", tags);
 
 api.all("*", (c) => c.json({}, 400));
 
