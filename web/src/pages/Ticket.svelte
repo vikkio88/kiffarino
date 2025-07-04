@@ -10,6 +10,7 @@
   import { getParam, type RouteParams } from "../libs/routing";
   import Edit, { type BodyFields } from "../components/tickets/Edit.svelte";
   import LinksEditor from "../components/tickets/LinksEditor.svelte";
+  import TagsEditor from "../components/tickets/TagsEditor.svelte";
 
   type Props = {
     route: RouteParams<{ id: string }>;
@@ -83,12 +84,9 @@
           </div>
         {/if}
       </div>
-      <details>
+      <details open={resp.result.links.length > 0}>
         <summary>Links 🔗</summary>
-        <LinksEditor
-          links={resp.result.links}
-          onSuccess={() => console.log("On add link success")}
-        />
+        <LinksEditor links={resp.result.links} ticketId={id} />
       </details>
       <div class="bottom">
         <div class="f c">
@@ -99,6 +97,11 @@
             ✏️ {ago(resp.result.updatedAt)}
           </span>
         </div>
+
+        <TagsEditor
+          ticketId={id}
+          tags={resp.result.tags}
+        />
 
         <div class="edit f rc g" class:bg={isEditingBody}>
           {#if isEditingBody}
