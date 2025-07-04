@@ -133,4 +133,7 @@ kfr start 5321 # <- will start the server on port 5321
 
   - [ ] Add images on a subfolder and be able to serve it via public serve in api
     - [ ] Picker to search for assets in public folder
-    - [ ] Folder is generated need to link static serve to local folder
+    - [x] Folder is generated need to link static serve to local folder
+    - [x] Folder forward on dev mode too
+  
+  - [ ] Add Github releases
