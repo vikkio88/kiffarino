@@ -1,4 +1,5 @@
 import {
+  Link,
   Ticket,
   type ApiResult,
   type Board,
@@ -83,4 +84,22 @@ export async function createWithRespBody(
   }
 
   return parse<ApiResult<TicketRecord>>(resp);
+}
+
+export async function createLink(
+  ticketId: string,
+  link: Link
+): Promise<boolean> {
+  const resp = await post(u(TICKETS_API, ticketId, "link"), { ...link });
+
+  return resp.status === 201;
+}
+
+export async function removeLink(
+  ticketId: string,
+  linkedId: string
+): Promise<boolean> {
+  const resp = await del(u(TICKETS_API, ticketId, "link", linkedId));
+
+  return resp.status === 200;
 }
