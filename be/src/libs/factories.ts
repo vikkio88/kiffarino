@@ -1,8 +1,6 @@
 import {
   Ticket,
   type CreateTicketParams,
-  type TicketStatus,
-  type TicketType,
 } from "@kiffarino/shared";
 import { generatedId } from "./id";
 

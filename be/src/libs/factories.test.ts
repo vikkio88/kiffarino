@@ -36,6 +36,12 @@ describe("Create a Ticket", () => {
     expect(tagged.tags).toEqual(["ciao", "come", "stai"]);
     expect(tagged.toMarkdown()).toInclude("ciao,come,stai");
   });
+  
+  test("tags getFormatted", () => {
+    const tagged = createTicket("tagged", { tags: ["ciao bello", "come", "stai Qua"] });
+    expect(tagged.tags).toEqual(["ciao-bello", "come", "stai-qua"]);
+    expect(tagged.toMarkdown()).toInclude("ciao-bello,come,stai-qua");
+  });
 
   test("type", () => {
     const typed = createTicket("typed", { type: "bug" });
