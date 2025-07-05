@@ -1,7 +1,7 @@
-import { startServer } from "../../server";
 import { generate } from "./generate";
 import { help } from "./help";
 import { init } from "./init";
+import { start } from "./start";
 import { version } from "./version";
 
 const methods = ["help", "init", "generate", "start", "version"] as const;
@@ -12,9 +12,5 @@ export const map: Record<MethodName, (args: string[]) => void> = {
   init,
   generate,
   version,
-
-  start: (args: string[]) => {
-    const forcedPort = args[0] ? parseInt(args[0]) : undefined;
-    startServer(forcedPort);
-  },
+  start,
 };
