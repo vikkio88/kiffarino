@@ -1,5 +1,5 @@
 <script lang="ts">
-  // import type { TitledLink } from "@kiffarino/shared";
+  import MdEditor from "../shared/MdEditor.svelte";
 
   export type BodyFields = { title?: string; body?: string };
 
@@ -11,8 +11,6 @@
   const { fields: ticket, onChange }: Props = $props();
   let title = $state<string>(ticket.title || "");
   let body = $state<string>(ticket.body || "");
-
-  // let links = $state<TitledLink[]>([]);
 </script>
 
 <input
@@ -22,11 +20,7 @@
 />
 
 <div class="body pd">
-  <textarea
-    onchange={() => onChange({ body })}
-    bind:value={body}
-    placeholder="Add a description..."
-  ></textarea>
+  <MdEditor initialValue={body} onChange={(body) => onChange({ body })} />
 </div>
 
 <style>
@@ -47,17 +41,5 @@
     font-size: 2.5rem;
     text-align: center;
     width: 100%;
-  }
-
-  textarea {
-    width: 100%;
-    height: 90%;
-    resize: none;
-    border: none;
-    padding: 1rem;
-    font-family: inherit;
-    font-size: inherit;
-    background-color: var(--black-2-color);
-    color: var(--main-font-color);
   }
 </style>
