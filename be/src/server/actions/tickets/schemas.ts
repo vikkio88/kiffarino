@@ -33,6 +33,7 @@ export const ticketFilterSchema = z.object({
         !arr || arr.every((s) => ticketStatuses.includes(s as TicketStatus)),
       { message: "Invalid status value(s)" }
     ),
+  tag: z.string().min(2).optional(),
   priority: z.coerce.number().optional(),
   title: z.coerce.string().optional(),
 });

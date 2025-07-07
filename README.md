@@ -118,8 +118,9 @@ kfr start 5321 # <- will start the server on port 5321
   - [ ] Abstract db ops to drivers so could swap db for something else
   - [ ] Drag&Drop for Board
   - [ ] Routes to fetch Archived tickets
-  - [ ] Tags
-    - [ ] Tags Search/Autocomplete
+  - [x] Tags
+    - [x] Tags Search
+    - [x] Tags Autocomplete
     - [x] Implement Tags parsing
     - [x] Implement Tags Filters/Update/Create (zod)
 

@@ -13,6 +13,7 @@ import { TICKETS_API } from "./shared";
 export type Filters = {
   statuses?: TicketStatus[];
   title?: string;
+  tag?: string;
 };
 
 export async function one(id: string): Promise<ApiResult<Ticket> | null> {
@@ -102,4 +103,16 @@ export async function removeLink(
   const resp = await del(u(TICKETS_API, ticketId, "link", linkedId));
 
   return resp.status === 200;
+}
+
+export async function tagsFilter(
+  tag: string
+): Promise<ApiResult<string[]> | null> {
+  const resp = await get(`${u("tags")}${p({ tag })}`);
+
+  if (resp.status !== 200) {
+    return { result: [] };
+  }
+
+  return parse<ApiResult<string[]>>(resp);
 }

@@ -1,5 +1,5 @@
 ### Filter
-get http://localhost:3003/api/tickets?statuses=todo,inProgress,backlog
+get http://localhost:3003/api/tickets?statuses=todo,inProgress&tag=ciao
 
 ### getOne
 get http://localhost:3003/api/tickets/01JZ5WE7A0RQTNFY0B188D8HVG

@@ -1,4 +1,9 @@
-import { type ApiResult, type TicketRecord, type TicketStatus } from "@kiffarino/shared";
+import {
+  toTag,
+  type ApiResult,
+  type TicketRecord,
+  type TicketStatus,
+} from "@kiffarino/shared";
 import type { Context } from "hono";
 import { ticketFilterSchema } from "./schemas";
 import { read } from "../../../db";
@@ -32,8 +37,15 @@ export async function filter(c: Context) {
       ? t.title.toLowerCase().includes(filters.title.toLowerCase())
       : true;
 
-    return statusMatch && priorityMatch && titleMatch;
+    const tagMatch = filters.tag
+      ? t.tags.some((tag) => tag.toLowerCase().includes(toTag(filters.tag!)))
+      : true;
+
+    return statusMatch && priorityMatch && titleMatch && tagMatch;
   });
 
-  return c.json<ApiResult<TicketRecord[]>>({ result: result.toSorted(sort.byUpdatedDESC) }, 200);
+  return c.json<ApiResult<TicketRecord[]>>(
+    { result: result.toSorted(sort.byUpdatedDESC) },
+    200
+  );
 }
