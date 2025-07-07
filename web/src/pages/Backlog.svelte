@@ -1,16 +1,34 @@
 <script lang="ts">
-  import { ticketStatuses, type TicketStatus } from "@kiffarino/shared";
+  import { ticketStatuses, toTag, type TicketStatus } from "@kiffarino/shared";
   import { filter } from "../api/tickets";
   import FPC from "../components/layout/FullPageCentre.svelte";
   import Spinner from "../components/shared/Spinner.svelte";
   import ListItem from "../components/tickets/ListItem.svelte";
   import { emojiMap, statusLabelMap } from "../components/tickets/status";
   import TitleSearch from "../components/tickets/TitleSearch.svelte";
+  import { getQueryParam, type QueryParams } from "../libs/routing";
+  import { goto } from "@mateothegreat/svelte5-router";
+
+  const { route }: { route: QueryParams<{ tag?: string }> } = $props();
+  const initialTag = getQueryParam(route, "tag");
+  const initialSearchParams = {
+    tag: initialTag,
+    statuses: !initialTag ? (["backlog"] as TicketStatus[]) : undefined,
+  };
+
+  let tag: string | undefined = $state(initialSearchParams.tag);
 
   let statusFilter: HTMLDetailsElement;
-  let statuses: TicketStatus[] | undefined = $state(["backlog"]);
+  let statuses: TicketStatus[] | undefined = $state(
+    initialSearchParams.statuses
+  );
+
+  const initialTextFilter = initialSearchParams.tag
+    ? `tag:${toTag(initialSearchParams.tag)}`
+    : undefined;
+
   let title: string | undefined = $state(undefined);
-  const backLogPromise = $derived(filter({ statuses, title }));
+  const backLogPromise = $derived(filter({ statuses, title, tag }));
 
   const isActive = (statuses: TicketStatus[], status: TicketStatus) =>
     statuses.includes(status);
@@ -39,6 +57,12 @@
   };
 
   const onSearch = (value: string) => {
+    if (value.startsWith("tag:")) {
+      title = undefined;
+      tag = value.slice(4).trim();
+      return;
+    }
+
     title = value;
   };
 </script>
@@ -48,9 +72,16 @@
   <div class="f r spa g pd">
     <div class="titleSearch">
       <TitleSearch
+        initialValue={initialTextFilter}
         {onSearch}
         onReset={() => {
+          // this means that something got injected via url
+          if (initialTextFilter) {
+            goto("/backlog");
+          }
+          tag = undefined;
           title = undefined;
+          statuses = ["backlog"];
         }}
       />
     </div>
