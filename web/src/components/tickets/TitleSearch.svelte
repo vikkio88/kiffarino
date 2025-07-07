@@ -1,13 +1,14 @@
 <script lang="ts">
   type Props = {
+    initialValue?: string;
     clearIcon?: string;
     onSearch: (title: string) => void;
     onReset: () => void;
   };
 
-  const { onSearch, onReset, clearIcon = "❌" }: Props = $props();
+  const { initialValue, onSearch, onReset, clearIcon = "❌" }: Props = $props();
 
-  let title: undefined | string = $state(undefined);
+  let title: undefined | string = $state(initialValue);
 
   const onSubmit = (e: SubmitEvent) => {
     e.preventDefault();
