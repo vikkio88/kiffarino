@@ -89,7 +89,7 @@
         <LinksEditor links={resp.result.links} ticketId={id} />
       </details>
       <div class="bottom">
-        <div class="f c">
+        <div class="f1 f c">
           <span data-tooltip={cd(resp.result.createdAt)}>
             🆕 {ago(resp.result.createdAt)}
           </span>
@@ -98,12 +98,11 @@
           </span>
         </div>
 
-        <TagsEditor
-          ticketId={id}
-          tags={resp.result.tags}
-        />
+        <div class="f1 f r cc">
+          <TagsEditor ticketId={id} tags={resp.result.tags} />
+        </div>
 
-        <div class="edit f rc g" class:bg={isEditingBody}>
+        <div class="edit f1" class:bg={isEditingBody}>
           {#if isEditingBody}
             <button class="n-btn" onclick={onUpdate}> 💾 </button>
             <button class="n-btn" onclick={() => (isEditingBody = false)}>
@@ -142,6 +141,15 @@
 
   .edit {
     font-size: 1.5rem;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .edit > .n-btn {
     position: relative;
   }
 
