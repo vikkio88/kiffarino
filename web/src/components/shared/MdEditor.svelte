@@ -32,15 +32,6 @@
 
   let value = $state(initialValue ?? "");
 
-  function addToSelectedTxt(
-    pattern: string,
-    fallback: string | undefined = undefined
-  ) {
-    const selection = csFromTextArea(textarea!);
-    const newValue = insertAtSelection(selection, value, pattern, fallback);
-    value = newValue ?? "";
-  }
-
   const addImage = async () => {
     const selection = csFromTextAreaOrUndefined(textarea!);
     if (!selection) {
@@ -58,7 +49,14 @@
   };
 
   const addLink = async () => {
-    addToSelectedTxt(LINK_PATTERN);
+    const selection = csFromTextArea(textarea!);
+    if (selection.start === selection.end) {
+      return;
+    }
+
+    // maybe move to use wrap selection?
+    const newValue = insertAtSelection(selection, value, LINK_PATTERN);
+    value = newValue ?? "";
     await tick();
     const cursorPos = substringSelection(value, "URL");
     if (!cursorPos) return;
@@ -90,9 +88,9 @@
   <div class="editorCommands">
     <button class="n-btn" disabled={showPreview} onclick={addImage}>🖼️</button>
     <button class="n-btn" disabled={showPreview} onclick={addLink}>🔗</button>
-    <button class="n-btn" disabled={showPreview} onclick={addPluginBlock}
-      >🔌</button
-    >
+    <button class="n-btn" disabled={showPreview} onclick={addPluginBlock}>
+      🔌
+    </button>
   </div>
 
   <button class="n-btn" onclick={() => (showPreview = !showPreview)}>
