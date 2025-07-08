@@ -102,12 +102,14 @@
           <TagsEditor ticketId={id} tags={resp.result.tags} />
         </div>
 
-        <div class="edit f1" class:bg={isEditingBody}>
+        <div class="edit f1">
           {#if isEditingBody}
-            <button class="n-btn" onclick={onUpdate}> 💾 </button>
-            <button class="n-btn" onclick={() => (isEditingBody = false)}>
-              ❌
-            </button>
+            <div class="bg">
+              <button class="n-btn" onclick={onUpdate}> 💾 </button>
+              <button class="n-btn" onclick={() => (isEditingBody = false)}>
+                ❌
+              </button>
+            </div>
           {:else}
             <ConfirmBtn tooltip="Delete" onConfirm={onDelete}>🗑️</ConfirmBtn>
             <ConfirmBtn tooltip="Archive" onConfirm={onArchive}>🗄️</ConfirmBtn>

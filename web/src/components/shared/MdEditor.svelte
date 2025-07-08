@@ -1,8 +1,20 @@
 <script lang="ts">
   import { tick } from "svelte";
-
-  const INSERT_PATTERN = "%SELECTION%";
-  const CURSOR_POSITION = "%URL%";
+  import {
+    appendToText,
+    CURSOR_POSITION,
+    PLACEHOLDER,
+    insertAtSelection,
+    moveCursor,
+    csFromTextArea,
+    substringSelection,
+    csFromTextAreaOrUndefined,
+    wrapSelection,
+    PLUGIN_PATTERN,
+    LINK_PATTERN,
+    IMAGE_PATTERN,
+  } from "./editor/libs";
+  import Renderer from "../md/Renderer.svelte";
 
   type Props = {
     initialValue?: string;
@@ -12,54 +24,96 @@
 
   const {
     initialValue,
-    placeholder = "Add a description...",
+    placeholder = "Add some markdown text...",
     onChange,
   }: Props = $props();
-  let textarea: HTMLTextAreaElement;
+
+  let textarea: HTMLTextAreaElement | undefined = $state();
+
   let value = $state(initialValue ?? "");
 
-  async function insertAtSelection(
+  function addToSelectedTxt(
     pattern: string,
     fallback: string | undefined = undefined
   ) {
-    let selected = value.slice(textarea.selectionStart, textarea.selectionEnd);
-    if (selected === "" && !fallback) {
-      return;
-    }
-
-    if (selected === "" && fallback) {
-      selected = fallback;
-    }
-
-    const newValue = `${value.slice(0, textarea.selectionStart)}${pattern.replace(INSERT_PATTERN, selected).replace(CURSOR_POSITION, "URL")}${value.slice(textarea.selectionEnd)}`;
-
-    value = newValue;
-    await tick();
-    const cursorPos = newValue.indexOf("URL");
-
-    textarea.focus();
-    textarea.setSelectionRange(cursorPos, cursorPos + 3);
+    const selection = csFromTextArea(textarea!);
+    const newValue = insertAtSelection(selection, value, pattern, fallback);
+    value = newValue ?? "";
   }
 
-  const addImage = () => {
-    insertAtSelection(`\n![${INSERT_PATTERN}](${CURSOR_POSITION})\n`, "Image Alt");
+  const addImage = async () => {
+    const selection = csFromTextAreaOrUndefined(textarea!);
+    if (!selection) {
+      value = appendToText(value, IMAGE_PATTERN, "Image");
+    } else {
+      value = wrapSelection(selection, value, IMAGE_PATTERN, "Image");
+    }
+    value = value.replace(CURSOR_POSITION, "URL").replace(PLACEHOLDER, "");
+    await tick();
+
+    const cursorPos = substringSelection(value, "URL");
+    if (!cursorPos) return;
+
+    moveCursor(textarea!, cursorPos);
   };
 
-  const addLink = () => {
-    insertAtSelection(`[${INSERT_PATTERN}](${CURSOR_POSITION})`);
+  const addLink = async () => {
+    addToSelectedTxt(LINK_PATTERN);
+    await tick();
+    const cursorPos = substringSelection(value, "URL");
+    if (!cursorPos) return;
+
+    moveCursor(textarea!, cursorPos);
   };
+
+  const addPluginBlock = async () => {
+    const selection = csFromTextAreaOrUndefined(textarea!);
+    if (!selection) {
+      value = appendToText(value, PLUGIN_PATTERN, "Plugin body");
+    } else {
+      value = wrapSelection(selection, value, PLUGIN_PATTERN);
+    }
+
+    value = value.replace(CURSOR_POSITION, "PLUGIN_NAME");
+    await tick();
+
+    const cursorPos = substringSelection(value, "PLUGIN_NAME");
+    if (!cursorPos) return;
+
+    moveCursor(textarea!, cursorPos);
+  };
+
+  let showPreview = $state(false);
 </script>
 
 <div class="commands">
-  <button class="n-btn" onclick={addImage}>🖼️</button>
-  <button class="n-btn" onclick={addLink}>🔗</button>
+  <div class="editorCommands">
+    <button class="n-btn" disabled={showPreview} onclick={addImage}>🖼️</button>
+    <button class="n-btn" disabled={showPreview} onclick={addLink}>🔗</button>
+    <button class="n-btn" disabled={showPreview} onclick={addPluginBlock}
+      >🔌</button
+    >
+  </div>
+
+  <button class="n-btn" onclick={() => (showPreview = !showPreview)}>
+    {#if showPreview}
+      📝
+    {:else}
+      👁️
+    {/if}
+  </button>
 </div>
-<textarea
-  bind:this={textarea}
-  onchange={() => onChange(value)}
-  bind:value
-  {placeholder}
-></textarea>
+
+{#if showPreview}
+  <Renderer text={value} />
+{:else}
+  <textarea
+    bind:this={textarea}
+    bind:value
+    {placeholder}
+    oninput={() => onChange(value)}
+  ></textarea>
+{/if}
 
 <style>
   .commands {
@@ -69,6 +123,13 @@
     flex-direction: row;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
+  }
+
+  .editorCommands {
+    flex: 5;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
   }
   textarea {
     width: 100%;
