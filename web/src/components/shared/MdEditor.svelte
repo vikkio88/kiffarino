@@ -4,7 +4,6 @@
     appendToText,
     CURSOR_POSITION,
     PLACEHOLDER,
-    insertAtSelection,
     moveCursor,
     csFromTextArea,
     substringSelection,
@@ -51,12 +50,12 @@
   const addLink = async () => {
     const selection = csFromTextArea(textarea!);
     if (selection.start === selection.end) {
-      return;
+      value = appendToText(value, LINK_PATTERN, "LABEL");
+    } else {
+      const newValue = wrapSelection(selection, value, LINK_PATTERN);
+      value = newValue;
     }
-
-    // maybe move to use wrap selection?
-    const newValue = insertAtSelection(selection, value, LINK_PATTERN);
-    value = newValue ?? "";
+    value = value.replace(CURSOR_POSITION, "URL").replace(PLACEHOLDER, "");
     await tick();
     const cursorPos = substringSelection(value, "URL");
     if (!cursorPos) return;
@@ -109,7 +108,9 @@
     bind:this={textarea}
     bind:value
     {placeholder}
-    oninput={() => onChange(value)}
+    oninput={() => {
+      onChange(value);
+    }}
   ></textarea>
 {/if}
 

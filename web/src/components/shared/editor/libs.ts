@@ -1,6 +1,15 @@
+import {
+  PLUGIN_BODY_PH,
+  PLUGIN_NAME_PH,
+  PLUGIN_SECTION,
+} from "../../md/parser/const";
+
 export const PLACEHOLDER = "%PLACEHOLDER%";
 export const CURSOR_POSITION = "%CURSOR%";
-export const PLUGIN_PATTERN = `\n<!-- plugin: ${CURSOR_POSITION} -->\n${PLACEHOLDER}\n<!-- endplugin -->`;
+export const PLUGIN_PATTERN = PLUGIN_SECTION.replace(
+  PLUGIN_NAME_PH,
+  CURSOR_POSITION
+).replace(PLUGIN_BODY_PH, PLACEHOLDER);
 export const LINK_PATTERN = `[${PLACEHOLDER}](${CURSOR_POSITION})`;
 export const IMAGE_PATTERN = `\n![${PLACEHOLDER}](${CURSOR_POSITION})\n`;
 
@@ -44,26 +53,6 @@ export function substringSelection(
   if (start === -1) return null;
   const end = start + substring.length;
   return cs(start, end);
-}
-
-export function insertAtSelection(
-  selection: CursorSelection,
-  value: string,
-  pattern: string,
-  fallback?: string
-) {
-  let selected = value.slice(selection.start, selection.end);
-  if (selected === "" && !fallback) {
-    return value;
-  }
-
-  if (selected === "" && fallback) {
-    selected = fallback;
-  }
-
-  return `${value.slice(0, selection.start)}${pattern
-    .replace(PLACEHOLDER, selected)
-    .replace(CURSOR_POSITION, "URL")}${value.slice(selection.end)}`;
 }
 
 export function wrapSelection(
