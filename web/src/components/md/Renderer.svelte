@@ -1,5 +1,9 @@
 <script lang="ts">
-  import { parsePlugins, type Section } from "./parser/plugins";
+  import {
+    // markdownFromSections,
+    parsePlugins,
+    type Section,
+  } from "./parser/plugins";
   import md from "./renderers/simpleMd";
   import Youtube from "./renderers/Youtube.svelte";
   type Props = {
@@ -7,7 +11,13 @@
   };
   const { text }: Props = $props();
 
-  const sections: Section[] = parsePlugins(text);
+  const sections: Section[] = $state(parsePlugins(text));
+  const onUpdate = (sectionIndex: number, source: string) => {
+    sections[sectionIndex] = { ...sections[sectionIndex], source };
+
+    //TODO: update all body
+    // markdownFromSections(sections);
+  };
 </script>
 
 {#each sections as section}

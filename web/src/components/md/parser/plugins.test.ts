@@ -1,5 +1,5 @@
 import { describe, test, expect } from "bun:test";
-import { parsePlugins } from "./plugins";
+import { markdownFromSections, parsePlugins, type Section } from "./plugins";
 
 describe("parsePlugins", () => {
   test("parses plain markdown as simple_md", () => {
@@ -135,5 +135,53 @@ Final line of text.
 
     const defaultSections = result.filter((s) => s.plugin.name === "simple_md");
     expect(defaultSections.length).toBe(4);
+  });
+});
+
+describe("markdownFromSections", () => {
+  test("returns plain markdown for simple_md sections", () => {
+    const sections: Section[] = [
+      { source: "Hello world", plugin: { name: "simple_md" } },
+      { source: "This is markdown", plugin: { name: "simple_md" } },
+    ];
+
+    const result = markdownFromSections(sections);
+
+    expect(result).toBe("Hello world\n\nThis is markdown");
+  });
+
+  test("wraps non-default plugin sections in plugin markers", () => {
+    const sections: Section[] = [
+      { source: "<iframe>", plugin: { name: "youtube" } },
+    ];
+
+    const result = markdownFromSections(sections);
+
+    expect(result).toBe(
+      `<!-- plugin: youtube -->\n<iframe>\n<!-- endplugin -->`
+    );
+  });
+
+  test("handles mixed plugin and simple_md sections", () => {
+    const sections: Section[] = [
+      { source: "Text A", plugin: { name: "simple_md" } },
+      { source: "<iframe>", plugin: { name: "youtube" } },
+      { source: "Text B", plugin: { name: "simple_md" } },
+    ];
+
+    const result = markdownFromSections(sections);
+
+    expect(result).toBe(
+      [
+        "Text A",
+        `<!-- plugin: youtube -->\n<iframe>\n<!-- endplugin -->`,
+        "Text B",
+      ].join("\n\n")
+    );
+  });
+
+  test("returns empty string for empty section list", () => {
+    const result = markdownFromSections([]);
+    expect(result).toBe("");
   });
 });

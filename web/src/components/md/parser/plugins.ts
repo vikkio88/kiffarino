@@ -1,4 +1,4 @@
-import { PLUGIN_REGEXP } from "./const";
+import { PLUGIN_END_VAR, PLUGIN_NAME_VAR, PLUGIN_REGEXP } from "./const";
 
 export const pluginNames = ["simple_md", "youtube"] as const;
 export type PluginName = (typeof pluginNames)[number];
@@ -47,4 +47,18 @@ export function parsePlugins(text: string): Section[] {
   }
 
   return sections;
+}
+
+export function markdownFromSections(sections: Section[]): string {
+  return sections
+    .map((section) => {
+      const { plugin, source } = section;
+
+      if (plugin.name === "simple_md") {
+        return source;
+      }
+
+      return `<!-- ${PLUGIN_NAME_VAR} ${plugin.name} -->\n${source}\n<!-- ${PLUGIN_END_VAR} -->`;
+    })
+    .join("\n\n");
 }
