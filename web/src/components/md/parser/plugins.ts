@@ -1,6 +1,6 @@
 import { PLUGIN_END_VAR, PLUGIN_NAME_VAR, PLUGIN_REGEXP } from "./const";
 
-export const pluginNames = ["simple_md", "youtube"] as const;
+export const pluginNames = ["simple_md", "youtube", "code"] as const;
 export type PluginName = (typeof pluginNames)[number];
 export type Plugin = { name: PluginName };
 export type Section = { source: string; plugin: Plugin };

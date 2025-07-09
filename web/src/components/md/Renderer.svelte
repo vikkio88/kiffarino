@@ -4,6 +4,7 @@
     parsePlugins,
     type Section,
   } from "./parser/plugins";
+  import Code from "./renderers/Code.svelte";
   import md from "./renderers/simpleMd";
   import Youtube from "./renderers/Youtube.svelte";
   type Props = {
@@ -25,6 +26,8 @@
     {@html md.parse(section.source)}
   {:else if section.plugin.name === "youtube"}
     <Youtube body={section.source} />
+  {:else if section.plugin.name === "code"}
+    <Code body={section.source} />
   {:else}
     <!-- Fallback to simple_md if no plugin -->
     {@html md.parse(section.source)}
