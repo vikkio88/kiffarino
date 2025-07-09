@@ -137,7 +137,7 @@
   }
   .body {
     font-size: 1.2rem;
-    height: 70%;
+    height: 80%;
     overflow: auto;
   }
 
