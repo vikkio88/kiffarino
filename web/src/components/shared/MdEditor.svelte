@@ -14,6 +14,7 @@
     IMAGE_PATTERN,
   } from "./editor/libs";
   import Renderer from "../md/Renderer.svelte";
+  import { upload } from "../../api/assets";
 
   type Props = {
     initialValue?: string;
@@ -80,6 +81,32 @@
     moveCursor(textarea!, cursorPos);
   };
 
+  const uploadFile = async () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "*/*";
+
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await upload(formData);
+      if (!res) {
+        //TODO: handle error
+        return;
+      }
+
+      const { url, name } = res.result;
+      const newValue = appendToText(value, IMAGE_PATTERN, name);
+      value = `\n${newValue.replace(CURSOR_POSITION, url)}`;
+    };
+
+    input.click();
+  };
+
   let showPreview = $state(false);
 </script>
 
@@ -89,6 +116,9 @@
     <button class="n-btn" disabled={showPreview} onclick={addLink}>🔗</button>
     <button class="n-btn" disabled={showPreview} onclick={addPluginBlock}>
       🔌
+    </button>
+    <button class="n-btn" disabled={showPreview} onclick={uploadFile}>
+      🖼️
     </button>
   </div>
 
