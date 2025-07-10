@@ -102,6 +102,7 @@
       const { url, name } = res.result;
       const newValue = appendToText(value, IMAGE_PATTERN, name);
       value = `\n${newValue.replace(CURSOR_POSITION, url)}`;
+      onChange(value);
     };
 
     input.click();
