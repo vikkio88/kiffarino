@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { loadConfig } from "../../libs/config";
 import { startServer } from "../../server";
-import { EXEC_NAME, PROJECT_CONFIG_FILENAME } from "@kiffarino/shared/config";
+import { EXEC_NAME } from "@kiffarino/shared/config";
 
 export function start(args: string[]) {
   const config = loadConfig();
