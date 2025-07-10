@@ -37,3 +37,14 @@ export function post<T>(api: string, body?: T, headers = {}) {
     body: JSON.stringify(body),
   });
 }
+
+
+export function postFile(api: string, formData: FormData, headers = {}) {
+  return fetch(`${API_URL}/${api}`, {
+    method: "POST",
+    headers: {
+      ...headers,
+    },
+    body: formData,
+  });
+}

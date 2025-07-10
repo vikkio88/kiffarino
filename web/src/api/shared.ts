@@ -5,3 +5,4 @@ export const API_URL = import.meta.env.PROD
   : `http://localhost:${SERVER_PORT}/api`;
 
 export const TICKETS_API = "tickets";
+export const ASSETS_API = "assets";

@@ -1,15 +1,6 @@
-import { LOCAL_ASSETS_FOLDER } from "@kiffarino/shared";
+import { LOCAL_ASSETS_FOLDER, type StaticAssetFile } from "@kiffarino/shared";
 import fs from "node:fs";
 import p from "node:path";
-
-export type StaticAssetFile = {
-  path: string;
-  url: string;
-  name: string;
-  extension: string;
-  size: number;
-  modified: number;
-};
 
 export function list(
   baseFolder: string,
