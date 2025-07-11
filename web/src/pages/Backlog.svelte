@@ -68,11 +68,11 @@
 </script>
 
 <div class="f1 f c w100">
-  <h1 class="ta-c">Backlog</h1>
   <div class="f r spa g pd">
     <div class="titleSearch">
       <TitleSearch
         initialValue={initialTextFilter}
+        placeholder="Search Tickets by title..."
         {onSearch}
         onReset={() => {
           // this means that something got injected via url
