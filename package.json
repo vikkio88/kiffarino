@@ -1,6 +1,6 @@
 {
   "name": "kiffarino",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Vincenzo Ciaccio <vincenzo.ciaccio@gmail.com>",
   "main": "./index.js",
   "bin": {
