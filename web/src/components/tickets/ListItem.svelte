@@ -51,7 +51,7 @@
 
 <style>
   li {
-    padding: 1rem;
+    padding: 2rem 1rem;
     gap: 1rem;
     display: flex;
     align-items: center;
