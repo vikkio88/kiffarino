@@ -1,5 +1,6 @@
 import { LOCAL_ASSETS_FOLDER, type StaticAssetFile } from "@kiffarino/shared";
 import fs from "node:fs";
+import { writeFile } from "node:fs/promises";
 import p from "node:path";
 
 export function list(
@@ -29,4 +30,26 @@ export function list(
 
     return [];
   });
+}
+
+export async function upload(
+  baseFolder: string,
+  assetsFolder: string,
+  file: File
+): Promise<StaticAssetFile> {
+  const localAssetPath = p.resolve(baseFolder, assetsFolder);
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  const filePath = p.join(localAssetPath, file.name);
+
+  await writeFile(filePath, buffer);
+
+  return {
+    name: file.name,
+    path: filePath,
+    url: p.join("/", LOCAL_ASSETS_FOLDER, file.name),
+    extension: p.extname(file.name).slice(1),
+    size: buffer.length,
+    modified: Date.now(),
+  };
 }
