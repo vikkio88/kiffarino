@@ -54,9 +54,23 @@
     };
   };
 
+  let hasChanges = $derived(
+    isEditingBody && Object.values(updateBody).some((v) => v !== undefined)
+  );
   const refresh = () => {
+    updateBody = {};
     getOnePromise = one(id);
   };
+
+  import type { Ticket } from "@kiffarino/shared";
+
+  function baseOrUpdatedFields(result: Partial<Ticket>): BodyFields {
+    return {
+      title: result.title,
+      body: result.body,
+      ...updateBody,
+    };
+  }
 </script>
 
 {#await getOnePromise}
@@ -72,11 +86,15 @@
             id={resp.result.id}
             status={resp.result.status}
             type={resp.result.type}
+            canEdit={!isEditingBody}
             onSuccess={refresh}
           />
         </div>
         {#if isEditingBody}
-          <Edit fields={resp.result} onChange={onTicketUpdate} />
+          <Edit
+            fields={baseOrUpdatedFields(resp.result)}
+            onChange={onTicketUpdate}
+          />
         {:else}
           <h1 class="ta-c">{resp.result.title}</h1>
           <div class="body pd">
@@ -89,7 +107,7 @@
         <LinksEditor links={resp.result.links} ticketId={id} />
       </details>
       <div class="bottom">
-        <div class="f1 f c">
+        <div class="f1 f c g_5">
           <span data-tooltip={cd(resp.result.createdAt)}>
             🆕 {ago(resp.result.createdAt)}
           </span>
@@ -103,6 +121,9 @@
         </div>
 
         <div class="edit f1">
+          {#if hasChanges}
+            <strong>Unsaved Changes</strong>
+          {/if}
           {#if isEditingBody}
             <div class="bg">
               <button class="n-btn" onclick={onUpdate}> 💾 </button>
@@ -153,6 +174,12 @@
 
   .edit > .n-btn {
     position: relative;
+  }
+
+  .edit > strong {
+    font-size: 0.7rem;
+    color: var(--warning-color);
+    font-weight: bold;
   }
 
   details {
