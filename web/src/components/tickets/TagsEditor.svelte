@@ -115,7 +115,8 @@
               {tag}
             </button>
           {:else}
-            <span>No Tags...</span>
+            <span>No Tags {`"${input}" yet.`}</span>
+            <span>[Enter] to create</span>
           {/each}
         {/if}
       </div>
@@ -199,6 +200,12 @@
     display: none;
     transform: scale(0.98);
     pointer-events: none;
+  }
+
+  .searchResult > span {
+    text-align: center;
+    color: var(--gray-2-color);
+    font-size: smaller;
   }
 
   .hasResults {
