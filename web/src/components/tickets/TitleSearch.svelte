@@ -1,12 +1,19 @@
 <script lang="ts">
   type Props = {
     initialValue?: string;
+    placeholder?: string;
     clearIcon?: string;
     onSearch: (title: string) => void;
     onReset: () => void;
   };
 
-  const { initialValue, onSearch, onReset, clearIcon = "❌" }: Props = $props();
+  const {
+    initialValue,
+    placeholder = "Search title...",
+    onSearch,
+    onReset,
+    clearIcon = "❌",
+  }: Props = $props();
 
   let title: undefined | string = $state(initialValue);
 
@@ -21,12 +28,7 @@
 </script>
 
 <form onsubmit={onSubmit}>
-  <input
-    type="text"
-    bind:value={title}
-    class="w100"
-    placeholder="Search title..."
-  />
+  <input type="text" bind:value={title} class="w100" {placeholder} />
   <div>
     <button
       class="n-btn"
