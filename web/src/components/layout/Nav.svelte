@@ -4,8 +4,8 @@
 
 <header class="f r spb pd">
   <nav class="f g">
-    <a href="/">Board</a>
-    <a href="/backlog">Backlog</a>
+    <a href="/" data-tooltip="Board" data-tooltip-position="bottom">🗓️</a>
+    <a href="/backlog"  data-tooltip="Backlog" data-tooltip-position="bottom">📚</a>
   </nav>
   <div data-tooltip="Create Ticket" data-tooltip-position="left">
     <button class="n-btn add" onclick={() => goto("/new/ticket")}>✏️</button>
