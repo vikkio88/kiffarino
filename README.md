@@ -128,12 +128,12 @@ kfr start 5321 # <- will start the server on port 5321
   - [ ] Short code?
   - [ ] Markdown plugins (like todo checkboxes)
     - [x] Move config to frontmatter
-    - [ ] Add them in multiple sections so you can have different parts of the page
-    - [ ] Imgs !\[Alt text\]\(/static/something.svg "a title"\)
+    - [x] Add them in multiple sections so you can have different parts of the page
+    - [x] Imgs !\[Alt text\]\(/static/something.svg "a title"\)
   - [ ] Epic link/Milestone
 
-  - [ ] Add images on a subfolder and be able to serve it via public serve in api
-    - [ ] Picker to search for assets in public folder
+  - [x] Add images on a subfolder and be able to serve it via public serve in api
+    - [x] Picker to search for assets in public folder
     - [x] Folder is generated need to link static serve to local folder
     - [x] Folder forward on dev mode too
   
