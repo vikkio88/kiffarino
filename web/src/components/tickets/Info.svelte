@@ -13,13 +13,21 @@
 
   type Props = {
     id?: string;
+    canEdit?: boolean;
     status: TicketStatus;
     type: TicketType;
     onSuccess?: () => void;
     onChange?: (info: TicketInfo) => void;
   };
 
-  const { id, status, type, onSuccess, onChange }: Props = $props();
+  const {
+    id,
+    status,
+    type,
+    onSuccess,
+    onChange,
+    canEdit = true,
+  }: Props = $props();
 
   let isEditing = $state(id === undefined);
   let updatedStatus: TicketStatus | undefined = undefined;
@@ -57,7 +65,7 @@
   };
 </script>
 
-{#if isEditing}
+{#if isEditing && canEdit}
   <TypeSelector {type} onChange={onTypeChange} />
   <StatusSelector {status} onChange={onStatusChange} />
 
@@ -70,5 +78,7 @@
 {:else}
   <Type {type} extended />
   <Status {status} extended />
-  <button class="n-btn" onclick={() => (isEditing = true)}> ⚙️ </button>
+  <button class="n-btn" disabled={!canEdit} onclick={() => (isEditing = true)}
+    >⚙️</button
+  >
 {/if}
