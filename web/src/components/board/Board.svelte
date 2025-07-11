@@ -1,18 +1,22 @@
 <script lang="ts">
-  import FPC from "../layout/FullPageCentre.svelte";
   import ListItem from "../tickets/ListItem.svelte";
-  import { emojiMap } from "../tickets/status";
-  import { board, create, move } from "../../api/tickets";
-  import Spinner from "../shared/Spinner.svelte";
-  import type { TicketRecord, TicketStatus } from "@kiffarino/shared";
+  import { emojiMap, statusLabelMap } from "../tickets/status";
+  import type { Board, TicketRecord, TicketStatus } from "@kiffarino/shared";
   import ExpandInput from "../shared/ExpandInput.svelte";
+  import { create, move } from "../../api/tickets";
+  type Props = {
+    board: Board;
+    onUpdate: () => void;
+  };
 
-  let boardPromise = $derived(board());
+  const { board, onUpdate }: Props = $props();
+
+  const columns = ["todo", "inProgress", "done"] as const;
 
   const onMove = async (ticket: TicketRecord, status: TicketStatus) => {
     //TODO: optimistic ui?
     await move(ticket.id, status);
-    boardPromise = board();
+    onUpdate();
   };
 </script>
 
@@ -22,7 +26,7 @@
       onSend={async (title: string) => {
         const result = await create({ title, status });
         if (result) {
-          boardPromise = board();
+          onUpdate();
         }
 
         //TODO: handle error
@@ -33,53 +37,24 @@
   </div>
 {/snippet}
 
-{#await boardPromise}
-  <FPC>
-    <Spinner />
-  </FPC>
-{:then resp}
-  {#if resp}
-    <div class="f c f1 pd ta-c">
-      <article>
-        <h3>Todo {emojiMap.todo}</h3>
-        <ul>
-          {#each resp.result.todo as ticket}
-            <ListItem {ticket} showMoveActions {onMove} />
-          {:else}
-            <h4>No tickets here 🤷</h4>
-          {/each}
-        </ul>
-        {@render fabAdd("todo")}
-      </article>
-
-      <article>
-        <h3>In Progress {emojiMap.inProgress}</h3>
-        <ul>
-          {#each resp.result.inProgress as ticket}
-            <ListItem {ticket} showMoveActions {onMove} />
-          {:else}
-            <h4>No tickets here 🤷</h4>
-          {/each}
-        </ul>
-        {@render fabAdd("inProgress")}
-      </article>
-
-      <article>
-        <h3>Done {emojiMap.done}</h3>
-        <ul>
-          {#each resp.result.done as ticket}
-            <ListItem {ticket} showMoveActions {onMove} />
-          {:else}
-            <h4>No tickets here 🤷</h4>
-          {/each}
-        </ul>
-        {@render fabAdd("done")}
-      </article>
-    </div>
-  {:else}
-    <h1>Error whilst Loading the Board</h1>
-  {/if}
-{/await}
+<div class="f c f1 pd ta-c">
+  {#each columns as status}
+    <article>
+      <h3>
+        {statusLabelMap[status as TicketStatus]}
+        {emojiMap[status as TicketStatus]}
+      </h3>
+      <ul>
+        {#each board[status] as ticket}
+          <ListItem {ticket} showMoveActions {onMove} />
+        {:else}
+          <h4>No tickets here 🤷</h4>
+        {/each}
+      </ul>
+      {@render fabAdd(status)}
+    </article>
+  {/each}
+</div>
 
 <style>
   article {

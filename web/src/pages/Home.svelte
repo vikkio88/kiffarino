@@ -1,9 +1,28 @@
 <script lang="ts">
+  import FPC from "../components/layout/FullPageCentre.svelte";
   import Board from "../components/board/Board.svelte";
   import logo from "../assets/favicon.svg";
+  import { board } from "../api/tickets";
+  import Spinner from "../components/shared/Spinner.svelte";
+
+  let boardPromise = $derived(board());
+
+  const onUpdate = () => {
+    boardPromise = board();
+  };
 </script>
 
-<Board />
+{#await boardPromise}
+  <FPC>
+    <Spinner />
+  </FPC>
+{:then resp}
+  {#if resp}
+    <Board board={resp.result} {onUpdate} />
+  {:else}
+    <h1>Error whilst Loading the Board</h1>
+  {/if}
+{/await}
 
 <div class="bottom">
   <span>
