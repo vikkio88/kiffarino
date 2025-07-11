@@ -1,13 +1,8 @@
 import type { Context } from "hono";
-
-import z from "zod/v4";
 import { read, write } from "../../../db";
 import { upsertTag } from "../../../db/tags";
 import type { ApiResult } from "@kiffarino/shared";
-
-export const createTagSchema = z.object({
-  tag: z.string().min(3),
-});
+import { createTagSchema } from "./schemas";
 
 export async function add(c: Context) {
   const body = await c.req.json();

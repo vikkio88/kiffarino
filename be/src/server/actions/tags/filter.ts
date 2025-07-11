@@ -1,10 +1,8 @@
 import type { Context } from "hono";
-import z from "zod/v4";
 import { read } from "../../../db";
 import { toTag, type ApiResult } from "@kiffarino/shared";
-export const tagFilterSchema = z.object({
-  tag: z.coerce.string().optional(),
-});
+import { tagFilterSchema } from "./schemas";
+
 
 export async function filter(c: Context) {
   const query = Object.fromEntries(new URLSearchParams(c.req.query()));
