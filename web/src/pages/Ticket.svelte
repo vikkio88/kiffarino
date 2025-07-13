@@ -86,6 +86,7 @@
             id={resp.result.id}
             status={resp.result.status}
             type={resp.result.type}
+            priority={resp.result.priority}
             canEdit={!isEditingBody}
             onSuccess={refresh}
           />

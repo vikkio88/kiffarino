@@ -69,9 +69,9 @@ kfr start 5321 # <- will start the server on port 5321
 
   - [x] version
 
-- [ ] Tickets
+- [x] Tickets
 
-  - [ ] BE
+  - [x] BE
 
     - [x] Create
     - [x] Read
@@ -81,9 +81,9 @@ kfr start 5321 # <- will start the server on port 5321
     - [x] Archive
     - [x] Link
     - [x] Tags CRUD
-    - [ ] Priority Ordering
+    - [x] Priority Ordering
 
-  - [ ] FE
+  - [x] FE
 
     - [x] Create
     - [x] Read
@@ -99,7 +99,7 @@ kfr start 5321 # <- will start the server on port 5321
         - [x] Title Search moved to its own component
 
     - [x] Tags CRUD on Ticket
-    - [ ] Priority CRUD
+    - [x] Priority CRUD
 
 - [ ] Docs
 
